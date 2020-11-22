@@ -1,4 +1,10 @@
 <resources>
     <string name="app_name">TuristaDroid</string>
     <string name="tituloSplashScreen">TuristaDroid</string>
+
+    <string name="login_lbl_Correo">E-mail</string>
+    <string name="login_lbl_Contrasena">Contraseña</string>
+    <string name="login_btn_iniciarSesion">Iniciar sesión</string>
+    <string name="login_link_registrarse">Registrarse</string>
+
 </resources>
