@@ -48,23 +48,33 @@ class Utilidades {
                     }
                 }
             }
-        } else {
+        } else { //para versiones anteriores del api 29 (Android 10)
+            //obtenemos nuestra información sobre el estado de la conexión de nuestro dispositivo
             val activeNetworkInfo = connectivityManager.activeNetworkInfo
+            //si está activado nos devolverá un valor true
             if (activeNetworkInfo != null && activeNetworkInfo.isConnected) {
                 Log.i("Internet", "ActiveNetworkInfo.isConnected")
                 return true
             }
         }
+        //si no está activado nos devolverá un valor false
         Log.i("Internet", "Sin conexión")
         return false
     }
 
     /**
      *Función que nos permite comprobar si tenemos el GPS disponible
+     * @param context Contexto actual de nuestro dispositivo
      */
     fun gpsDisponible(context: Context?): Boolean {
+        //primero guardamos el estado del servicio de ubicación.
         val locationManager = context?.getSystemService(AppCompatActivity.LOCATION_SERVICE) as LocationManager
+        //una vez que ya tenemos guardada su situación, vamos a comprobar su estado.
         val estadoGPS = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+        /*
+        su estado es Activado o Desactivado (true or false), dependiendo de su estado la función devolverá un valor u
+        otro.
+         */
         return if (!estadoGPS) {
             Log.i("GPS", "GPS DESACTIVADO")
             false
@@ -74,11 +84,20 @@ class Utilidades {
         }
     }
 
+    /**
+     * Función escribir correo, esta función escribir correo nos abre nuestra aplicación de Gmail, justo para enviar un
+     * correo a una persona, esa persona, viene dada por parámetros
+     * @param activity Activity en la que estamos en ese momento
+     * @param destinatario String con el correo del destinatario de la aplicación
+     * @param remitente String con el correo del remitente del mensaje
+     * @param texto String con el mensaje que queremos enviar al destinatario
+     * En este caso no he puesto cómo parámetro el asunto del correo, para poner directamente TuristaDroid, que es el
+     * nombre de nuestra aplicación
+     */
     fun escribirCorreo(
         activity: FragmentActivity?,
         destinatario: String = "",
         remitente: String = "",
-        asunto: String = "",
         texto: String = ""
     ) {
         val intent = Intent(Intent.ACTION_SEND)
@@ -86,7 +105,7 @@ class Utilidades {
         intent.type = "text/plain"
         intent.putExtra(Intent.EXTRA_EMAIL, arrayOf(destinatario))
         intent.putExtra(Intent.EXTRA_CC, remitente)
-        intent.putExtra(Intent.EXTRA_SUBJECT, asunto)
+        intent.putExtra(Intent.EXTRA_SUBJECT, "TuristaDroid")
         intent.putExtra(Intent.EXTRA_TEXT, texto)
         try {
             activity?.startActivity(Intent.createChooser(intent, "Enviar usando..."))
@@ -98,6 +117,8 @@ class Utilidades {
     /**
      * Función que abre una dirección url o enlace, esto nos puede valer para abrir las url de las redes sociales
      * del usuario
+     * @param activity Activity actual en la que nos situamos
+     * @param enlace String con el enlace a nuestras redes sociales por ejemplo
      */
     fun abrirEnlace(activity: FragmentActivity?, enlace: String) {
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse(enlace))
