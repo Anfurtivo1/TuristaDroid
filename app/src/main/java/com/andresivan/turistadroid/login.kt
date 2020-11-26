@@ -13,12 +13,18 @@ class login : AppCompatActivity() {
 
 
         login_link_registrarse.setOnClickListener { abrirRegistrarse() }
+        btnIniciarSesion.setOnClickListener { abrirPantallaPrincipal() }
 
     }
 
 
     private fun abrirRegistrarse(){
         val intent: Intent = Intent(this,registrarse::class.java)
+        startActivity(intent)
+    }
+
+    private fun abrirPantallaPrincipal(){
+        val intent: Intent = Intent(this,pantallaprincipal::class.java)
         startActivity(intent)
     }
 
