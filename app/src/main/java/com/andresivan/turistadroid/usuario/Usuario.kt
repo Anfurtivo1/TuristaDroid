@@ -2,10 +2,11 @@ package com.andresivan.turistadroid.usuario
 /*
 import io.realm.RealmObject
 */
-import io.realm.annotations.PrimaryKey
+//import io.realm.annotations.PrimaryKey
 
 class Usuario(
-    @PrimaryKey var id: Long = 0,
+    //@PrimaryKey
+    var id: Long = 0,
     var nombre: String = "",
     var login: String = "",
     var contrasena: String = "",
