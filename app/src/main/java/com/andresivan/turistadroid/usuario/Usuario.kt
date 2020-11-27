@@ -1,6 +1,7 @@
 package com.andresivan.turistadroid.usuario
-
+/*
 import io.realm.RealmObject
+*/
 import io.realm.annotations.PrimaryKey
 
 class Usuario(
@@ -11,7 +12,7 @@ class Usuario(
     var fotoUsuario: String = "",
     var correo: String = "",
     var cuentaTwitter: String = ""
-) : RealmObject() {
+) /*: RealmObject()*/ {
 
     constructor(
         nombre: String,
