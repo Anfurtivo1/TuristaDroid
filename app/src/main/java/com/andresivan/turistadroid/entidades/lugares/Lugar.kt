@@ -15,7 +15,7 @@ class Lugar(
     var valoracion: Int = 0,
     var favorito: Boolean = false,
     var usuarioID: String = ""
-) : RealmObject() {
+)/* : RealmObject() */{
 
     constructor(
         nombre: String,

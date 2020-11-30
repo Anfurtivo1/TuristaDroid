@@ -11,21 +11,20 @@ class MyApp : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        Log.i("Configuracion", "Inicializacion de la confifuracion de MyApp")
+        Log.i("Config", "INICIALIZANDO LA CONFIGURACIÓN DE MyApp")
         initRealmBD()
-        Log.i("Configuracion", "Fin de la inicializacion de la configuración de MyApp")
-
+        Log.i("Config", "FINALIZANDO LA CONFIGURACIÓN DE MyApp")
     }
 
     private fun initRealmBD() {
-        Log.i("Configuracion", "Inicializacion de la base de datos de RealmDB")
+        Log.i("Config", "Init Realm")
         Realm.init(applicationContext)
-        val realmConfig = RealmConfiguration.Builder()
+        val config = RealmConfiguration.Builder()
             .name(nombreBD)
-            .schemaVersion(versionBD)
-            .deleteRealmIfMigrationNeeded()
+            .schemaVersion(versionBD) // Versión de esquema estamos trabajando, si lo cambiamos, debemos incrementar
+            .deleteRealmIfMigrationNeeded() // Podemos borrar los datos que ya haya si cambiamos el esquema,
             .build()
-        Realm.setDefaultConfiguration(realmConfig)
-        Log.i("Configuracion", "Fin de la inicializacion de la base de datos de RealmDB")
+        Realm.setDefaultConfiguration(config)
+        Log.i("Config", "Fin Realm")
     }
 }

@@ -12,7 +12,7 @@ class Usuario(
     @Required var nombre: String = "",
     var fotoUsuario: String = "",
     var cuentaTwitter: String = ""
-) : RealmObject() {
+)/* : RealmObject() */{
 
     constructor(
         correo: String,
