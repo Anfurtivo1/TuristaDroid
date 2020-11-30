@@ -1,4 +1,4 @@
-package com.andresivan.turistadroid.usuario
+package com.andresivan.turistadroid.entidades.usuario
 
 import io.realm.Realm.*
 import io.realm.kotlin.where
@@ -42,12 +42,12 @@ object UsuarioControlador {
     /**
      * Función que nos permite buscar un usuario en nuestra base de datos, está función la podemos usar para iniciar
      * sesión o antes de registrarnos para comprobar si ya existe algún usuario con ese valor
-     * @param login String
+     * @param correo String
      * @return usuario Puede que devuelva algún usuario o no por eso en el tipo de valor que devuelve ponemos Usuario?
      */
-    fun selectByLogin(login: String): Usuario? {
+    fun selectByCorreo(correo: String): Usuario? {
         return getDefaultInstance().copyFromRealm(
-            getDefaultInstance().where<Usuario>().equalTo("login", login).findFirst()
+            getDefaultInstance().where<Usuario>().equalTo("correo", correo).findFirst()
         )
     }
 
