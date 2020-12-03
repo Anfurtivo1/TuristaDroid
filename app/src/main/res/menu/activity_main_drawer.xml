@@ -9,6 +9,11 @@
             android:icon="@drawable/ic_menu_camera"
             android:title="@string/cercaDeMi" />
         <item
+            android:id="@+id/ndEncenderLinterna"
+            android:icon="@drawable/ic_menu_slideshow"
+            android:title="@string/EncenderLinterna" />
+        <item
+
             android:id="@+id/ndMisSitios"
             android:icon="@drawable/ic_menu_gallery"
             android:title="@string/mis_sitios" />

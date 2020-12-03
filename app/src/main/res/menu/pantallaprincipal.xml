@@ -6,4 +6,9 @@
         android:orderInCategory="100"
         android:title="@string/action_settings"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/EncenderLinterna"
+        android:orderInCategory="100"
+        android:title="@string/EncenderLinterna"
+        app:showAsAction="never" />
 </menu>
