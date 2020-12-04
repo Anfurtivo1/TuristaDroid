@@ -6,7 +6,7 @@ import io.realm.Realm.*
 import io.realm.kotlin.where
 
 object UsuarioControlador {
-/*
+
 
     /**
      * Función para insertar un nuevo usuario en la Base de datos de Realm
@@ -77,5 +77,4 @@ object UsuarioControlador {
             it.deleteAll();
         }
     }
-*/
 }

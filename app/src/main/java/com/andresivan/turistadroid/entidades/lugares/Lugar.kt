@@ -5,7 +5,7 @@ import io.realm.annotations.PrimaryKey
 import io.realm.annotations.Required
 import java.util.*
 
-class Lugar(
+open class Lugar(
     @PrimaryKey var id: String = "",
     @Required var nombre: String = "",
     @Required var tipo: String = "Poblacion",
@@ -15,7 +15,7 @@ class Lugar(
     var valoracion: Int = 0,
     var favorito: Boolean = false,
     var usuarioID: String = ""
-)/* : RealmObject() */{
+): RealmObject(){
 
     constructor(
         nombre: String,
