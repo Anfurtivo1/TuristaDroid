@@ -1,7 +1,11 @@
 package com.andresivan.turistadroid
 
 import android.Manifest
+import android.app.Activity
+import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.ImageDecoder
 import android.hardware.Camera
 import android.hardware.camera2.CameraManager
 import android.os.Bundle
@@ -20,17 +24,30 @@ import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
+import android.location.LocationListener
+import android.net.Uri
+import android.os.Build
+import android.os.StrictMode
+import android.provider.MediaStore
+import android.util.Log
+import androidx.core.net.toFile
+import com.andresivan.turistadroid.utils.Fotos
+import java.io.IOException
 
 
 class pantallaprincipal : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
-
+    //Variables para la linterna
     lateinit var camera: Camera
     var parameters: Camera.Parameters? = null
     var isFlash = false
     var estado = true
     var permisos:Boolean = false
+
+
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,8 +73,6 @@ class pantallaprincipal : AppCompatActivity() {
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
-
-
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -107,7 +122,7 @@ class pantallaprincipal : AppCompatActivity() {
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
 
-    fun encenderLinterna() {
+    private fun encenderLinterna() {
 
         val camManager =
             getSystemService(CAMERA_SERVICE) as CameraManager
@@ -120,8 +135,9 @@ class pantallaprincipal : AppCompatActivity() {
             camManager.setTorchMode(cameraId, false)
             estado=true
         }
-
-
     }
+
+
+
 
 }
