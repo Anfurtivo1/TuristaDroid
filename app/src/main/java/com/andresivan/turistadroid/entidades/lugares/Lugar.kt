@@ -1,5 +1,8 @@
 package com.andresivan.turistadroid.entidades.lugares
-
+/*
+import com.andresivan.turistadroid.entidades.fotos.Foto
+import io.realm.RealmList
+*/
 import com.andresivan.turistadroid.entidades.fotos.Foto
 import io.realm.RealmList
 import io.realm.RealmObject
@@ -17,7 +20,7 @@ open class Lugar(
     var valoracion: Int = 0,
     var favorito: Boolean = false,
     @Required var usuarioID: String = "",
-    var fotos: RealmList<Foto>
+    var fotos: RealmList<Foto> = RealmList()
 ): RealmObject(){
 
     constructor(
@@ -33,7 +36,7 @@ open class Lugar(
     ) : this((UUID.randomUUID().toString()), nombre, tipo, fecha, latitud, longitud, valoracion, favorito, usuarioID, fotos)
 
     override fun toString(): String {
-        return "Lugar(id='$id', nombre='$nombre', tipo='$tipo', fecha='$fecha', latitud='$latitud', longitud='$longitud', valoracion=$valoracion, favorito=$favorito, usuarioID='$usuarioID')"
+        return "Lugar(id='$id', nombre='$nombre', tipo='$tipo', fecha='$fecha', latitud='$latitud', longitud='$longitud', valoracion=$valoracion, favorito=$favorito'), usuarioID='$usuarioID')"
     }
 
 

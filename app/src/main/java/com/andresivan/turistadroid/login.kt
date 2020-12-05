@@ -3,7 +3,6 @@ package com.andresivan.turistadroid
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.TextView
 import com.andresivan.turistadroid.app.MyApp
 import com.andresivan.turistadroid.entidades.usuario.Usuario
 import kotlinx.android.synthetic.main.activity_login.*
