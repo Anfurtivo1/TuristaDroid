@@ -1,5 +1,6 @@
 package com.andresivan.turistadroid
 
+import android.app.AlertDialog
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -33,6 +34,10 @@ class MainActivity : AppCompatActivity() {
         handler.postDelayed({
             val intent:Intent = Intent(this,login::class.java)
             startActivity(intent)
+            finish()
         },4000)
+
     }
+
+
 }

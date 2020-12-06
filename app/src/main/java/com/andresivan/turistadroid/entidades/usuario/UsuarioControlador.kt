@@ -1,15 +1,12 @@
 package com.andresivan.turistadroid.usuario
 
-import android.util.Log
-import android.widget.Toast
 import com.andresivan.turistadroid.entidades.usuario.Usuario
-import io.realm.Realm
 
 import io.realm.Realm.*
 import io.realm.kotlin.where
 
 object UsuarioControlador {
-
+/*
 
     /**
      * Función para insertar un nuevo usuario en la Base de datos de Realm
@@ -47,38 +44,15 @@ object UsuarioControlador {
     /**
      * Función que nos permite buscar un usuario en nuestra base de datos, está función la podemos usar para iniciar
      * sesión o antes de registrarnos para comprobar si ya existe algún usuario con ese valor
-     * @param correo String
+     * @param login String
      * @return usuario Puede que devuelva algún usuario o no por eso en el tipo de valor que devuelve ponemos Usuario?
      */
-    fun selectByCorreo(correo: String): Usuario? {
-        /*var query = getDefaultInstance().where<Usuario>().equalTo("correo", correo)
-        if (query.count() > 0){
-            return getDefaultInstance().copyFromRealm(
-                query.findFirst()
-            )
-        }else{
-            Log.i("REGISTRO","No devuelve ningún usuario con ese correo")
-        }*/
+    fun selectByLogin(login: String): Usuario? {
         return getDefaultInstance().copyFromRealm(
-            getDefaultInstance().where<Usuario>().equalTo("correo", correo).findFirst()
+            getDefaultInstance().where<Usuario>().equalTo("login", login).findFirst()
         )
     }
 
-    fun existeUsuario (correo: String): Boolean{
-        //var usuarioExiste: Boolean = false
-        val realm = Realm.getDefaultInstance()
-        var query = realm.where<Usuario>().equalTo("correo", correo).findAll()
-        if (query.count() > 0){
-            return true
-        }else{
-            return false
-        }
-    }
-/*
-    fun selectByCorreo(usuario: Usuario): Usuario?{
-        if (usuario.correo.isNullOrEmpty())
-    }
-*/
 
     /**
      * Función que nos permite buscar un usuario en nuestra base de datos, está función es igual que la anterior, pero
@@ -100,7 +74,8 @@ object UsuarioControlador {
      */
     fun removeAll() {
         getDefaultInstance().executeTransaction {
-            it.deleteAll()
+            it.deleteAll();
         }
     }
+*/
 }

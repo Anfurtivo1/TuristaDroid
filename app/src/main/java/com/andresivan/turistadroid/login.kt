@@ -1,5 +1,6 @@
 package com.andresivan.turistadroid
 
+import android.app.AlertDialog
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -26,6 +27,33 @@ class login : AppCompatActivity() {
     private fun abrirPantallaPrincipal(){
         val intent: Intent = Intent(this,pantallaprincipal::class.java)
         startActivity(intent)
+    }
+
+
+    /**
+     * Quitamos fragment apilados, y si no hay salimos
+     */
+    override fun onBackPressed() {
+        try {
+            if (supportFragmentManager.backStackEntryCount > 0)
+                supportFragmentManager.popBackStackImmediate()
+            else
+                confirmarSalir()
+        } catch (ex: Exception) {
+            confirmarSalir()
+        }
+    }
+
+    /**
+     * Mensaje para confirmar para salir
+     */
+    fun confirmarSalir() {
+        AlertDialog.Builder(this)
+            .setTitle(getString(R.string.app_name))
+            .setMessage(getString(R.string.Salir))
+            .setPositiveButton(getString(R.string.Si)) { dialog, which -> finish() }
+            .setNegativeButton(getString(R.string.No), null)
+            .show()
     }
 
 }

@@ -24,15 +24,6 @@ import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
-import android.location.LocationListener
-import android.net.Uri
-import android.os.Build
-import android.os.StrictMode
-import android.provider.MediaStore
-import android.util.Log
-import androidx.core.net.toFile
-import com.andresivan.turistadroid.utils.Fotos
-import java.io.IOException
 
 
 class pantallaprincipal : AppCompatActivity() {
@@ -73,6 +64,9 @@ class pantallaprincipal : AppCompatActivity() {
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+
+
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -84,26 +78,6 @@ class pantallaprincipal : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.EncenderLinterna -> {
-
-                if (ActivityCompat.checkSelfPermission(
-                        this,
-                        Manifest.permission.CAMERA
-                    ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                        this,
-                        Manifest.permission.ACCESS_COARSE_LOCATION
-                    ) != PackageManager.PERMISSION_GRANTED
-                ) {
-                    ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.CAMERA), 1000)
-                } else {
-                    if (getApplicationContext().getPackageManager()
-                            .hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH)
-                    ) {
-                        camera = Camera.open();
-                        parameters = camera.getParameters();
-                        isFlash = true;
-                    }
-
-                }
 
                 encenderLinterna()
 

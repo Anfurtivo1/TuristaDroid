@@ -47,13 +47,10 @@ dependencies {
     implementation 'androidx.navigation:navigation-fragment-ktx:2.3.1'
     implementation 'androidx.navigation:navigation-ui-ktx:2.3.1'
     implementation 'com.google.android.gms:play-services-maps:17.0.0'
+    implementation 'com.google.android.gms:play-services-location:17.0.0'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
     implementation 'com.karumi:dexter:6.2.1'
-    implementation 'com.google.code.gson:gson:2.8.6'
-    // LIBRERÍA PARA LOS PERMISOS DE LA APLICACIÓN
-    implementation 'com.karumi:dexter:6.2.1'
-    // LIBRERÍA PARA REDONDEAR LAS IMÁGENES
-    implementation 'com.squareup.picasso:picasso:2.71828'
+
 }
