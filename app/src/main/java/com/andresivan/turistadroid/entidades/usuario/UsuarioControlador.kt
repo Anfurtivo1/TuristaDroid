@@ -1,12 +1,15 @@
 package com.andresivan.turistadroid.usuario
 
+import android.util.Log
+import android.widget.Toast
 import com.andresivan.turistadroid.entidades.usuario.Usuario
+import io.realm.Realm
 
 import io.realm.Realm.*
 import io.realm.kotlin.where
 
 object UsuarioControlador {
-/*
+
 
     /**
      * Función para insertar un nuevo usuario en la Base de datos de Realm
@@ -44,15 +47,39 @@ object UsuarioControlador {
     /**
      * Función que nos permite buscar un usuario en nuestra base de datos, está función la podemos usar para iniciar
      * sesión o antes de registrarnos para comprobar si ya existe algún usuario con ese valor
-     * @param login String
+     * @param correo String
      * @return usuario Puede que devuelva algún usuario o no por eso en el tipo de valor que devuelve ponemos Usuario?
      */
-    fun selectByLogin(login: String): Usuario? {
+    fun selectByCorreo(correo: String): Usuario? {
         return getDefaultInstance().copyFromRealm(
-            getDefaultInstance().where<Usuario>().equalTo("login", login).findFirst()
+            getDefaultInstance().where<Usuario>().equalTo("correo", correo).findFirst()
         )
     }
 
+    /**
+     * Función que se encarga de comprobar si existe algún usuario en la aplicación con ese correo,
+     * dependiendo del valor boolean que devuelva hará una cosa u otra
+     * @param correo String es el correo del usuario que se quiere registrar, la contraseña y el
+     * nombre de usuario pueden repetirse pero el correo no
+     */
+    fun existeUsuario (correo: String): Boolean{
+        //var usuarioExiste: Boolean = false
+        val realm = Realm.getDefaultInstance()
+        var query = realm.where<Usuario>().equalTo("correo", correo).findAll()
+        return query.count() > 0
+    }
+
+    /**
+     * Función que se encarga de comprobar si existe algún usuario en la aplicación con ese correo y
+     * contraseña, dependiendo del valor boolean que devuelva hará una cosa u otra
+     * @param correo String es el correo electrónico introducido en cuadro de texto de correo
+     * @param contrasena String es la contrasena introducida en el cuadro de texto de contrasena
+     */
+    fun existeUsuarioLogin (correo: String, contrasena:String): Boolean{
+        var realm = Realm.getDefaultInstance()
+        var query = realm.where<Usuario>().equalTo("correo",correo).and().equalTo("contrasena", contrasena).findAll()
+        return query.count() > 0
+    }
 
     /**
      * Función que nos permite buscar un usuario en nuestra base de datos, está función es igual que la anterior, pero
@@ -74,8 +101,7 @@ object UsuarioControlador {
      */
     fun removeAll() {
         getDefaultInstance().executeTransaction {
-            it.deleteAll();
+            it.deleteAll()
         }
     }
-*/
 }

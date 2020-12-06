@@ -15,7 +15,7 @@ import io.realm.RealmConfiguration
 class MyApp : Application() {
     private val nombreBD = "ANDRESIVAN_MIS_LUGARES"
     private val versionBD = 1L
-    var APP_PERMISOS = false
+    var PERMISOS = false
 
     override fun onCreate() {
         super.onCreate()
@@ -58,7 +58,7 @@ class MyApp : Application() {
                 override fun onPermissionsChecked(report: MultiplePermissionsReport) {
                     // ccomprbamos si tenemos los permisos de todos ellos
                     if (report.areAllPermissionsGranted()) {
-                        APP_PERMISOS = true
+                        PERMISOS = true
                         Toast.makeText(applicationContext, "¡Todos los permisos concedidos!", Toast.LENGTH_SHORT)
                             .show()
                     }
