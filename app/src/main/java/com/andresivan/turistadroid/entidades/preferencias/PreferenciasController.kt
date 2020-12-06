@@ -1,10 +1,14 @@
 package com.andresivan.turistadroid.entidades.preferencias
 
 import android.content.Context
+import android.content.Intent
 import android.graphics.BitmapFactory
 import android.util.Log
 import android.widget.Toast
+import androidx.core.content.ContextCompat.startActivity
 import com.andresivan.turistadroid.entidades.usuario.Usuario
+import com.andresivan.turistadroid.login
+import com.andresivan.turistadroid.pantallaprincipal
 import com.andresivan.turistadroid.usuario.UsuarioControlador
 import com.andresivan.turistadroid.usuario.UsuarioControlador.existeUsuario
 import com.andresivan.turistadroid.utils.CifradorContrasena
@@ -43,6 +47,24 @@ object PreferenciasController {
             UsuarioControlador.insert(usuario)
             Toast.makeText(context, "Usuario registrado correctamente", Toast.LENGTH_SHORT).show()
             Log.i("REGISTRO", "USUARIO REGISTRADO $usuario")
+        }
+    }
+
+    fun iniciarSesionUsuario(context: Context, correo: String, contrasena:String):Boolean {
+        val usuario = Usuario(
+            correo = correo,
+            contrasena = CifradorContrasena.convertirHash(contrasena, "SHA-256")!!,
+            nombre = "",
+            fotoUsuario = "",
+            cuentaTwitter = ""
+        )
+
+        if (existeUsuario(correo)){
+            Toast.makeText(context, "Iniciando sesión", Toast.LENGTH_SHORT).show()
+            //AQUÍ iRÁ TODO LO QUE TENGAMOS QUE HACER PARA GUARDAR LA INFORMACIÓN DEL USUARIO PARA EL RESTO DE LA APLICACIÓN
+            return true
+        }else{
+            return false
         }
     }
 

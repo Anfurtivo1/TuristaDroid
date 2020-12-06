@@ -56,15 +56,29 @@ object UsuarioControlador {
         )
     }
 
+    /**
+     * Función que se encarga de comprobar si existe algún usuario en la aplicación con ese correo,
+     * dependiendo del valor boolean que devuelva hará una cosa u otra
+     * @param correo String es el correo del usuario que se quiere registrar, la contraseña y el
+     * nombre de usuario pueden repetirse pero el correo no
+     */
     fun existeUsuario (correo: String): Boolean{
         //var usuarioExiste: Boolean = false
         val realm = Realm.getDefaultInstance()
         var query = realm.where<Usuario>().equalTo("correo", correo).findAll()
-        if (query.count() > 0){
-            return true
-        }else{
-            return false
-        }
+        return query.count() > 0
+    }
+
+    /**
+     * Función que se encarga de comprobar si existe algún usuario en la aplicación con ese correo y
+     * contraseña, dependiendo del valor boolean que devuelva hará una cosa u otra
+     * @param correo String es el correo electrónico introducido en cuadro de texto de correo
+     * @param contrasena String es la contrasena introducida en el cuadro de texto de contrasena
+     */
+    fun existeUsuarioLogin (correo: String, contrasena:String): Boolean{
+        var realm = Realm.getDefaultInstance()
+        var query = realm.where<Usuario>().equalTo("correo",correo).and().equalTo("contrasena", contrasena).findAll()
+        return query.count() > 0
     }
 
     /**

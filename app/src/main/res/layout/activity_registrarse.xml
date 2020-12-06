@@ -51,16 +51,18 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/registrarse_tv_nombreuser" />
+
     <TextView
         android:id="@+id/registrarse_tv_contrasena"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="168dp"
-        android:layout_marginEnd="169dp"
+        android:layout_marginEnd="168dp"
         android:text="@string/login_lbl_Contrasena"
+        android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/registrarse_et_correo"/>
+        app:layout_constraintTop_toBottomOf="@+id/registrarse_et_correo" />
 
     <EditText
         android:id="@+id/registrarse_et_contrasena"
@@ -79,15 +81,19 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/registrarse_tv_contrasena"
         app:layout_constraintVertical_bias="0.0" />
+
     <TextView
         android:id="@+id/resgistrarse_tv_correo"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="186dp"
-        android:layout_marginTop="12dp" android:layout_marginEnd="186dp"
-        android:text="@string/login_lbl_Correo" app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="168dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="168dp"
+        android:text="@string/login_lbl_Correo"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imgUsuario"/>
+        app:layout_constraintTop_toBottomOf="@+id/imgUsuario" />
     <ImageView
         android:id="@+id/imgUsuario"
         android:layout_width="163dp"
@@ -112,15 +118,17 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0" app:layout_constraintStart_toEndOf="@+id/imgUsuario"
         app:layout_constraintTop_toTopOf="parent" app:srcCompat="@drawable/imagencamararegistro"/>
+
     <TextView
         android:id="@+id/registrarse_tv_nombreuser"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="155dp"
-        android:layout_marginEnd="156dp"
+        android:layout_marginStart="140dp"
+        android:layout_marginEnd="140dp"
         android:text="@string/register_lbl_nombreUsu"
+        android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/registrarse_et_contrasena"/>
+        app:layout_constraintTop_toBottomOf="@+id/registrarse_et_contrasena" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

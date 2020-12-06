@@ -12,6 +12,7 @@ import android.os.Bundle
 import android.os.StrictMode
 import android.provider.MediaStore
 import android.util.Log
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.core.net.toFile
 import com.andresivan.turistadroid.entidades.preferencias.PreferenciasController.crearSesion
@@ -203,12 +204,15 @@ class registrarse : AppCompatActivity() {
     }
 
     private fun registrarUsuario() {
+        var img:ImageView
+        img = findViewById(R.id.imgUsuario)
         var correo = registrarse_et_correo.text.toString()
         var contrasena = registrarse_et_contrasena.text.toString()
         var nombreUsuario = registrarse_et_nombreusu.text.toString()
+        IMAGEN_NOMBRE = img.toString()
 
         if (correo == "" || contrasena == "" || nombreUsuario == ""){
-            Toast.makeText(this, "RELLENE TODOS LOS CAMPOS CAMPOS SOLICITADOS PARA REGISTRARSE", Toast.LENGTH_SHORT)
+            Toast.makeText(this, "Rellene todos los campos para registrarse", Toast.LENGTH_SHORT)
         }else{
             crearSesion(this,  correo, contrasena, nombreUsuario, IMAGEN_NOMBRE)
         }
