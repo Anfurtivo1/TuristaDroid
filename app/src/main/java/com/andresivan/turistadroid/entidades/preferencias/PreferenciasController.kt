@@ -28,7 +28,7 @@ object PreferenciasController {
      * un usuario en insertarlo en la Base de Datos
      * @param context Context
      */
-    fun crearSesion(context: Context, correo: String, contrasena:String, nombreUsuario: String, fotoUsuario: String): Usuario {
+    fun crearSesion(context: Context, correo: String, contrasena:String, nombreUsuario: String, fotoUsuario: String) {
         val usuario = Usuario(
             correo = correo,
             contrasena = CifradorContrasena.convertirHash(contrasena, "SHA-256")!!,
@@ -38,11 +38,14 @@ object PreferenciasController {
         )
 
         if (existeUsuario(correo)){
-           Log.i("REGISTRO", "")
+           Toast.makeText(context, "Ya existe un usuario con ese correo", Toast.LENGTH_SHORT)
         }else{
             UsuarioControlador.insert(usuario)
             Log.i("REGISTRO", "USUARIO REGISTRADO $usuario")
         }
+    }
+
+    private fun abrirPreferecias (context: Context, usuario: Usuario): Usuario{
         // Abrimos las preferemcias en modo escritura
         val prefs = context.getSharedPreferences("MisLugares", Context.MODE_PRIVATE)
         val editor = prefs.edit()

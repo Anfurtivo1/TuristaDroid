@@ -74,11 +74,6 @@ object UsuarioControlador {
             return false
         }
     }
-/*
-    fun selectByCorreo(usuario: Usuario): Usuario?{
-        if (usuario.correo.isNullOrEmpty())
-    }
-*/
 
     /**
      * Función que nos permite buscar un usuario en nuestra base de datos, está función es igual que la anterior, pero
