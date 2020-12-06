@@ -14,6 +14,7 @@ import android.provider.MediaStore
 import android.util.Log
 import android.widget.Toast
 import androidx.core.net.toFile
+import com.andresivan.turistadroid.entidades.preferencias.PreferenciasController.crearSesion
 import com.andresivan.turistadroid.utils.Fotos
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.MultiplePermissionsReport
@@ -44,6 +45,7 @@ class registrarse : AppCompatActivity() {
 
         imgCamaraRegistrarse.setOnClickListener { tomarFotoCamara() }
         imgGaleriaRegistrarse.setOnClickListener { elegirFotoGaleria() }
+        btnRegistrarse.setOnClickListener{ registrarUsuario() }
 
     }
 
@@ -195,6 +197,19 @@ class registrarse : AppCompatActivity() {
             MediaStore.Images.Media.EXTERNAL_CONTENT_URI
         )
         startActivityForResult(galleryIntent, GALERIA)
+    }
+
+    private fun registrarUsuario() {
+        var correo = registrarse_et_correo.text.toString()
+        var contrasena = registrarse_et_contrasena.text.toString()
+        var nombreUsuario = registrarse_et_nombreusu.text.toString()
+
+        if (correo == "" || contrasena == "" || nombreUsuario == ""){
+            Toast.makeText(this, "RELLENE TODOS LOS CAMPOS CAMPOS SOLICITADOS PARA REGISTRARSE", Toast.LENGTH_SHORT)
+        }else{
+            crearSesion(this,  correo, contrasena, nombreUsuario, IMAGEN_NOMBRE)
+        }
+
     }
 
 }
