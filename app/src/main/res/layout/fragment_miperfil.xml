@@ -11,13 +11,13 @@
         android:id="@+id/btnEditarPerfil"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="31dp"
+        android:layout_marginBottom="20dp"
         android:backgroundTint="@android:color/holo_blue_dark"
         android:text="@string/editar_perfil"
         android:textColor="@android:color/background_light"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imgTwitterMiPerfil" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <ImageView
         android:id="@+id/imgMiPerfil"
@@ -30,50 +30,103 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/resgistrarse_tv_correo2"
+        android:id="@+id/miperfil_tv_correo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/nombreApellidos"
+        android:layout_marginStart="70dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="56dp"
+        android:text="Correo Electronico"
         android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.768"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/imgMiPerfil"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.079" />
+        app:layout_constraintVertical_bias="0.081" />
 
     <EditText
-        android:id="@+id/txtEmailMiPerfil"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="172dp"
+        android:id="@+id/miperfil_et_nombreusuario"
+        android:layout_width="239dp"
+        android:layout_height="44dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="16dp"
         android:ems="10"
-        android:hint="Email"
+        android:hint="@string/mp_hint_nombreusu"
         android:inputType="textEmailAddress"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintHorizontal_bias="0.003"
+        app:layout_constraintStart_toEndOf="@+id/miperfil_tv_nombreUsuario"
+        app:layout_constraintTop_toBottomOf="@+id/imgMiPerfil" />
 
     <EditText
-        android:id="@+id/txtContrasenaMiPerfil"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="348dp"
+        android:id="@+id/miperfil_et_contrasena"
+        android:layout_width="237dp"
+        android:layout_height="42dp"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="50dp"
         android:ems="10"
-        android:hint="@string/login_lbl_Contrasena"
+        android:hint="@string/mp_hint_contrasena"
         android:inputType="textPassword"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintHorizontal_bias="0.323"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/miperfil_et_nombreusuario" />
+
+    <EditText
+        android:id="@+id/miperfil_et_twitter"
+        android:layout_width="237dp"
+        android:layout_height="42dp"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="50dp"
+        android:ems="10"
+        android:hint="@string/mp_hint_twitter"
+        android:inputType="textPassword"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.324"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/miperfil_et_contrasena" />
 
     <ImageView
         android:id="@+id/imgTwitterMiPerfil"
-        android:layout_width="96dp"
-        android:layout_height="87dp"
-        android:layout_marginTop="28dp"
+        android:layout_width="58dp"
+        android:layout_height="60dp"
+        android:layout_marginEnd="36dp"
+        android:layout_marginBottom="36dp"
         android:src="@drawable/twitter"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <TextView
+        android:id="@+id/miperfil_tv_nombreUsuario"
+        android:layout_width="138dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="20dp"
+        android:text="Nombre usuario"
+        android:textSize="19sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtContrasenaMiPerfil" />
+        app:layout_constraintTop_toBottomOf="@+id/imgMiPerfil" />
+
+    <ImageView
+        android:id="@+id/imgGaleriaRegistrarse"
+        android:layout_width="78dp"
+        android:layout_height="65dp"
+        android:layout_marginStart="14dp"
+        android:layout_marginBottom="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/imagengaleriaregistro" />
+
+    <ImageView
+        android:id="@+id/imgCamaraRegistrarse"
+        android:layout_width="78dp"
+        android:layout_height="65dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginBottom="10dp"
+        app:layout_constraintBottom_toTopOf="@+id/imgGaleriaRegistrarse"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/imagencamararegistro" />
 </androidx.constraintlayout.widget.ConstraintLayout>

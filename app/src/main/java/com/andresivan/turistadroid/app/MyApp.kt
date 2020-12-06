@@ -17,6 +17,13 @@ class MyApp : Application() {
     private val versionBD = 1L
     var PERMISOS = false
 
+    var ID: String = ""
+    var CORREO: String = ""
+    var CONTRASENA: String = ""
+    var NOMBRE_FOTO: String = ""
+    var NOMBRE_USUARIO: String = ""
+    var CUENTA_TWITTER: String = ""
+
     override fun onCreate() {
         super.onCreate()
         Log.i("Config", "INICIALIZANDO LA CONFIGURACIÓN DE MyApp")

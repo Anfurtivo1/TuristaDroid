@@ -70,7 +70,7 @@
         android:layout_marginStart="150dp"
         android:layout_marginTop="30dp"
         android:layout_marginEnd="150dp"
-        android:text="@string/login_lbl_Correo"
+        android:text="@string/login_link_registrarse"
         android:textAlignment="center"
         android:textColor="@android:color/holo_blue_dark"
         android:textStyle="bold|italic"

@@ -11,7 +11,7 @@ open class Usuario(
     @Required var contrasena: String = "",
     @Required var nombre: String = "",
     var fotoUsuario: String = "",
-    var cuentaTwitter: String = ""
+    var cuentaTwitter: String = "https://twitter.com/ICoelloC"
 ) : RealmObject(){
 
     constructor(

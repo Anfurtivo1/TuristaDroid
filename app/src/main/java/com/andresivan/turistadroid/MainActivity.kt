@@ -10,8 +10,13 @@ import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.ImageView
 import android.widget.TextView
+import com.andresivan.turistadroid.app.MyApp
+import kotlinx.android.synthetic.main.fragment_miperfil.*
 
 class MainActivity : AppCompatActivity() {
+
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -38,6 +43,4 @@ class MainActivity : AppCompatActivity() {
         },4000)
 
     }
-
-
 }

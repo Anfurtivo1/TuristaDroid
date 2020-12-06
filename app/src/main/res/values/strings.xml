@@ -9,6 +9,11 @@
 
     <string name="register_lbl_nombreUsu"> Nombre de usuario</string>
 
+    <string name="mp_hint_nombreusu">Nombre usuario</string>
+    <string name="mp_hint_contrasena">Contraseña</string>
+    <string name="mp_hint_twitter">Link Twitter</string>
+
+
     <string name="title_activity_pantallaprincipal">pantallaprincipal</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
