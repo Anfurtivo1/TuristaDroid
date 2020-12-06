@@ -38,9 +38,10 @@ object PreferenciasController {
         )
 
         if (existeUsuario(correo)){
-           Toast.makeText(context, "Ya existe un usuario con ese correo", Toast.LENGTH_SHORT)
+           Toast.makeText(context, "Ya existe un usuario con ese correo", Toast.LENGTH_SHORT).show()
         }else{
             UsuarioControlador.insert(usuario)
+            Toast.makeText(context, "Usuario registrado correctamente", Toast.LENGTH_SHORT).show()
             Log.i("REGISTRO", "USUARIO REGISTRADO $usuario")
         }
     }

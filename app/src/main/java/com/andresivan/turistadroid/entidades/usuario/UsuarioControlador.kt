@@ -51,14 +51,6 @@ object UsuarioControlador {
      * @return usuario Puede que devuelva algún usuario o no por eso en el tipo de valor que devuelve ponemos Usuario?
      */
     fun selectByCorreo(correo: String): Usuario? {
-        /*var query = getDefaultInstance().where<Usuario>().equalTo("correo", correo)
-        if (query.count() > 0){
-            return getDefaultInstance().copyFromRealm(
-                query.findFirst()
-            )
-        }else{
-            Log.i("REGISTRO","No devuelve ningún usuario con ese correo")
-        }*/
         return getDefaultInstance().copyFromRealm(
             getDefaultInstance().where<Usuario>().equalTo("correo", correo).findFirst()
         )

@@ -30,7 +30,7 @@ class registrarse : AppCompatActivity() {
     // Variables para la camara de fotos
     private val GALERIA = 1
     private val CAMARA = 2
-    private lateinit var IMAGEN_NOMBRE: String
+    private var IMAGEN_NOMBRE: String = ""
     private lateinit var IMAGEN_URI: Uri
     private val IMAGEN_DIR = "/TuristaDroid"
     private val IMAGEN_PROPORCION = 600
@@ -82,7 +82,10 @@ class registrarse : AppCompatActivity() {
             .withPermissions(
                 Manifest.permission.CAMERA,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                Manifest.permission.READ_EXTERNAL_STORAGE
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.INTERNET,
+                Manifest.permission.ACCESS_NETWORK_STATE
             )
             // Listener a ejecutar
             .withListener(object : MultiplePermissionsListener {

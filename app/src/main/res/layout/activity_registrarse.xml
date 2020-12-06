@@ -10,38 +10,47 @@
         android:id="@+id/btnRegistrarse"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
         android:layout_marginBottom="5dp"
         android:backgroundTint="@android:color/holo_blue_dark"
         android:text="@string/login_link_registrarse"
         android:textColor="@android:color/background_light"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" app:layout_constraintHorizontal_bias="0.499"
-        app:layout_constraintStart_toStartOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.499"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/registrarse_et_nombreusu" />
+
     <EditText
         android:id="@+id/registrarse_et_correo"
-        android:layout_width="312dp"
+        android:layout_width="match_parent"
         android:layout_height="44dp"
         android:layout_marginStart="50dp"
-        android:layout_marginEnd="49dp"
+        android:layout_marginEnd="50dp"
         android:autofillHints=""
         android:background="#B3B3B3"
         android:backgroundTint="#B3B3B3"
-        android:ems="10" android:inputType="textEmailAddress"
-        app:layout_constraintEnd_toEndOf="parent" app:layout_constraintHorizontal_bias="0.477"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/resgistrarse_tv_correo"/>
-    <EditText
-        android:id="@+id/registrarse_et_nombreusu"
-        android:layout_width="312dp"
-        android:layout_height="44dp"
-        android:layout_marginStart="181dp"
-        android:layout_marginEnd="191dp"
-        android:autofillHints=""
-        android:background="#B3B3B3" android:backgroundTint="#B3B3B3"
         android:ems="10"
         android:inputType="textEmailAddress"
-        app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/registrarse_tv_nombreuser"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.477"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/resgistrarse_tv_correo" />
+
+    <EditText
+        android:id="@+id/registrarse_et_nombreusu"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_marginStart="50dp"
+        android:layout_marginEnd="50dp"
+        android:autofillHints=""
+        android:background="#B3B3B3"
+        android:backgroundTint="#B3B3B3"
+        android:ems="10"
+        android:inputType="textEmailAddress"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/registrarse_tv_nombreuser" />
     <TextView
         android:id="@+id/registrarse_tv_contrasena"
         android:layout_width="wrap_content"
@@ -55,17 +64,21 @@
 
     <EditText
         android:id="@+id/registrarse_et_contrasena"
-        android:layout_width="312dp"
+        android:layout_width="match_parent"
         android:layout_height="44dp"
+        android:layout_marginStart="50dp"
+        android:layout_marginEnd="50dp"
         android:autofillHints=""
         android:background="#B3B3B3"
         android:backgroundTint="#B3B3B3"
         android:ems="10"
         android:inputType="textPassword"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" app:layout_constraintHorizontal_bias="0.485"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.485"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/registrarse_tv_contrasena" app:layout_constraintVertical_bias="0.0"/>
+        app:layout_constraintTop_toBottomOf="@+id/registrarse_tv_contrasena"
+        app:layout_constraintVertical_bias="0.0" />
     <TextView
         android:id="@+id/resgistrarse_tv_correo"
         android:layout_width="wrap_content"
