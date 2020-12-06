@@ -7,61 +7,88 @@
     tools:context=".login">
 
     <EditText
-        android:id="@+id/login_et_correo"
-        android:layout_width="312dp"
+        android:id="@+id/login_et_contrasena"
+        android:layout_width="match_parent"
         android:layout_height="44dp"
-        android:layout_marginStart="196dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="196dp" android:layout_marginBottom="30dp"
-        android:autofillHints="" android:background="#B3B3B3"
-        android:backgroundTint="#B3B3B3" android:ems="10"
-        android:inputType="textEmailAddress" app:layout_constraintBottom_toTopOf="@+id/login_tv_contrasena"
-        app:layout_constraintEnd_toEndOf="parent" app:layout_constraintHorizontal_bias="0.476"
-        app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toBottomOf="@+id/login_tv_correo"/>
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="50dp"
+        android:autofillHints=""
+        android:background="#B3B3B3"
+        android:backgroundTint="#B3B3B3"
+        android:ems="10"
+        android:inputType="textPassword"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/login_tv_contrasena" />
+
+    <TextView
+        android:id="@+id/login_tv_correo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="108dp"
+        android:text="@string/login_lbl_Correo"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/login_tv_contrasena"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:text="@string/login_lbl_Contrasena"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/login_et_correo" />
+
+    <EditText
+        android:id="@+id/login_et_correo"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_marginStart="50dp"
+        android:layout_marginEnd="50dp"
+        android:autofillHints=""
+        android:background="#B3B3B3"
+        android:backgroundTint="#B3B3B3"
+        android:ems="10"
+        android:inputType="textEmailAddress"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/login_tv_correo" />
+
     <TextView
         android:id="@+id/login_link_registrarse"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="186dp"
-        android:layout_marginTop="16dp" android:layout_marginEnd="186dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="186dp"
         android:text="@string/login_lbl_Correo"
         android:textColor="@android:color/holo_blue_dark"
-        android:textStyle="bold|italic" app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.514" app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnIniciarSesion" tools:text="@string/login_link_registrarse"/>
-    <TextView
-        android:id="@+id/login_tv_correo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="100dp"
-        android:layout_marginBottom="10dp"
-        android:text="@string/login_lbl_Correo"
-        app:layout_constraintBottom_toTopOf="@+id/login_et_correo" app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent"/>
-    <TextView
-        android:id="@+id/login_tv_contrasena"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp" android:text="@string/login_lbl_Contrasena"
-        app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/login_et_correo"/>
-    <EditText
-        android:id="@+id/login_et_contrasena"
-        android:layout_width="312dp"
-        android:layout_height="44dp"
-        android:layout_marginStart="196dp" android:layout_marginTop="4dp"
-        android:layout_marginEnd="196dp" android:autofillHints=""
-        android:background="#B3B3B3" android:backgroundTint="#B3B3B3"
-        android:ems="10" android:inputType="textPassword"
-        app:layout_constraintEnd_toEndOf="parent" app:layout_constraintHorizontal_bias="0.476"
-        app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toBottomOf="@+id/login_tv_contrasena"/>
+        android:textStyle="bold|italic"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.516"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnIniciarSesion"
+        tools:text="@string/login_link_registrarse" />
+
     <Button
         android:id="@+id/btnIniciarSesion"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" android:layout_marginTop="40dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="36dp"
         android:backgroundTint="@android:color/holo_blue_dark"
         android:text="@string/login_btn_iniciarSesion"
         android:textColor="@android:color/background_light"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toBottomOf="@+id/login_et_contrasena"/>
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/login_et_contrasena" />
 </androidx.constraintlayout.widget.ConstraintLayout>

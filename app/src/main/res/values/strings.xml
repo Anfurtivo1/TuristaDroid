@@ -6,6 +6,9 @@
     <string name="login_lbl_Contrasena">Contraseña</string>
     <string name="login_btn_iniciarSesion">Iniciar sesión</string>
     <string name="login_link_registrarse">Registrarse</string>
+
+    <string name="register_lbl_nombreUsu"> Nombre de usuario</string>
+
     <string name="title_activity_pantallaprincipal">pantallaprincipal</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>

@@ -12,8 +12,10 @@ import android.os.Bundle
 import android.os.StrictMode
 import android.provider.MediaStore
 import android.util.Log
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.core.net.toFile
+import com.andresivan.turistadroid.entidades.preferencias.PreferenciasController.crearSesion
 import com.andresivan.turistadroid.utils.Fotos
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.MultiplePermissionsReport
@@ -29,7 +31,7 @@ class registrarse : AppCompatActivity() {
     // Variables para la camara de fotos
     private val GALERIA = 1
     private val CAMARA = 2
-    private lateinit var IMAGEN_NOMBRE: String
+    private var IMAGEN_NOMBRE: String = ""
     private lateinit var IMAGEN_URI: Uri
     private val IMAGEN_DIR = "/TuristaDroid"
     private val IMAGEN_PROPORCION = 600
@@ -44,6 +46,7 @@ class registrarse : AppCompatActivity() {
 
         imgCamaraRegistrarse.setOnClickListener { tomarFotoCamara() }
         imgGaleriaRegistrarse.setOnClickListener { elegirFotoGaleria() }
+        btnRegistrarse.setOnClickListener{ registrarUsuario() }
 
     }
 
@@ -80,7 +83,10 @@ class registrarse : AppCompatActivity() {
             .withPermissions(
                 Manifest.permission.CAMERA,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                Manifest.permission.READ_EXTERNAL_STORAGE
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.INTERNET,
+                Manifest.permission.ACCESS_NETWORK_STATE
             )
             // Listener a ejecutar
             .withListener(object : MultiplePermissionsListener {
@@ -195,6 +201,22 @@ class registrarse : AppCompatActivity() {
             MediaStore.Images.Media.EXTERNAL_CONTENT_URI
         )
         startActivityForResult(galleryIntent, GALERIA)
+    }
+
+    private fun registrarUsuario() {
+        var img:ImageView
+        img = findViewById(R.id.imgUsuario)
+        var correo = registrarse_et_correo.text.toString()
+        var contrasena = registrarse_et_contrasena.text.toString()
+        var nombreUsuario = registrarse_et_nombreusu.text.toString()
+        IMAGEN_NOMBRE = img.toString()
+
+        if (correo == "" || contrasena == "" || nombreUsuario == ""){
+            Toast.makeText(this, "Rellene todos los campos para registrarse", Toast.LENGTH_SHORT)
+        }else{
+            crearSesion(this,  correo, contrasena, nombreUsuario, IMAGEN_NOMBRE)
+        }
+
     }
 
 }
