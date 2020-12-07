@@ -6,7 +6,8 @@ import io.realm.kotlin.where
 object FotoController {
     /**
      * Función que nos permite obtener todas las fotos de un lugar
-     * @return MutableList<Foto>? nos devuelve todas las fotos que haya en la base de datos, la interrogación nos indica
+     * @return MutableList<Foto>? nos devuelve todas las fotos que haya en la base de datos, la
+     * interrogación nos indica que puede que no tengamos registros en la BBDD
      */
     fun selectAll(): MutableList<Foto>? {
         return Realm.getDefaultInstance().copyFromRealm(

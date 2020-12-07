@@ -4,6 +4,8 @@ import android.Manifest
 import android.app.Application
 import android.util.Log
 import android.widget.Toast
+import com.andresivan.turistadroid.entidades.preferencias.PreferenciasController
+import com.andresivan.turistadroid.entidades.usuario.Usuario
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.MultiplePermissionsReport
 import com.karumi.dexter.PermissionToken
@@ -13,16 +15,12 @@ import io.realm.Realm
 import io.realm.RealmConfiguration
 
 class MyApp : Application() {
+    lateinit var SESION_USUARIO:Usuario
+        private set
     private val nombreBD = "ANDRESIVAN_MIS_LUGARES"
     private val versionBD = 1L
     var PERMISOS = false
-
-    var ID: String = ""
-    var CORREO: String = ""
-    var CONTRASENA: String = ""
-    var NOMBRE_FOTO: String = ""
-    var NOMBRE_USUARIO: String = ""
-    var CUENTA_TWITTER: String = ""
+        private set
 
     override fun onCreate() {
         super.onCreate()
@@ -31,6 +29,7 @@ class MyApp : Application() {
         initPermisos()
         Log.i("Config", "FINALIZANDO LA CONFIGURACIÓN DE MyApp")
     }
+
 
     private fun initRealmBD() {
         Log.i("Config", "Init Realm")

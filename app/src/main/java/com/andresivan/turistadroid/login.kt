@@ -2,27 +2,25 @@ package com.andresivan.turistadroid
 
 import android.app.AlertDialog
 import android.content.Intent
+import android.graphics.BitmapFactory
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.TextView
 import android.widget.Toast
 import com.andresivan.turistadroid.app.MyApp
+import com.andresivan.turistadroid.entidades.preferencias.PreferenciasController
 import com.andresivan.turistadroid.entidades.preferencias.PreferenciasController.iniciarSesionUsuario
+import com.andresivan.turistadroid.entidades.preferencias.PreferenciasController.leerSesion
 import com.andresivan.turistadroid.entidades.usuario.Usuario
 import com.andresivan.turistadroid.usuario.UsuarioControlador.selectByCorreo
+import com.andresivan.turistadroid.utils.CifradorContrasena
 import kotlinx.android.synthetic.main.activity_login.*
 
 class login : AppCompatActivity() {
 
-    var myApp = MyApp()
+    //private lateinit var USER: Usuario
 
-    var ID = myApp.ID
-    var CORREO = myApp.CORREO
-    var CONTRASENA = myApp.CONTRASENA
-    var NOMBRE_FOTO = myApp.NOMBRE_FOTO
-    var NOMBRE_USUARIO = myApp.NOMBRE_USUARIO
-    var CUENTA_TWITTER = myApp.CUENTA_TWITTER
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,6 +33,12 @@ class login : AppCompatActivity() {
 
     }
 
+
+/*
+    private fun leerSesion() {
+        USER = (this.application as MyApp).SESION_USUARIO
+    }
+*/
     private fun initPermisos() {
         if (!(this.application as MyApp).PERMISOS)
             (this.application as MyApp).initPermisos()
@@ -46,8 +50,9 @@ class login : AppCompatActivity() {
     }
 
     private fun iniciarSesion() {
-        CORREO = login_et_correo.text.toString()
-        CONTRASENA = login_et_contrasena.text.toString()
+
+        var CORREO = login_et_correo.text.toString()
+        var CONTRASENA = login_et_contrasena.text.toString()
 
         if (CORREO == "" || CONTRASENA == "") {
             Toast.makeText(
@@ -57,11 +62,7 @@ class login : AppCompatActivity() {
             )
         } else {
             if (iniciarSesionUsuario(this, CORREO, CONTRASENA)) {
-                var usuario: Usuario? = selectByCorreo(CORREO)
-                ID = usuario!!.id
-                NOMBRE_USUARIO = usuario.nombre
-                NOMBRE_FOTO = usuario.fotoUsuario
-                CUENTA_TWITTER = usuario.cuentaTwitter
+                var usuario = selectByCorreo(CORREO)
                 abrirPantallaPrincipal()
             } else {
                 Toast.makeText(this, "Correo o Contraseña incorrectos", Toast.LENGTH_SHORT).show()

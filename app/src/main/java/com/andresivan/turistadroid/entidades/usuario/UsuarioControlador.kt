@@ -87,7 +87,7 @@ object UsuarioControlador {
      * @param id String
      * @return usuario Puede que devuelva algún usuario o no por eso en el tipo de valor que devuelve ponemos Usuario?
      */
-    fun selectById(id: Long): Usuario? {
+    fun selectById(id: String): Usuario? {
         return getDefaultInstance().copyFromRealm(
             getDefaultInstance().where<Usuario>().equalTo("id", id).findFirst()
         )
