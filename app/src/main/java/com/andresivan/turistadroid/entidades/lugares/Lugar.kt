@@ -24,11 +24,10 @@ open class Lugar(
     @Required
     var longitud: String = "",
     @Required
-    var imgID: String,
+    var imgID: String = "",
     var valoracion: Int = 0,
     var favorito: Boolean = false,
-    @Required var usuarioID: String = "",
-    var fotos: RealmList<Foto> = RealmList()
+    @Required var usuarioID: String = ""
 ) : RealmObject() {
 
     constructor(
