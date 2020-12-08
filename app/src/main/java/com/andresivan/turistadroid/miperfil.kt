@@ -29,18 +29,7 @@ private const val ARG_PARAM2 = "param2"
  * create an instance of this fragment.
  */
 class miperfil : Fragment() {
-
-    var CORREO = ""
-    var NOMBRE_USUARIO = ""
-    var NOMBRE_FOTO = ""
-
-    var USUARIO = Usuario(
-        correo = "",
-        contrasena = "",
-        nombre = "",
-        fotoUsuario = "",
-        cuentaTwitter = ""
-    )
+    lateinit var USUARIO: Usuario
 
     // TODO: Rename and change types of parameters
     private var param1: String? = null
@@ -121,6 +110,7 @@ class miperfil : Fragment() {
 
         UsuarioControlador.updateUsuario(USUARIO)
         Log.i("MI PERFIL - MOD USU", "USUARIO MODIFICADO")
+        //Toast.makeText(this, "USUARIO MODIFICADO", Toast.LENGTH_SHORT)
     }
 
     private fun abrirGaleria() {
