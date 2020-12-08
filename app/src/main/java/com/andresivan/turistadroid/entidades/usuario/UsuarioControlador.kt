@@ -95,6 +95,18 @@ object UsuarioControlador {
 
 
     /**
+     * Función que nos permite actualizar un registro de la BBDD de Usuarios
+     * @param usuario Usuario que queremos modificar
+     */
+    fun updateUsuario(usuario: Usuario){
+        var realm = Realm.getDefaultInstance()
+
+        realm.executeTransaction{ realm ->
+            realm.copyToRealmOrUpdate(usuario)
+        }
+    }
+
+    /**
      * Función que nos permite borrar todos los usuarios de la base de datos
      * Esta función no recibe parámetro como las anteriores, debido a que no nos hace falta ya que queremos borrar
      * a todos los usuarios que existan

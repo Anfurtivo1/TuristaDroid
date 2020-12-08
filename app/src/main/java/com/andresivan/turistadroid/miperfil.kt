@@ -1,6 +1,7 @@
 package com.andresivan.turistadroid
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -8,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.andresivan.turistadroid.app.MyApp
 import com.andresivan.turistadroid.entidades.sesion.SesionController
@@ -32,6 +34,14 @@ class miperfil : Fragment() {
     var NOMBRE_USUARIO = ""
     var NOMBRE_FOTO = ""
 
+    var USUARIO = Usuario(
+        correo = "",
+        contrasena = "",
+        nombre = "",
+        fotoUsuario = "",
+        cuentaTwitter = ""
+    )
+
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
@@ -55,16 +65,14 @@ class miperfil : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        InitUI()
+        initUI()
     }
 
-    private fun InitUI() {
+    private fun initUI() {
         cargarMiPerfilUsuario()
-        inicializarEventosBotones()
     }
 
-    private fun inicializarEventosBotones() {
-    }
+
 
     private fun cargarMiPerfilUsuario() {
         var CorreoElectronico: TextView = miperfil_tv_correo
@@ -72,25 +80,61 @@ class miperfil : Fragment() {
 
         for (sesion in SesionController.selectAll()!!){
             Log.i("Sesion",sesion.toString())
-            var usuario: Usuario
 
-            usuario = UsuarioControlador.selectById(sesion.idUsuarioActivo)!!
+            USUARIO = UsuarioControlador.selectById(sesion.idUsuarioActivo)!!
 
-            Log.i("Mi Perfil", usuario.toString())
+            Log.i("Mi Perfil", USUARIO.toString())
 
-            CORREO = usuario.correo
-            NOMBRE_USUARIO = usuario.nombre
-            NOMBRE_FOTO = usuario.fotoUsuario
-
-            Log.i("Mi perfil", "NOMBRE USUARIO: "+NOMBRE_USUARIO)
-            Log.i("Mi perfil", "CORREO ELECTRONICO USUARIO: "+ CORREO)
-            Log.i("Mi perfil", "NOMBRE_FOTO: "+ NOMBRE_FOTO)
+            Log.i("Mi perfil", "NOMBRE USUARIO: "+USUARIO.nombre)
+            Log.i("Mi perfil", "CORREO ELECTRONICO USUARIO: "+ USUARIO.correo)
+            Log.i("Mi perfil", "NOMBRE_FOTO: "+ USUARIO.fotoUsuario)
 
 
-            CorreoElectronico.setText(CORREO)
-            NombreUsuario.setText(NOMBRE_USUARIO)
+            CorreoElectronico.setText(USUARIO.correo)
+            NombreUsuario.setText(USUARIO.nombre)
+
+            inicializarEventosBotones()
 
         }
+    }
+
+    private fun inicializarEventosBotones() {
+
+        btnEditarPerfil.setOnClickListener{editarPerfil()}
+
+        imgTwitterMiPerfil.setOnClickListener{abrirPaginaWeb(USUARIO.cuentaTwitter)}
+
+        imgCamaraRegistrarse.setOnClickListener{abrirCamara()}
+        imgGaleriaRegistrarse.setOnClickListener{abrirGaleria()}
+    }
+
+    private fun editarPerfil() {
+        if (miperfil_et_nombreusuario.text.toString() != ""){
+            USUARIO.nombre = miperfil_et_nombreusuario.text.toString()
+        }
+        if (miperfil_et_contrasena.text.toString() != ""){
+            USUARIO.contrasena = CifradorContrasena.convertirHash(miperfil_et_nombreusuario.text.toString(), "SHA-256")!!
+        }
+        if (miperfil_et_twitter.text.toString() != ""){
+            USUARIO.cuentaTwitter = miperfil_et_nombreusuario.text.toString()
+        }
+
+        UsuarioControlador.updateUsuario(USUARIO)
+        Log.i("MI PERFIL - MOD USU", "USUARIO MODIFICADO")
+    }
+
+    private fun abrirGaleria() {
+        TODO("Not yet implemented")
+    }
+
+    private fun abrirCamara() {
+        TODO("Not yet implemented")
+    }
+
+    private fun abrirPaginaWeb(paginaWeb:String) {
+        var uri: Uri = Uri.parse(paginaWeb)
+        var i:Intent = Intent(Intent.ACTION_VIEW, uri)
+        startActivity(i)
     }
 
 
