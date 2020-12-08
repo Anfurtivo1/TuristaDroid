@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory
 import android.util.Log
 import android.widget.Toast
 import androidx.core.content.ContextCompat.startActivity
+import com.andresivan.turistadroid.entidades.sesion.SesionController
 import com.andresivan.turistadroid.entidades.usuario.Usuario
 import com.andresivan.turistadroid.login
 import com.andresivan.turistadroid.pantallaprincipal
@@ -58,10 +59,11 @@ object PreferenciasController {
             fotoUsuario = "",
             cuentaTwitter = ""
         )
-
+        //SesionController.removeAll()
         if (existeUsuario(correo)){
             Toast.makeText(context, "Iniciando sesión", Toast.LENGTH_SHORT).show()
             //AQUÍ iRÁ TODO LO QUE TENGAMOS QUE HACER PARA GUARDAR LA INFORMACIÓN DEL USUARIO PARA EL RESTO DE LA APLICACIÓN
+            /*
             val prefs = context.getSharedPreferences("TuristaDroid", Context.MODE_PRIVATE)
             val editor = prefs.edit()
             editor.putString("USER_ID", usuario.id)
@@ -69,6 +71,7 @@ object PreferenciasController {
             editor.putString("USER", Gson().toJson(usuario))
             editor.apply()
             //return usuario
+             */
             return true
         }else{
             return false

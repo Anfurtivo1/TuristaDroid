@@ -12,6 +12,8 @@ import com.andresivan.turistadroid.app.MyApp
 import com.andresivan.turistadroid.entidades.preferencias.PreferenciasController
 import com.andresivan.turistadroid.entidades.preferencias.PreferenciasController.iniciarSesionUsuario
 import com.andresivan.turistadroid.entidades.preferencias.PreferenciasController.leerSesion
+import com.andresivan.turistadroid.entidades.sesion.Sesion
+import com.andresivan.turistadroid.entidades.sesion.SesionController
 import com.andresivan.turistadroid.entidades.usuario.Usuario
 import com.andresivan.turistadroid.usuario.UsuarioControlador.selectByCorreo
 import com.andresivan.turistadroid.utils.CifradorContrasena
@@ -63,6 +65,16 @@ class login : AppCompatActivity() {
         } else {
             if (iniciarSesionUsuario(this, CORREO, CONTRASENA)) {
                 var usuario = selectByCorreo(CORREO)
+                if (usuario != null) {
+                    Log.i("INICIO SESION", "Id usuario: "+usuario.id)
+                    var sesion = Sesion(
+                    idUsuarioActivo = usuario.id
+                    )
+                    SesionController.deleteSesion(sesion.idUsuarioActivo)
+                    SesionController.insert(sesion)
+                    Log.i("CREACION SESION", sesion.toString())
+                    Toast.makeText(this, "ID del usuario: "+usuario.id, Toast.LENGTH_SHORT)
+                }
                 abrirPantallaPrincipal()
             } else {
                 Toast.makeText(this, "Correo o Contraseña incorrectos", Toast.LENGTH_SHORT).show()

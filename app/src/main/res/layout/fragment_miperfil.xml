@@ -11,13 +11,17 @@
         android:id="@+id/btnEditarPerfil"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="286dp"
         android:layout_marginBottom="20dp"
         android:backgroundTint="@android:color/holo_blue_dark"
         android:text="@string/editar_perfil"
         android:textColor="@android:color/background_light"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintHorizontal_bias="0.499"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/miperfil_et_twitter"
+        app:layout_constraintVertical_bias="1.0" />
 
     <ImageView
         android:id="@+id/imgMiPerfil"
@@ -33,44 +37,42 @@
         android:id="@+id/miperfil_tv_correo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="70dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="5dp"
         android:layout_marginEnd="56dp"
         android:text="Correo Electronico"
         android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.573"
         app:layout_constraintStart_toEndOf="@+id/imgMiPerfil"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.081" />
+        app:layout_constraintVertical_bias="0.045" />
 
-    <EditText
-        android:id="@+id/miperfil_et_nombreusuario"
-        android:layout_width="239dp"
-        android:layout_height="44dp"
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginEnd="16dp"
-        android:ems="10"
-        android:hint="@string/mp_hint_nombreusu"
-        android:inputType="textEmailAddress"
+    <TextView
+        android:id="@+id/miperfil_tv_nombreUsuario"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="62dp"
+        android:layout_marginEnd="81dp"
+        android:text="Nombre usuario"
+        android:textSize="19sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.003"
-        app:layout_constraintStart_toEndOf="@+id/miperfil_tv_nombreUsuario"
-        app:layout_constraintTop_toBottomOf="@+id/imgMiPerfil" />
+        app:layout_constraintStart_toEndOf="@+id/imgMiPerfil"
+        app:layout_constraintTop_toBottomOf="@+id/miperfil_tv_correo" />
 
     <EditText
         android:id="@+id/miperfil_et_contrasena"
         android:layout_width="237dp"
         android:layout_height="42dp"
         android:layout_marginStart="50dp"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="4dp"
         android:layout_marginEnd="50dp"
         android:ems="10"
         android:hint="@string/mp_hint_contrasena"
         android:inputType="textPassword"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.323"
+        app:layout_constraintHorizontal_bias="0.517"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/miperfil_et_nombreusuario" />
 
@@ -85,9 +87,24 @@
         android:hint="@string/mp_hint_twitter"
         android:inputType="textPassword"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.324"
+        app:layout_constraintHorizontal_bias="0.517"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/miperfil_et_contrasena" />
+
+    <EditText
+        android:id="@+id/miperfil_et_nombreusuario"
+        android:layout_width="239dp"
+        android:layout_height="44dp"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="50dp"
+        android:ems="10"
+        android:hint="@string/mp_hint_nombreusu"
+        android:inputType="textEmailAddress"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.514"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imgMiPerfil" />
 
     <ImageView
         android:id="@+id/imgTwitterMiPerfil"
@@ -98,17 +115,6 @@
         android:src="@drawable/twitter"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
-
-    <TextView
-        android:id="@+id/miperfil_tv_nombreUsuario"
-        android:layout_width="138dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="20dp"
-        android:text="Nombre usuario"
-        android:textSize="19sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imgMiPerfil" />
 
     <ImageView
         android:id="@+id/imgGaleriaRegistrarse"
