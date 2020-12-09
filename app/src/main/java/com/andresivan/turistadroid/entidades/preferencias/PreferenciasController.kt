@@ -42,7 +42,7 @@ object PreferenciasController {
             cuentaTwitter = ""
         )
 
-        if (existeUsuario(correo)){
+        if (existeUsuario(correo, contrasena)){
            Toast.makeText(context, "Ya existe un usuario con ese correo", Toast.LENGTH_SHORT).show()
         }else{
             UsuarioControlador.insert(usuario)
@@ -60,18 +60,8 @@ object PreferenciasController {
             cuentaTwitter = ""
         )
         //SesionController.removeAll()
-        if (existeUsuario(correo)){
+        if (existeUsuario(correo, contrasena)){
             Toast.makeText(context, "Iniciando sesión", Toast.LENGTH_SHORT).show()
-            //AQUÍ iRÁ TODO LO QUE TENGAMOS QUE HACER PARA GUARDAR LA INFORMACIÓN DEL USUARIO PARA EL RESTO DE LA APLICACIÓN
-            /*
-            val prefs = context.getSharedPreferences("TuristaDroid", Context.MODE_PRIVATE)
-            val editor = prefs.edit()
-            editor.putString("USER_ID", usuario.id)
-            // Escribimos el usuario como JSON
-            editor.putString("USER", Gson().toJson(usuario))
-            editor.apply()
-            //return usuario
-             */
             return true
         }else{
             return false

@@ -79,8 +79,8 @@ class miperfil : Fragment() {
             Log.i("Mi perfil", "NOMBRE_FOTO: "+ USUARIO.fotoUsuario)
 
 
-            CorreoElectronico.setText(USUARIO.correo)
-            NombreUsuario.setText(USUARIO.nombre)
+            CorreoElectronico.text = USUARIO.correo
+            NombreUsuario.text = USUARIO.nombre
 
             inicializarEventosBotones()
 
@@ -98,19 +98,22 @@ class miperfil : Fragment() {
     }
 
     private fun editarPerfil() {
-        if (miperfil_et_nombreusuario.text.toString() != ""){
-            USUARIO.nombre = miperfil_et_nombreusuario.text.toString()
-        }
-        if (miperfil_et_contrasena.text.toString() != ""){
-            USUARIO.contrasena = CifradorContrasena.convertirHash(miperfil_et_nombreusuario.text.toString(), "SHA-256")!!
-        }
-        if (miperfil_et_twitter.text.toString() != ""){
-            USUARIO.cuentaTwitter = miperfil_et_nombreusuario.text.toString()
+        for (sesion in SesionController.selectAll()!!){
+            if (miperfil_et_nombreusuario.text.toString() != ""){
+                USUARIO.nombre = miperfil_et_nombreusuario.text.toString()
+            }
+            if (miperfil_et_contrasena.text.toString() != ""){
+                USUARIO.contrasena = CifradorContrasena.convertirHash(miperfil_et_contrasena.text.toString(), "SHA-256")!!
+                Log.i("Mod_perfil -->", "NUEVA COINTRASEÑA --> "+USUARIO.contrasena)
+            }
+            if (miperfil_et_twitter.text.toString() != ""){
+                USUARIO.cuentaTwitter = miperfil_et_twitter.text.toString()
+            }
+            UsuarioControlador.updateUsuario(USUARIO, sesion.idUsuarioActivo)
+            Log.i("MI PERFIL - MOD USU", "USUARIO MODIFICADO")
+            //Toast.makeText(this, "USUARIO MODIFICADO", Toast.LENGTH_SHORT)
         }
 
-        UsuarioControlador.updateUsuario(USUARIO)
-        Log.i("MI PERFIL - MOD USU", "USUARIO MODIFICADO")
-        //Toast.makeText(this, "USUARIO MODIFICADO", Toast.LENGTH_SHORT)
     }
 
     private fun abrirGaleria() {

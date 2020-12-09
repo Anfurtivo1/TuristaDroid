@@ -3,6 +3,7 @@ package com.andresivan.turistadroid.usuario
 import android.util.Log
 import android.widget.Toast
 import com.andresivan.turistadroid.entidades.usuario.Usuario
+import com.andresivan.turistadroid.utils.CifradorContrasena
 import io.realm.Realm
 
 import io.realm.Realm.*
@@ -62,10 +63,12 @@ object UsuarioControlador {
      * @param correo String es el correo del usuario que se quiere registrar, la contraseña y el
      * nombre de usuario pueden repetirse pero el correo no
      */
-    fun existeUsuario (correo: String): Boolean{
+    fun existeUsuario(correo: String, contrasena: String): Boolean {
         //var usuarioExiste: Boolean = false
         val realm = Realm.getDefaultInstance()
-        var query = realm.where<Usuario>().equalTo("correo", correo).findAll()
+        var query = realm.where<Usuario>().equalTo("correo", correo)
+            .equalTo("contrasena", CifradorContrasena.convertirHash(contrasena, "SHA-256"))
+            .findAll()
         return query.count() > 0
     }
 
@@ -75,9 +78,11 @@ object UsuarioControlador {
      * @param correo String es el correo electrónico introducido en cuadro de texto de correo
      * @param contrasena String es la contrasena introducida en el cuadro de texto de contrasena
      */
-    fun existeUsuarioLogin (correo: String, contrasena:String): Boolean{
+    fun existeUsuarioLogin(correo: String, contrasena: String): Boolean {
         var realm = Realm.getDefaultInstance()
-        var query = realm.where<Usuario>().equalTo("correo",correo).and().equalTo("contrasena", contrasena).findAll()
+        var query =
+            realm.where<Usuario>().equalTo("correo", correo).and().equalTo("contrasena", contrasena)
+                .findAll()
         return query.count() > 0
     }
 
@@ -98,12 +103,15 @@ object UsuarioControlador {
      * Función que nos permite actualizar un registro de la BBDD de Usuarios
      * @param usuario Usuario que queremos modificar
      */
-    fun updateUsuario(usuario: Usuario){
+    fun updateUsuario(usuario: Usuario, id: String) {
         var realm = Realm.getDefaultInstance()
 
-        realm.executeTransaction{ realm ->
-            realm.copyToRealmOrUpdate(usuario)
+        realm.where<Usuario>().equalTo("id",id)
+
+        realm.executeTransaction { realm ->
+            realm.insertOrUpdate(usuario)
         }
+        realm.commitTransaction()
     }
 
     /**

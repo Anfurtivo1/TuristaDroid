@@ -31,6 +31,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_miperfil.*
+import kotlinx.android.synthetic.main.nav_header_main.*
 
 
 class pantallaprincipal : AppCompatActivity() {
@@ -42,7 +43,7 @@ class pantallaprincipal : AppCompatActivity() {
     var isFlash = false
     var estado = true
     var permisos:Boolean = false
-
+    lateinit var USUARIO:Usuario
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -69,8 +70,6 @@ class pantallaprincipal : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
-
-
     }
 
 
@@ -78,7 +77,27 @@ class pantallaprincipal : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.pantallaprincipal, menu)
+        initUI()
         return true
+    }
+
+    private fun initUI() {
+        for (sesion in SesionController.selectAll()!!){
+            Log.i("Sesion",sesion.toString())
+
+            USUARIO = UsuarioControlador.selectById(sesion.idUsuarioActivo)!!
+
+            Log.i("Mi Perfil", USUARIO.toString())
+
+            Log.i("Mi perfil", "NOMBRE USUARIO: "+USUARIO.nombre)
+            Log.i("Mi perfil", "CORREO ELECTRONICO USUARIO: "+ USUARIO.correo)
+            Log.i("Mi perfil", "NOMBRE_FOTO: "+ USUARIO.fotoUsuario)
+
+
+            nav_header_nombre_usuario.text = USUARIO.nombre
+            nav_header_correo.text = USUARIO.correo
+
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -116,8 +135,5 @@ class pantallaprincipal : AppCompatActivity() {
             estado=true
         }
     }
-
-
-
 
 }
