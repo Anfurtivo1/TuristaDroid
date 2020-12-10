@@ -13,7 +13,7 @@
 
     <fragment
         android:id="@+id/ndMisSitios"
-        android:name="com.andresivan.turistadroid.ui.missitios.missitios"
+        android:name="com.andresivan.turistadroid.ui.missitios.MisSitios"
         android:label="fragment_missitios"
         tools:layout="@layout/fragment_missitios" />
     <fragment

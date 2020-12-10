@@ -116,7 +116,7 @@
             android:layout_height="match_parent"
             android:layout_width="match_parent"
             android:layout_marginBottom="5dp"
-            android:id="@+id/detalleLugarMapa"
+            android:id="@+id/detalleMapa"
             tools:context="com.andresivan.turistadroid.ui.cercademi"
             android:name="com.google.android.gms.maps.SupportMapFragment" android:layout_marginTop="5dp"
             android:layout_marginStart="0dp" android:layout_marginEnd="0dp"

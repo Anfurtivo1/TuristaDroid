@@ -48,4 +48,7 @@
         <item>Valoracion desc</item>
     </string-array>
 
+    <string name="ok">Aceptar</string>
+    <string name="no">Cancelar</string>
+
 </resources>

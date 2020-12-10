@@ -5,7 +5,7 @@
     android:id="@+id/misSitios"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.missitios.missitios">
+    tools:context=".ui.missitios.MisSitios">
 
     <Spinner
         android:id="@+id/misSitiosSpinnerFiltro"

@@ -56,4 +56,10 @@ object FotoController {
             Realm.getDefaultInstance().where<Foto>().findAll().deleteAllFromRealm();
         }
     }
+
+    fun update(foto: Foto) {
+        Realm.getDefaultInstance().executeTransaction {
+            it.copyToRealmOrUpdate(foto)
+        }
+    }
 }
