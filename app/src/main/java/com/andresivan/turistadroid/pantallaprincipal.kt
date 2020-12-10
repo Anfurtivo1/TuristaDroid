@@ -30,6 +30,7 @@ import com.andresivan.turistadroid.usuario.UsuarioControlador
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
+import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_miperfil.*
 import kotlinx.android.synthetic.main.nav_header_main.*
 
@@ -53,7 +54,7 @@ class pantallaprincipal : AppCompatActivity() {
 
         val fab: FloatingActionButton = findViewById(R.id.fab)
         fab.setOnClickListener { view ->
-            Snackbar.make(view, "Boton para abrir la linterna aún no incorporado", Snackbar.LENGTH_LONG)
+            Snackbar.make(view, "", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show()
         }
 
@@ -98,6 +99,7 @@ class pantallaprincipal : AppCompatActivity() {
 
             nav_header_nombre_usuario.text = USUARIO.nombre
             nav_header_correo.text = USUARIO.correo
+            Picasso.get().load("https://ichef.bbci.co.uk/news/800/cpsprodpb/4172/production/_108545761_mediaitem108545760.jpg").resize(250, 250).centerCrop().into(imageView)
 
         }
     }
