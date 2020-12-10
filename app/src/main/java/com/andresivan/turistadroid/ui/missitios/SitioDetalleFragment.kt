@@ -195,11 +195,11 @@ class SitioDetalleFragment(
         detalleSitioFabFuncion.setImageResource(R.drawable.ic_update)
         detalleSitioFabFuncion.backgroundTintList =
             AppCompatResources.getColorStateList(context!!, R.color.updateColor)
-        detalleLugarBotonFecha.setOnClickListener { escogerFecha() }
-        detalleLugarFabCamara.visibility = View.VISIBLE
-        detalleLugarFabCamara.setOnClickListener { initDialogFoto() }
-        detalleLugarSpinnerTipo.isEnabled = true
-        detalleLugarInputNombre.isEnabled = true
+        detalleBtnFecha.setOnClickListener { escogerFecha() }
+        detalleCamaraSitio.visibility = View.VISIBLE
+        detalleCamaraSitio.setOnClickListener { initDialogFoto() }
+        detalleSpnTipo.isEnabled = true
+        detalleSitioInput.isEnabled = true
         // Acción
         detalleSitioFabFuncion.setOnClickListener { actualizarLugar() }
 
@@ -351,6 +351,19 @@ class SitioDetalleFragment(
             Log.i("Modificar", "Borrada la imagen temporal asociada")
         } catch (ex: Exception) {
         }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun seleccionarFecha(){
+        val date = LocalDateTime.now()
+
+        val datePickerDialog = DatePickerDialog(
+            requireContext(),
+            { _, mYear, mMonth, mDay ->
+                detalleBtnFecha.text = (mDay.toString() + "/" + (mMonth + 1) + "/" + mYear)
+            }, date.year, date.monthValue - 1, date.dayOfMonth
+        )
+        datePickerDialog.show()
     }
 
     /**
