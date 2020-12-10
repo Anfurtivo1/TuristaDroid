@@ -4,6 +4,8 @@ import android.Manifest
 import android.app.Application
 import android.util.Log
 import android.widget.Toast
+import com.andresivan.turistadroid.entidades.preferencias.PreferenciasController
+import com.andresivan.turistadroid.entidades.usuario.Usuario
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.MultiplePermissionsReport
 import com.karumi.dexter.PermissionToken
@@ -13,9 +15,12 @@ import io.realm.Realm
 import io.realm.RealmConfiguration
 
 class MyApp : Application() {
+    lateinit var SESION_USUARIO:Usuario
+        private set
     private val nombreBD = "ANDRESIVAN_MIS_LUGARES"
     private val versionBD = 1L
-    var APP_PERMISOS = false
+    var PERMISOS = false
+        private set
 
     override fun onCreate() {
         super.onCreate()
@@ -24,6 +29,7 @@ class MyApp : Application() {
         initPermisos()
         Log.i("Config", "FINALIZANDO LA CONFIGURACIÓN DE MyApp")
     }
+
 
     private fun initRealmBD() {
         Log.i("Config", "Init Realm")
@@ -58,7 +64,7 @@ class MyApp : Application() {
                 override fun onPermissionsChecked(report: MultiplePermissionsReport) {
                     // ccomprbamos si tenemos los permisos de todos ellos
                     if (report.areAllPermissionsGranted()) {
-                        APP_PERMISOS = true
+                        PERMISOS = true
                         Toast.makeText(applicationContext, "¡Todos los permisos concedidos!", Toast.LENGTH_SHORT)
                             .show()
                     }

@@ -4,45 +4,72 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".registrarse">
+    tools:context=".actividades.registrarse">
 
     <Button
         android:id="@+id/btnRegistrarse"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="48dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
         android:backgroundTint="@android:color/holo_blue_dark"
         android:text="@string/login_link_registrarse"
         android:textColor="@android:color/background_light"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.499"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/registrarse_et_correo" />
+        app:layout_constraintTop_toBottomOf="@+id/registrarse_et_nombreusu" />
 
-    <TextView
-        android:id="@+id/resgistrarse_tv_correo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="28dp"
-        android:text="@string/login_lbl_Correo"
-        app:layout_constraintBottom_toTopOf="@+id/registrarse_et_contrasena"
+    <EditText
+        android:id="@+id/registrarse_et_correo"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_marginStart="50dp"
+        android:layout_marginEnd="50dp"
+        android:autofillHints=""
+        android:background="#B3B3B3"
+        android:backgroundTint="#B3B3B3"
+        android:ems="10"
+        android:inputType="textEmailAddress"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <TextView
-        android:id="@+id/registrarse_tv_contrasena"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="96dp"
-        android:text="@string/login_lbl_Contrasena"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="0.477"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/resgistrarse_tv_correo" />
 
     <EditText
-        android:id="@+id/registrarse_et_contrasena"
-        android:layout_width="312dp"
+        android:id="@+id/registrarse_et_nombreusu"
+        android:layout_width="match_parent"
         android:layout_height="44dp"
+        android:layout_marginStart="50dp"
+        android:layout_marginEnd="50dp"
+        android:autofillHints=""
+        android:background="#B3B3B3"
+        android:backgroundTint="#B3B3B3"
+        android:ems="10"
+        android:inputType="textEmailAddress"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/registrarse_tv_nombreuser" />
+
+    <TextView
+        android:id="@+id/registrarse_tv_contrasena"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="168dp"
+        android:layout_marginEnd="168dp"
+        android:text="@string/login_lbl_Contrasena"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/registrarse_et_correo" />
+
+    <EditText
+        android:id="@+id/registrarse_et_contrasena"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_marginStart="50dp"
+        android:layout_marginEnd="50dp"
         android:autofillHints=""
         android:background="#B3B3B3"
         android:backgroundTint="#B3B3B3"
@@ -50,54 +77,58 @@
         android:inputType="textPassword"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.485"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/registrarse_tv_contrasena"
+        app:layout_constraintVertical_bias="0.0" />
 
-    <EditText
-        android:id="@+id/registrarse_et_correo"
-        android:layout_width="312dp"
-        android:layout_height="44dp"
-        android:layout_marginTop="59dp"
-        android:autofillHints=""
-        android:background="#B3B3B3"
-        android:backgroundTint="#B3B3B3"
-        android:ems="10"
-        android:inputType="textEmailAddress"
+    <TextView
+        android:id="@+id/resgistrarse_tv_correo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="168dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="168dp"
+        android:text="@string/login_lbl_Correo"
+        android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.505"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/registrarse_et_contrasena" />
-
+        app:layout_constraintTop_toBottomOf="@+id/imgUsuario" />
     <ImageView
         android:id="@+id/imgUsuario"
         android:layout_width="163dp"
         android:layout_height="114dp"
-        android:layout_marginBottom="111dp"
-        app:layout_constraintBottom_toTopOf="@+id/resgistrarse_tv_correo"
+        android:layout_marginTop="4dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@drawable/imagenusuarioregistro" />
-
+        app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/imagenusuarioregistro"/>
     <ImageView
         android:id="@+id/imgGaleriaRegistrarse"
         android:layout_width="79dp"
         android:layout_height="64dp"
-        android:layout_marginBottom="79dp"
-        app:layout_constraintBottom_toTopOf="@+id/registrarse_et_contrasena"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.15"
-        app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@drawable/imagengaleriaregistro" />
-
+        android:layout_marginStart="45dp" android:layout_marginTop="28dp"
+        app:layout_constraintEnd_toStartOf="@+id/imgUsuario" app:layout_constraintHorizontal_bias="0.992"
+        app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/imagengaleriaregistro"/>
     <ImageView
         android:id="@+id/imgCamaraRegistrarse"
         android:layout_width="78dp"
         android:layout_height="65dp"
-        android:layout_marginBottom="78dp"
-        app:layout_constraintBottom_toTopOf="@+id/registrarse_et_contrasena"
+        android:layout_marginTop="28dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.912"
+        app:layout_constraintHorizontal_bias="0.0" app:layout_constraintStart_toEndOf="@+id/imgUsuario"
+        app:layout_constraintTop_toTopOf="parent" app:srcCompat="@drawable/imagencamararegistro"/>
+
+    <TextView
+        android:id="@+id/registrarse_tv_nombreuser"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="140dp"
+        android:layout_marginEnd="140dp"
+        android:text="@string/register_lbl_nombreUsu"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@drawable/imagencamararegistro" />
+        app:layout_constraintTop_toBottomOf="@+id/registrarse_et_contrasena" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

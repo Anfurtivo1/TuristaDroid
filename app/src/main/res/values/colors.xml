@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#6200EE</color>
-    <color name="colorPrimaryDark">#3700B3</color>
+    <color name="colorPrimary">#F370CA9C</color>
+    <color name="colorPrimaryDark">#73AF6C</color>
+    <color name="fabBtnColor">#B6E3A5</color>
     <color name="colorAccent">#03DAC5</color>
+    <color name="favNo">#FFFFDFDF</color>
+    <color name="favYes">#5EB867</color>
+    <color name="recyclerListColor">#F370CA9C</color>
+    <color name="itemlstColour">#D6D6D6</color>
+    <color name="qrCodeColor">#F370CA9C</color>
+    <color name="removeColor">#73AF6C</color>
+    <color name="updateColor">#03DAC5</color>
 </resources>

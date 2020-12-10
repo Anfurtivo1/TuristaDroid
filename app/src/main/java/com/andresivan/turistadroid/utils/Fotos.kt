@@ -47,7 +47,7 @@ object Fotos {
     /**
      * Copia un bitmap en un path determinado
      */
-    fun copiarFoto(bitmap: Bitmap, path: String, compresion: Int, context: Context) {
+    fun copiarFoto(bitmap: Bitmap, path: String, compresion: Int, context: Context): File {
         val nombre = crearNombreFoto("camara",".jpg")
         val fichero =
             context.getExternalFilesDir(Environment.DIRECTORY_PICTURES)?.absolutePath + path + File.separator + nombre
@@ -56,8 +56,25 @@ object Fotos {
         val fo = FileOutputStream(fichero)
         fo.write(bytes.toByteArray())
         fo.close()
+        return File(fichero)
     }
 
+    fun copyPhoto(bitmap: Bitmap, nombre: String, path: String, compresion: Int, context: Context): File {
+        val dirFotos =
+            File((context.getExternalFilesDir(Environment.DIRECTORY_PICTURES)?.absolutePath) + path)
+        if (!dirFotos.exists()) {
+            dirFotos.mkdirs()
+        }
+
+        val fichero =
+            context.getExternalFilesDir(Environment.DIRECTORY_PICTURES)?.absolutePath + path + File.separator + nombre
+        val bytes = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.JPEG, compresion, bytes)
+        val fo = FileOutputStream(fichero)
+        fo.write(bytes.toByteArray())
+        fo.close()
+        return File(fichero)
+    }
     /**
      * Comprime una imagen
      */

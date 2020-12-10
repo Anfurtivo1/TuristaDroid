@@ -1,29 +1,28 @@
-package com.andresivan.turistadroid
+package com.andresivan.turistadroid.actividades
 
-import android.Manifest
-import android.app.Activity
-import android.content.Intent
-import android.content.pm.PackageManager
-import android.graphics.Bitmap
-import android.graphics.ImageDecoder
 import android.hardware.Camera
 import android.hardware.camera2.CameraManager
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import androidx.core.app.ActivityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import com.andresivan.turistadroid.R
+import com.andresivan.turistadroid.entidades.sesion.SesionController
+import com.andresivan.turistadroid.entidades.usuario.Usuario
+import com.andresivan.turistadroid.usuario.UsuarioControlador
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.android.synthetic.main.nav_header_main.*
 
 
 class pantallaprincipal : AppCompatActivity() {
@@ -35,10 +34,7 @@ class pantallaprincipal : AppCompatActivity() {
     var isFlash = false
     var estado = true
     var permisos:Boolean = false
-
-
-
-
+    lateinit var USUARIO:Usuario
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,14 +61,36 @@ class pantallaprincipal : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
-
-
     }
+
+
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.pantallaprincipal, menu)
+
+        //Este es el método para rellenar la foto el nombre y el correo del usuario
+        initUI()
         return true
+    }
+
+    private fun initUI() {
+        for (sesion in SesionController.selectAll()!!){
+            Log.i("Sesion",sesion.toString())
+
+            USUARIO = UsuarioControlador.selectById(sesion.idUsuarioActivo)!!
+
+            Log.i("Mi Perfil", USUARIO.toString())
+
+            Log.i("Mi perfil", "NOMBRE USUARIO: "+USUARIO.nombre)
+            Log.i("Mi perfil", "CORREO ELECTRONICO USUARIO: "+ USUARIO.correo)
+            Log.i("Mi perfil", "NOMBRE_FOTO: "+ USUARIO.fotoUsuario)
+
+
+            nav_header_nombre_usuario.text = USUARIO.nombre
+            nav_header_correo.text = USUARIO.correo
+
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -110,8 +128,5 @@ class pantallaprincipal : AppCompatActivity() {
             estado=true
         }
     }
-
-
-
 
 }
