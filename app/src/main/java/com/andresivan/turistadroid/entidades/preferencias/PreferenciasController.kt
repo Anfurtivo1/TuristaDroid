@@ -1,15 +1,9 @@
 package com.andresivan.turistadroid.entidades.preferencias
 
 import android.content.Context
-import android.content.Intent
-import android.graphics.BitmapFactory
 import android.util.Log
 import android.widget.Toast
-import androidx.core.content.ContextCompat.startActivity
-import com.andresivan.turistadroid.entidades.sesion.SesionController
 import com.andresivan.turistadroid.entidades.usuario.Usuario
-import com.andresivan.turistadroid.login
-import com.andresivan.turistadroid.pantallaprincipal
 import com.andresivan.turistadroid.usuario.UsuarioControlador
 import com.andresivan.turistadroid.usuario.UsuarioControlador.existeUsuario
 import com.andresivan.turistadroid.utils.CifradorContrasena

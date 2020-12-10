@@ -1,6 +1,5 @@
-package com.andresivan.turistadroid
+package com.andresivan.turistadroid.actividades
 
-import android.app.AlertDialog
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -10,8 +9,7 @@ import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.ImageView
 import android.widget.TextView
-import com.andresivan.turistadroid.app.MyApp
-import kotlinx.android.synthetic.main.fragment_miperfil.*
+import com.andresivan.turistadroid.R
 
 class MainActivity : AppCompatActivity() {
 
@@ -24,8 +22,12 @@ class MainActivity : AppCompatActivity() {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN)
 
         //Creamos dos animaciones para darle mas vistosidad al SplashScreen
-       val animacion1:Animation = AnimationUtils.loadAnimation(applicationContext,R.anim.desplazamiento_arriba)
-       val animacion2:Animation = AnimationUtils.loadAnimation(applicationContext,R.anim.desplazamiento_abajo)
+       val animacion1:Animation = AnimationUtils.loadAnimation(applicationContext,
+           R.anim.desplazamiento_arriba
+       )
+       val animacion2:Animation = AnimationUtils.loadAnimation(applicationContext,
+           R.anim.desplazamiento_abajo
+       )
         //Rescatamos los elementos del SplashScreen
         val tituloSplashScreen:TextView = findViewById(R.id.txvTituloSplashScreen)
         val imagenSplashScreen:ImageView = findViewById(R.id.imgSplashScreen)
@@ -37,7 +39,7 @@ class MainActivity : AppCompatActivity() {
         val handler: Handler= Handler()
 
         handler.postDelayed({
-            val intent:Intent = Intent(this,login::class.java)
+            val intent:Intent = Intent(this, login::class.java)
             startActivity(intent)
             finish()
         },4000)

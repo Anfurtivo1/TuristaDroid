@@ -7,18 +7,18 @@
 
     <fragment
         android:id="@+id/ndCercaDeMi"
-        android:name="com.andresivan.turistadroid.cercademi"
+        android:name="com.andresivan.turistadroid.ui.cercademi"
         android:label="fragment_cercademi"
         tools:layout="@layout/fragment_cercademi" />
 
     <fragment
         android:id="@+id/ndMisSitios"
-        android:name="com.andresivan.turistadroid.missitios"
+        android:name="com.andresivan.turistadroid.ui.missitios.missitios"
         android:label="fragment_missitios"
         tools:layout="@layout/fragment_missitios" />
     <fragment
         android:id="@+id/ndMiPerfil"
-        android:name="com.andresivan.turistadroid.miperfil"
+        android:name="com.andresivan.turistadroid.ui.miperfil"
         android:label="fragment_miperfil"
         tools:layout="@layout/fragment_miperfil" />
 

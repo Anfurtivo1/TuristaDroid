@@ -1,4 +1,4 @@
-package com.andresivan.turistadroid
+package com.andresivan.turistadroid.ui
 
 import android.content.Intent
 import android.net.Uri
@@ -7,11 +7,9 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.fragment.app.Fragment
-import com.andresivan.turistadroid.app.MyApp
+import com.andresivan.turistadroid.R
 import com.andresivan.turistadroid.entidades.sesion.SesionController
 import com.andresivan.turistadroid.entidades.usuario.Usuario
 import com.andresivan.turistadroid.usuario.UsuarioControlador

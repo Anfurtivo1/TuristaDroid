@@ -38,4 +38,14 @@
     <string name="editar_perfil">Editar perfil</string>
     <string name="EncenderLinterna">Encender linterna</string>
 
+    <string-array name="filtros">
+        <item>Ordenar por:</item>
+        <item>Nombre asc</item>
+        <item>Nombre desc</item>
+        <item>Fecha asc</item>
+        <item>Fecha desc</item>
+        <item>Valoracion asc</item>
+        <item>Valoracion desc</item>
+    </string-array>
+
 </resources>

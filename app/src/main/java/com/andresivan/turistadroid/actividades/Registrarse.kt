@@ -1,4 +1,4 @@
-package com.andresivan.turistadroid
+package com.andresivan.turistadroid.actividades
 
 import android.Manifest
 import android.app.Activity
@@ -15,6 +15,7 @@ import android.util.Log
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.core.net.toFile
+import com.andresivan.turistadroid.R
 import com.andresivan.turistadroid.entidades.preferencias.PreferenciasController.crearSesion
 import com.andresivan.turistadroid.utils.Fotos
 import com.karumi.dexter.Dexter

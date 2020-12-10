@@ -1,22 +1,17 @@
-package com.andresivan.turistadroid
+package com.andresivan.turistadroid.actividades
 
 import android.app.AlertDialog
 import android.content.Intent
-import android.graphics.BitmapFactory
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.widget.TextView
 import android.widget.Toast
+import com.andresivan.turistadroid.R
 import com.andresivan.turistadroid.app.MyApp
-import com.andresivan.turistadroid.entidades.preferencias.PreferenciasController
 import com.andresivan.turistadroid.entidades.preferencias.PreferenciasController.iniciarSesionUsuario
-import com.andresivan.turistadroid.entidades.preferencias.PreferenciasController.leerSesion
 import com.andresivan.turistadroid.entidades.sesion.Sesion
 import com.andresivan.turistadroid.entidades.sesion.SesionController
-import com.andresivan.turistadroid.entidades.usuario.Usuario
 import com.andresivan.turistadroid.usuario.UsuarioControlador.selectByCorreo
-import com.andresivan.turistadroid.utils.CifradorContrasena
 import kotlinx.android.synthetic.main.activity_login.*
 
 class login : AppCompatActivity() {

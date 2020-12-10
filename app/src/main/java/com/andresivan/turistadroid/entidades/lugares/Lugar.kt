@@ -26,7 +26,7 @@ open class Lugar(
     @Required
     var imgID: String = "",
     var valoracion: Int = 0,
-    var favorito: Boolean = false,
+    var fav: Boolean = false,
     @Required var usuarioID: String = ""
 ) : RealmObject() {
 
@@ -38,7 +38,7 @@ open class Lugar(
         longitud: String,
         imgID: String,
         valoracion: Int,
-        favorito: Boolean,
+        fav: Boolean,
         usuarioID: String
     ) :
             this(
@@ -50,12 +50,12 @@ open class Lugar(
                 longitud,
                 imgID,
                 valoracion,
-                favorito,
+                fav,
                 usuarioID
             )
 
     override fun toString(): String {
-        return "Lugar(id='$id', nombre='$nombre', tipo='$tipo', fecha='$fecha', latitud='$latitud', longitud='$longitud', imgID='$imgID', favorito=$favorito, valoracion=$valoracion, usuarioID='$usuarioID')"
+        return "Lugar(id='$id', nombre='$nombre', tipo='$tipo', fecha='$fecha', latitud='$latitud', longitud='$longitud', imgID='$imgID', favorito=$fav, valoracion=$valoracion, usuarioID='$usuarioID')"
     }
 
     override fun equals(other: Any?): Boolean {
@@ -68,7 +68,7 @@ open class Lugar(
         if (latitud != other.latitud) return false
         if (longitud != other.longitud) return false
         if (imgID != other.imgID) return false
-        if (favorito != other.favorito) return false
+        if (fav != other.fav) return false
         if (valoracion != other.valoracion) return false
         if (usuarioID != other.usuarioID) return false
         return true
@@ -82,7 +82,7 @@ open class Lugar(
         result = 31 * result + latitud.hashCode()
         result = 31 * result + longitud.hashCode()
         result = 31 * result + imgID.hashCode()
-        result = 31 * result + favorito.hashCode()
+        result = 31 * result + fav.hashCode()
         result = 31 * result + valoracion
         result = 31 * result + usuarioID.hashCode()
         return result
