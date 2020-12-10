@@ -32,6 +32,7 @@ import com.andresivan.turistadroid.entidades.usuario.Usuario
 import com.andresivan.turistadroid.utils.ABase64
 import com.andresivan.turistadroid.utils.CifradorContrasena
 import com.andresivan.turistadroid.utils.Fotos
+import com.andresivan.turistadroid.utils.GeneradorQR
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.*
@@ -438,8 +439,8 @@ class SitioDetalleFragment(
         val inflater = requireActivity().layoutInflater
         // https://stackoverflow.com/questions/40189734/bitmap-not-showing-in-dialog
         // https://stackoverflow.com/questions/40189734/bitmap-not-showing-in-dialog
-        val vista = inflater.inflate(R.layout.compartir_qr_code_layout, null)
-        val code = QRCode.generateQRCode(Gson().toJson(LUGAR))
+        val vista = inflater.inflate(R.layout.fragment_compartir_qr, null)
+        val code = GeneradorQR.generarCodigoQR(Gson().toJson(LUGAR))
         val qrCodeImageView = vista.findViewById(R.id.imagenCodigoQR) as ImageView
         qrCodeImageView.setImageBitmap(code)
         builder

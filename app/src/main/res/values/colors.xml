@@ -7,4 +7,5 @@
     <color name="favNo">#FFFFDFDF</color>
     <color name="favYes">#5EB867</color>
     <color name="recyclerListColor">#F370CA9C</color>
+    <color name="itemlstColour">#D6D6D6</color>
 </resources>
