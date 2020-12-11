@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
+import androidx.fragment.app.FragmentTransaction
 import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -21,7 +22,6 @@ import com.andresivan.turistadroid.entidades.lugares.LugarController
 import com.andresivan.turistadroid.ui.missitios.Filtross.FiltrosControlador
 import com.andresivan.turistadroid.ui.missitios.filtros.Filtros
 import kotlinx.android.synthetic.main.fragment_missitios.*
-import java.text.SimpleDateFormat
 
 class MisSitios : Fragment() {
     // Propiedades
@@ -136,11 +136,11 @@ class MisSitios : Fragment() {
     }
 
     private fun editarElemento(pos: Int) {
-        abrirDetalle(SITIOS[pos], ModosAccesos.ACTUALIZAR, this, pos)
+        abrirFragmentDetallesSitio(SITIOS[pos], ModosAccesos.ACTUALIZAR, this, pos)
     }
 
     private fun borrarElemento(pos: Int) {
-        abrirDetalle(SITIOS[pos], ModosAccesos.ELIMINAR, this, pos)
+        abrirFragmentDetallesSitio(SITIOS[pos], ModosAccesos.ELIMINAR, this, pos)
     }
 
     private fun btnDer(canvas: Canvas, dX: Float, itemView: View, width: Float) {
@@ -182,18 +182,21 @@ class MisSitios : Fragment() {
 
     private fun nuevoElemento() {
         Log.i("Lugares", "Nuevo elemento")
-        abrirDetalle(null, ModosAccesos.INSERTAR, this, null)
+        abrirFragmentDetallesSitio(null, ModosAccesos.INSERTAR, this, null)
     }
 
-    private fun abrirDetalle(
+    private fun abrirFragmentDetallesSitio(
         sitio: Lugar?,
         modosAccesos: ModosAccesos?,
         anterior: MisSitios?,
         position: Int?
     ) {
-        Log.i("Lugares", "abrir Detalle")
         val sitioDetalle = SitioDetalleFragment(sitio, modosAccesos, anterior, position)
-        Log.i("Lugares",sitioDetalle.toString())
+        val transaction = requireActivity().supportFragmentManager.beginTransaction()
+        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+        transaction.add(R.id.nav_host_fragment, sitioDetalle)
+        transaction.addToBackStack(null)
+        transaction.commit()
         abrirSitioDetalle()
     }
 
@@ -302,7 +305,7 @@ class MisSitios : Fragment() {
 
     private fun abrirElemento(lugar: Lugar) {
         Log.i("Mis Sitios", "Abrimos el lugar" + lugar.id)
-        abrirDetalle(lugar, ModosAccesos.VISUALIZAR, this, null)
+        abrirFragmentDetallesSitio(lugar, ModosAccesos.VISUALIZAR, this, null)
     }
 
     /**
