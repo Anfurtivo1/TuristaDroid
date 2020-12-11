@@ -197,7 +197,7 @@ class MisSitios : Fragment() {
         transaction.add(R.id.nav_host_fragment, sitioDetalle)
         transaction.addToBackStack(null)
         transaction.commit()
-        abrirSitioDetalle()
+        //abrirSitioDetalle()
     }
 
     /**
