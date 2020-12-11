@@ -23,7 +23,6 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.ImageView
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.app.ActivityCompat
 import androidx.core.net.toFile
@@ -51,38 +50,31 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.fragment_sitio_detalle.*
 import java.io.IOException
-import java.time.Instant
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
 import com.andresivan.turistadroid.utils.*
-import java.io.File
 
 class SitioDetalleFragment(
-    private var LUGAR: Lugar? = null,
-    private val MODO: ModosAccesos? = ModosAccesos.INSERTAR,
+    private var SITIO: Lugar? = null,
+    private val MODO_ACCESO_FRAGMENT: ModosAccesos? = ModosAccesos.INSERTAR,
     private val ANTERIOR: MisSitios? = null,
-    private val LUGAR_INDEX: Int? = null
+    private val SITIO_POSICION: Int? = null
 ) : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
 
-    // Mis Variables
-    private lateinit var USUARIO: Usuario
+    private lateinit var USER: Usuario
     private var PERMISOS: Boolean = false
-
-    // Variables a usar y permisos del mapa
-    private lateinit var mMap: GoogleMap
-    private var mPosicion: FusedLocationProviderClient? = null
-    private var marcadorTouch: Marker? = null
-    private var localizacion: Location? = null
+    private lateinit var map: GoogleMap
+    private var mapPosition: FusedLocationProviderClient? = null
+    private var markerT: Marker? = null
+    private var location: Location? = null
     private var posicion: LatLng? = null
-
-    // Variables para la camara
     private val GALERIA = 1
     private val CAMARA = 2
-    private lateinit var IMAGEN_URI: Uri
+    private lateinit var IMG_URI: Uri
     private val IMG_DIR = "/MisSitios"
-    private val IMG_PROPORCION = 600
-    private lateinit var FOTO: Bitmap
+    private val IMG_SIZE = 600
+    private lateinit var PHOTO: Bitmap
     private var IMG_COMPR_LVL = 60
     private val IMG_PREF = "Sitio"
     private val IMG_EXT = ".jpg"
@@ -100,105 +92,116 @@ class SitioDetalleFragment(
         view.setOnTouchListener { view, motionEvent ->
             return@setOnTouchListener true
         }
-        initIU()
+        inicializarInterfaz()
     }
 
     /**
      * Iniciamos los elementos de la interfaz
      */
-    private fun initIU() {
-        // Actualizo la vista anterior para que no se quede el swipe marcado
-        ANTERIOR?.actualizarVistaLista()
-        initPermisos()
-        initUsuario()
-        // Modos de ejecución
-        when (this.MODO) {
-            ModosAccesos.INSERTAR -> initModoInsertar()
-            ModosAccesos.VISUALIZAR -> initModoVisualizar()
-            ModosAccesos.ELIMINAR -> initModoEliminar()
-            //ModosAccesos.ACTUALIZAR -> initModoActualizar()
+    private fun inicializarInterfaz() {
+        ANTERIOR?.actualizarRevyclerView()
+        initPermissions()
+        initUser()
+        /*
+        SEGÚN EL MODO QUE UTILIZEMOS PARA ACCEDER AL FRAGMENTE, HAREMOS UNA COSA
+        U OTRA
+         */
+        when (this.MODO_ACCESO_FRAGMENT) {
+            //Si queremos insertar
+            ModosAccesos.INSERTAR -> initInsertMode()
+            //Si queremos ver la info del sitio
+            ModosAccesos.VISUALIZAR -> initVisualizeMode()
+            //Si queremos borrar sitio
+            ModosAccesos.ELIMINAR -> initDeleteMode()
+            //Si queremos modificar un sitio
+            ModosAccesos.ACTUALIZAR -> initUpdateMode()
             else -> {
             }
         }
-        leerPoscionGPSActual()
-        initMapa()
+        obtenerMiPosicionActual()
+        initMap()
     }
 
     /**
      * Lee el usuario
      */
-    private fun initUsuario() {
-        this.USUARIO = (activity?.application as MyApp).SESION_USUARIO
+    private fun initUser() {
+        this.USER = (activity?.application as MyApp).SESION_USUARIO
     }
 
     /**
      * Lee los permisos
      */
-    private fun initPermisos() {
+    private fun initPermissions() {
         this.PERMISOS = (activity?.application as MyApp).PERMISOS
     }
 
     /**
-     * Crea todos los elementos en modo insertar
+     * Función que permite editar el Fragement de detalles del sitio,
+     * modificando la vista del fragment_sitio_detalle para poder
+     * insertar
      */
-    private fun initModoInsertar() {
+    private fun initInsertMode() {
         Log.i("Lugares", "Modo Insertar")
         detalleFavoritos.visibility = View.GONE
         detalleSitioInput.setText("")
         val date = LocalDateTime.now()
         detalleBtnFecha.text = DateTimeFormatter.ofPattern("dd/MM/yyyy").format(date)
-        detalleBtnFecha.setOnClickListener { escogerFecha() }
-        detalleSitioFabFuncion.setOnClickListener { insertarLugar() }
+        detalleBtnFecha.setOnClickListener { chooseDate() }
+        detalleSitioFabFuncion.setOnClickListener { insertPlace() }
         detalleCamaraSitio.setOnClickListener { initDialogFoto() }
 
     }
 
     /**
-     * Inicia el modo de Visualizar
+     * Función que permite editar el Fragment de detalles del lugar
+     * modificando la vista del fragment_sitio_detale para poder
+     * modificar el sitio seleccionado
      */
-    private fun initModoVisualizar() {
+    private fun initVisualizeMode() {
         Log.i("Lugares", "Modo Visualizar")
-        // Ocultamos o quitamos lo que no queremos ver en este modo
         detalleCamaraSitio.visibility = View.GONE
-        detalleSitioInput.setText(LUGAR?.nombre)
+        detalleSitioInput.setText(SITIO?.nombre)
         detalleSitioInput.isEnabled = false
-        detalleBtnFecha.text = LUGAR?.fecha
-        detalleFavoritos.text = LUGAR?.valoracion.toString() + " voto(s)."
+        detalleBtnFecha.text = SITIO?.fecha
+        detalleFavoritos.text = SITIO?.valoracion.toString() + " likes"
         detalleSpnTipo.setSelection(
             (detalleSpnTipo.adapter as ArrayAdapter<String?>).getPosition(
-                LUGAR?.tipo
+                SITIO?.tipo
             )
         )
         detalleSpnTipo.isEnabled = false
-        val fotografia = FotoController.selectById(LUGAR?.imgID.toString())
-        this.FOTO = ABase64.toBitmap(fotografia?.imgLugar.toString())!!
-        IMAGEN_URI = Uri.parse(fotografia?.uri)
-        detalleFotoSitio.setImageBitmap(this.FOTO)
+        val fotografia = FotoController.selectById(SITIO?.imgID.toString())
+        this.PHOTO = ABase64.toBitmap(fotografia?.imgLugar.toString())!!
+        IMG_URI = Uri.parse(fotografia?.uri)
+        detalleFotoSitio.setImageBitmap(this.PHOTO)
 
         detalleSitioFabFuncion.visibility = View.VISIBLE
         detalleSitioFabFuncion.setImageResource(R.drawable.ic_qr)
         detalleSitioFabFuncion.backgroundTintList =
             AppCompatResources.getColorStateList(requireContext(), R.color.qrCodeColor)
-        detalleSitioFabFuncion.setOnClickListener { compartirLugar() }
+        detalleSitioFabFuncion.setOnClickListener { sharePlace() }
     }
 
     /**
-     * Inicia el Modo de Modificar
+     * Función que permite editar la vista el Fragment de detalles del lugar
+     * modificando la vista del fragment_sitio_detale para poder
+     * eliminar el sitio seleccionado
      */
-    fun initModoEliminar() {
+    fun initDeleteMode() {
         Log.i("Lugares", "Modo Eliminar")
-        initModoVisualizar()
+        initVisualizeMode()
         detalleSitioFabFuncion.visibility = View.VISIBLE
         detalleSitioFabFuncion.setImageResource(R.drawable.ic_remove)
         detalleSitioFabFuncion.backgroundTintList =
             AppCompatResources.getColorStateList(requireContext(), R.color.removeColor)
-        detalleSitioFabFuncion.setOnClickListener { eliminarLugar() }
+        detalleSitioFabFuncion.setOnClickListener { deletePlace() }
 
     }
 
-    fun initModoActualizar() {
+    fun initUpdateMode() {
         Log.i("Lugares", "Modo Actualizar")
-        initModoVisualizar()
+        initVisualizeMode()
         detalleSitioFabFuncion.visibility = View.VISIBLE
         detalleSitioFabFuncion.setImageResource(R.drawable.ic_update)
         detalleSitioFabFuncion.backgroundTintList =
@@ -208,17 +211,15 @@ class SitioDetalleFragment(
         detalleCamaraSitio.setOnClickListener { initDialogFoto() }
         detalleSpnTipo.isEnabled = true
         detalleSitioInput.isEnabled = true
-        // Acción
-        detalleSitioFabFuncion.setOnClickListener { actualizarLugar() }
-
+        detalleSitioFabFuncion.setOnClickListener { updatePlace() }
     }
 
     /**
      * Precondiciones para insertar
      */
-    private fun insertarLugar() {
-        if (comprobarFormulario()) {
-            alertaDialogo("Insertar Lugar", "¿Desea salvar este lugar?")
+    private fun insertPlace() {
+        if (chequearComponentes()) {
+            alertDialog("Insertar Lugar", "¿Desea salvar este lugar?")
         }
     }
 
@@ -227,48 +228,47 @@ class SitioDetalleFragment(
      */
     private fun insertar() {
         try {
-            // Iderntamos la fotografia
-            val b64 = ABase64.toBase64(this.FOTO)!!
-            /*
+            val b64 = ABase64.toBase64(this.PHOTO)!!
             val fotografia = Foto(
                 id = UUID.randomUUID().toString(),
-                imagen = b64,
-                uri = IMAGEN_URI.toString(),
-                hash = CifradorContrasena.convertirHash(b64).toString(),
-                usuarioID = USUARIO.id
+                imgLugar = b64,
+                uri = IMG_URI.toString(),
+                hash = CifradorContrasena.convertirHash(b64, "SHA-256").toString(),
+                usuarioID = USER.id
             )
             FotoController.insert(fotografia)
             Log.i("Insertar", "Fotografía insertada con éxito con: " + fotografia.id)
             // Insertamos lugar
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                LUGAR = Lugar(
+                SITIO = Lugar(
                     id = UUID.randomUUID().toString(),
                     nombre = detalleSitioInput.text.toString().trim(),
                     tipo = (detalleSpnTipo.selectedItem as String),
                     fecha = detalleBtnFecha.text.toString(),
                     latitud = posicion?.latitude.toString(),
                     longitud = posicion?.longitude.toString(),
-                    imagenID = fotografia.id,
-                    favorito = false,
-                    votos = 0,
-                    time = Instant.now().toString(),
-                    usuarioID = USUARIO.id
+                    imgID = fotografia.id,
+                    valoracion = 0,
+                    fav = false,
+                    usuarioID = USER.id
                 )
-            }*/
-            LugarController.insert(LUGAR!!)
-            // Actualizamos el adapter
-            ANTERIOR?.insertarItemLista(LUGAR!!)
-            Snackbar.make(requireView(), "¡Lugar añadido con éxito!", Snackbar.LENGTH_LONG).show();
-            Log.i("Insertar", "Lugar insertado con éxito con id" + LUGAR)
+            }
+            LugarController.insert(SITIO!!)
+
+            ANTERIOR?.insertarItemLista(SITIO!!)
+
+            Snackbar.make(requireView(), "¡Añadido!", Snackbar.LENGTH_LONG).show();
+
             volver()
         } catch (ex: Exception) {
-            Toast.makeText(context, "Error al insertar: " + ex.localizedMessage, Toast.LENGTH_LONG)
-                .show()
-            Log.i("Insertar", "Error al insertar: " + ex.localizedMessage)
+            Toast.makeText(
+                context,
+                "Se ha producido un error" + ex.localizedMessage,
+                Toast.LENGTH_LONG
+            ).show()
         }
         try {
-            IMAGEN_URI.toFile().delete()
-            Log.i("Insertar", "Borrada la imagen tempral asociada")
+            IMG_URI.toFile().delete()
         } catch (ex: Exception) {
         }
     }
@@ -276,42 +276,39 @@ class SitioDetalleFragment(
     /**
      * Precondiciones para eliminar
      */
-    private fun eliminarLugar() {
+    private fun deletePlace() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            alertaDialogo("Eliminar Lugar", "¿Desea eliminar este lugar?")
+            alertDialog("Eliminar Lugar", "¿Desea eliminar este lugar?")
         }
     }
 
     /**
-     * Elimina un objeto de la base de datos
+     * Función que se encarga de eliminar un registro de la base de
+     * datos
      */
-    private fun eliminar() {
+    private fun delete() {
         try {
-            //Eliminamos lógicamente // Eliminamos el lugar
-            val fotografiaID = LUGAR?.imgID.toString()
+            val fotografiaID = SITIO?.imgID.toString()
             val fotografia = FotoController.selectById(fotografiaID)
             FotoController.delete(fotografia!!)
-            LugarController.delete(LUGAR!!)
-            // Actualizamos el adapter
-            ANTERIOR?.eliminarItemLista(LUGAR_INDEX!!)
-            Snackbar.make(requireView(), "¡Lugar eliminado con éxito!", Snackbar.LENGTH_LONG).show();
-            Log.i("Eliminar", "Lugar eliminado con éxito")
+            LugarController.delete(SITIO!!)
+            ANTERIOR?.eliminarItemLista(SITIO_POSICION!!)
+            Snackbar.make(requireView(), "ELIMINADO", Snackbar.LENGTH_LONG)
+                .show();
         } catch (ex: Exception) {
-            Toast.makeText(context, "Error al eliminar: " + ex.localizedMessage, Toast.LENGTH_LONG)
+            Toast.makeText(context, "ERROR: " + ex.localizedMessage, Toast.LENGTH_LONG)
                 .show()
-            Log.i("Eliminar", "Error al eliminar: " + ex.localizedMessage)
         }
-        // Volvemos
         volver()
     }
 
     /**
      * Pre condición de actualizar
      */
-    private fun actualizarLugar() {
-        if (comprobarFormulario()) {
+    private fun updatePlace() {
+        if (chequearComponentes()) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                alertaDialogo("Modificar Lugar", "¿Desea modificar este lugar?")
+                alertDialog("Modificar Lugar", "¿Desea modificar este lugar?")
             }
         }
     }
@@ -319,35 +316,31 @@ class SitioDetalleFragment(
     /**
      * Actualiza un lugar
      */
-    private fun actualizar() {
+    private fun update() {
         try {
-            // Actualizamos la fotografía por si hay cambios
-            val fotografiaID = LUGAR?.imgID.toString()
-            val fotografia = FotoController.selectById(fotografiaID)
-            val b64 = ABase64.toBase64(this.FOTO)!!
-            Log.i("Actualizar", "Imagenes Distintas")
-            with(fotografia!!) {
+            val fotoID = SITIO?.imgID.toString()
+            val foto = FotoController.selectById(fotoID)
+            val b64 = ABase64.toBase64(this.PHOTO)!!
+            with(foto!!) {
                 imgLugar = b64
-                uri = IMAGEN_URI.toString()
-                hash = CifradorContrasena.convertirHash(b64,"").toString()
-                usuarioID = USUARIO.id
+                uri = IMG_URI.toString()
+                hash = CifradorContrasena.convertirHash(b64, "").toString()
+                usuarioID = USER.id
             }
-            FotoController.update(fotografia)
-            Log.i("Actualizar", "Fotografía actualizada")
-            Log.i("Actualizar", "Actualizamos los lugares")
-            with(LUGAR!!) {
+            FotoController.update(foto)
+
+            with(SITIO!!) {
                 nombre = detalleSitioInput.text.toString().trim()
                 tipo = (detalleSpnTipo.selectedItem as String)
                 fecha = detalleBtnFecha.text.toString()
                 latitud = posicion?.latitude.toString()
                 longitud = posicion?.longitude.toString()
             }
-            LugarController.update(LUGAR!!)
-            // Actualizamos el adapter
-            ANTERIOR?.actualizarItemLista(LUGAR!!, LUGAR_INDEX!!)
-            Snackbar.make(requireView(), "¡Lugar actualizado con éxito!", Snackbar.LENGTH_LONG).show();
-            Log.i("Actualizar", "Lugar actualizado con éxito con id" + LUGAR!!.id)
-            // Volvemos
+            LugarController.update(SITIO!!)
+            ANTERIOR?.actualizarItemLista(SITIO!!, SITIO_POSICION!!)
+            Snackbar.make(requireView(), "ACTUALIZADO", Snackbar.LENGTH_LONG)
+                .show();
+
             volver()
 
         } catch (ex: Exception) {
@@ -356,22 +349,20 @@ class SitioDetalleFragment(
                 "Error al actualizar: " + ex.localizedMessage,
                 Toast.LENGTH_LONG
             ).show()
-            Log.i("Actualizar", "Error al actualizar: " + ex.localizedMessage)
         }
         try {
-            IMAGEN_URI.toFile().delete()
-            Log.i("Modificar", "Borrada la imagen temporal asociada")
+            IMG_URI.toFile().delete()
         } catch (ex: Exception) {
         }
     }
 
-    private fun seleccionarFecha(){
+    private fun seleccionarFecha() {
         val date = LocalDateTime.now()
 
         val datePickerDialog = DatePickerDialog(
             requireContext(),
             { _, mYear, mMonth, mDay ->
-                detalleBtnFecha.text = (mDay.toString() + "/" + (mMonth + 1) + "/" + mYear)
+                detalleBtnFecha.text = (mDay.toString() + "-" + (mMonth + 1) + "-" + mYear)
             }, date.year, date.monthValue - 1, date.dayOfMonth
         )
         datePickerDialog.show()
@@ -387,7 +378,7 @@ class SitioDetalleFragment(
     /**
      * Inicia el DatePicker
      */
-    private fun escogerFecha() {
+    private fun chooseDate() {
         val date = LocalDateTime.now()
         //Abrimos el DataPickerDialog
         val datePickerDialog = DatePickerDialog(
@@ -402,17 +393,17 @@ class SitioDetalleFragment(
     /**
      * Dialogo de opciones
      */
-    private fun alertaDialogo(titulo: String, texto: String) {
+    private fun alertDialog(titulo: String, texto: String) {
         val builder = AlertDialog.Builder(context)
         with(builder)
         {
             setTitle(titulo)
             setMessage(texto)
             setPositiveButton(R.string.ok) { _, _ ->
-                when (MODO) {
+                when (MODO_ACCESO_FRAGMENT) {
                     ModosAccesos.INSERTAR -> insertar()
-                    ModosAccesos.ELIMINAR -> eliminar()
-                    ModosAccesos.ACTUALIZAR -> actualizar()
+                    ModosAccesos.ELIMINAR -> delete()
+                    ModosAccesos.ACTUALIZAR -> update()
                     else -> {
                     }
                 }
@@ -423,46 +414,42 @@ class SitioDetalleFragment(
     }
 
     /**
-     * Comprueba que no haya campos nulos
+     * Funcion que permite comprobar el contido del formulario del fragment
      * @return Boolean
      */
-    private fun comprobarFormulario(): Boolean {
-        var sal = true
+    private fun chequearComponentes(): Boolean {
+        var comprobacion = true
         if (detalleSitioInput.text?.isEmpty()!!) {
             detalleSitioInput.error = "El nombre no puede ser vacío"
-            sal = false
+            comprobacion = false
         }
-        if (!this::FOTO.isInitialized) {
-            this.FOTO = (detalleFotoSitio.drawable as BitmapDrawable).bitmap
-            Toast.makeText(context, "La imagen no puede estar vacía", Toast.LENGTH_SHORT).show()
-            sal = false
+        if (!this::PHOTO.isInitialized) {
+            this.PHOTO = (detalleFotoSitio.drawable as BitmapDrawable).bitmap
+            Toast.makeText(context, "No puede estar vacío el campo de la foto", Toast.LENGTH_SHORT).show()
+            comprobacion = false
         }
-        return sal
+        return comprobacion
     }
 
     /**
-     * Comparte un lugar con QR
+     * Función que nos permite compartir un QR con la info de un sitio
      */
-    private fun compartirLugar() {
-        val builder = AlertDialog.Builder(context)
-        val inflater = requireActivity().layoutInflater
-        // https://stackoverflow.com/questions/40189734/bitmap-not-showing-in-dialog
-        // https://stackoverflow.com/questions/40189734/bitmap-not-showing-in-dialog
-        val vista = inflater.inflate(R.layout.fragment_compartir_qr, null)
-        val code = GeneradorQR.generarCodigoQR(Gson().toJson(LUGAR))
-        val qrCodeImageView = vista.findViewById(R.id.imagenCodigoQR) as ImageView
-        qrCodeImageView.setImageBitmap(code)
-        builder
-            .setView(vista)
+    private fun sharePlace() {
+        val buildr = AlertDialog.Builder(context)
+        val infltr = requireActivity().layoutInflater
+        val view = infltr.inflate(R.layout.fragment_compartir_qr, null)
+        val code = GeneradorQR.generarCodigoQR(Gson().toJson(SITIO))
+        val codeQR_IV = view.findViewById(R.id.imagenCodigoQR) as ImageView
+        codeQR_IV.setImageBitmap(code)
+        buildr
+            .setView(view)
             .setIcon(R.drawable.ic_qr)
-            .setTitle("¿Compartir mediante QR?")
-            // Add action buttons
+            .setTitle("¿DESEA COMPARTIR EL CODIGO QR?")
             .setPositiveButton(R.string.aceptar) { _, _ ->
                 compartirQRCode(code)
             }
             .setNegativeButton(R.string.cancelar, null)
-        // setNeutralButton("Maybe", neutralButtonClick)
-        builder.show()
+        buildr.show()
 
     }
 
@@ -472,42 +459,33 @@ class SitioDetalleFragment(
      */
     private fun compartirQRCode(qrCode: Bitmap) {
         Log.i("QR", "Aceptar QR")
-        // Politicas de seguridad
-        val builder = StrictMode.VmPolicy.Builder()
-        StrictMode.setVmPolicy(builder.build())
+
+        val buildr = StrictMode.VmPolicy.Builder()
+        StrictMode.setVmPolicy(buildr.build())
+
         val nombre = Fotos.crearNombreFoto(IMG_PREF, IMG_EXT)
+
         val fichero =
             Fotos.copiarFoto(qrCode, IMG_DIR, 100, requireContext())
-        //Log.i("QR", "Foto salvada: " + fichero.absolutePath)
         val shareIntent = Intent(Intent.ACTION_SEND).apply {
             type = "image/*"
             putExtra(Intent.EXTRA_STREAM, Uri.fromFile(fichero))
         }
         context?.startActivity(Intent.createChooser(shareIntent, null))
-        Log.i("QR", "Foto salvada")
     }
 
-
-    /**
-     * FUNCIONALIDAD DEL GPS
-     */
-
-    /**
-     * Leemos la posición actual del GPS
-     */
-    private fun leerPoscionGPSActual() {
-        mPosicion = LocationServices.getFusedLocationProviderClient(requireActivity())
+    private fun obtenerMiPosicionActual() {
+        mapPosition = LocationServices.getFusedLocationProviderClient(requireActivity())
     }
 
-    private fun initMapa() {
-        Log.i("Mapa", "Iniciando Mapa")
+    private fun initMap() {
         val mapFragment = childFragmentManager
             .findFragmentById(R.id.detalleMapa) as SupportMapFragment?
         mapFragment!!.getMapAsync(this)
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
-        mMap = googleMap
+        map = googleMap
         configurarIUMapa()
         modoMapa()
     }
@@ -517,15 +495,15 @@ class SitioDetalleFragment(
      */
     private fun configurarIUMapa() {
         Log.i("Mapa", "Configurando IU Mapa")
-        mMap.mapType = GoogleMap.MAP_TYPE_HYBRID
-        val uiSettings: UiSettings = mMap.uiSettings
+        map.mapType = GoogleMap.MAP_TYPE_HYBRID
+        val uiSettings: UiSettings = map.uiSettings
         uiSettings.isScrollGesturesEnabled = true
         uiSettings.isTiltGesturesEnabled = true
         uiSettings.isCompassEnabled = true
         uiSettings.isZoomControlsEnabled = true
         uiSettings.isMapToolbarEnabled = true
-        mMap.setMinZoomPreference(12.0f)
-        mMap.setOnMarkerClickListener(this)
+        map.setMinZoomPreference(12.0f)
+        map.setOnMarkerClickListener(this)
     }
 
     /**
@@ -533,7 +511,7 @@ class SitioDetalleFragment(
      */
     private fun modoMapa() {
         Log.i("Mapa", "Configurando Modo Mapa")
-        when (this.MODO) {
+        when (this.MODO_ACCESO_FRAGMENT) {
             ModosAccesos.INSERTAR -> mapaInsertar()
             ModosAccesos.VISUALIZAR -> mapaVisualizar()
             ModosAccesos.ELIMINAR -> mapaVisualizar()
@@ -558,7 +536,7 @@ class SitioDetalleFragment(
             ) {
                 return
             }
-            mMap.isMyLocationEnabled = true
+            map.isMyLocationEnabled = true
         }
         activarEventosMarcadores()
         obtenerPosicion()
@@ -569,16 +547,16 @@ class SitioDetalleFragment(
      */
     private fun mapaVisualizar() {
         Log.i("Mapa", "Configurando Modo Visualizar")
-        posicion = LatLng(LUGAR!!.latitud.toDouble(), LUGAR!!.longitud.toDouble())
+        posicion = LatLng(SITIO!!.latitud.toDouble(), SITIO!!.longitud.toDouble())
         // marcadorTouch?.remove()
-        mMap.addMarker(
+        map.addMarker(
             MarkerOptions() // Posición
                 .position(posicion!!) // Título
-                .title(LUGAR!!.nombre) // Subtitulo
-                .snippet(LUGAR!!.tipo + " del " + LUGAR!!.fecha) // Color o tipo d icono
+                .title(SITIO!!.nombre) // Subtitulo
+                .snippet(SITIO!!.tipo + " del " + SITIO!!.fecha) // Color o tipo d icono
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET))
         )
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(posicion))
+        map.moveCamera(CameraUpdateFactory.newLatLng(posicion))
     }
 
     /**
@@ -597,7 +575,7 @@ class SitioDetalleFragment(
             ) {
                 return
             }
-            mMap.isMyLocationEnabled = true
+            map.isMyLocationEnabled = true
         }
         activarEventosMarcadores()
         mapaVisualizar()
@@ -607,16 +585,16 @@ class SitioDetalleFragment(
      * Activa los eventos de los marcadores
      */
     private fun activarEventosMarcadores() {
-        mMap.setOnMapClickListener { point ->
-            marcadorTouch?.remove()
-            marcadorTouch = mMap.addMarker(
+        map.setOnMapClickListener { point ->
+            markerT?.remove()
+            markerT = map.addMarker(
                 MarkerOptions() // Posición
                     .position(point) // Título
                     .title("Posición Actual") // Subtitulo
                     .snippet(detalleSitioInput.text.toString())
                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN))
             )
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(point))
+            map.moveCamera(CameraUpdateFactory.newLatLng(point))
             posicion = point
         }
     }
@@ -629,19 +607,19 @@ class SitioDetalleFragment(
         try {
             if (this.PERMISOS) {
                 // Lo lanzamos como tarea concurrente
-                val local: Task<Location> = mPosicion!!.lastLocation
+                val local: Task<Location> = mapPosition!!.lastLocation
                 local.addOnCompleteListener(
                     requireActivity()
                 ) { task ->
                     if (task.isSuccessful) {
                         // Actualizamos la última posición conocida
                         //try {
-                        localizacion = task.result
+                        location = task.result
                         posicion = LatLng(
-                            localizacion!!.latitude,
-                            localizacion!!.longitude
+                            location!!.latitude,
+                            location!!.longitude
                         )
-                        mMap.moveCamera(CameraUpdateFactory.newLatLng(posicion));
+                        map.moveCamera(CameraUpdateFactory.newLatLng(posicion));
                     } else {
                         Log.i("GPS", "No se encuetra la última posición.")
                         Log.e("GPS", "Exception: %s", task.exception)
@@ -649,7 +627,8 @@ class SitioDetalleFragment(
                 }
             }
         } catch (e: SecurityException) {
-            Snackbar.make(requireView(),"No se ha encontrado su posoción actual o el GPS está desactivado",
+            Snackbar.make(
+                requireView(), "No se ha encontrado su posoción actual o el GPS está desactivado",
                 Snackbar.LENGTH_LONG
             ).show();
             Log.e("Exception: %s", e.message.toString())
@@ -700,15 +679,16 @@ class SitioDetalleFragment(
 
 
     private fun tomarFotoCamara() {
-        // Si queremos hacer uso de fotos en alta calidad
         val builder = StrictMode.VmPolicy.Builder()
         StrictMode.setVmPolicy(builder.build())
+
         val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         val nombre = Fotos.crearNombreFoto(IMG_PREF, IMG_EXT)
         val fichero = Fotos.salvarFoto(IMG_DIR, nombre, requireContext())
-        IMAGEN_URI = Uri.fromFile(fichero)
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, IMAGEN_URI)
-        Log.i("Camara", IMAGEN_URI.path.toString())
+
+        IMG_URI = Uri.fromFile(fichero)
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, IMG_URI)
+
         startActivityForResult(intent, CAMARA)
     }
 
@@ -734,50 +714,54 @@ class SitioDetalleFragment(
                     // Obtenemos el bitmap de su almacenamiento externo
                     // Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), contentURI);
                     if (Build.VERSION.SDK_INT < 28) {
-                        this.FOTO =
+                        this.PHOTO =
                             MediaStore.Images.Media.getBitmap(context?.contentResolver, contentURI);
                     } else {
                         val source: ImageDecoder.Source =
                             ImageDecoder.createSource(context?.contentResolver!!, contentURI)
-                        this.FOTO = ImageDecoder.decodeBitmap(source)
+                        this.PHOTO = ImageDecoder.decodeBitmap(source)
                     }
 
-                    val prop = this.IMG_PROPORCION / this.FOTO.width.toFloat()
+                    val prop = this.IMG_SIZE / this.PHOTO.width.toFloat()
 
-                    this.FOTO = Bitmap.createScaledBitmap(
-                        this.FOTO,
-                        this.IMG_PROPORCION,
-                        (this.FOTO.height * prop).toInt(),
+                    this.PHOTO = Bitmap.createScaledBitmap(
+                        this.PHOTO,
+                        this.IMG_SIZE,
+                        (this.PHOTO.height * prop).toInt(),
                         false
                     )
 
                     val nombre = Fotos.crearNombreFoto(IMG_PREF, IMG_EXT)
                     val fichero =
-                        Fotos.copyPhoto(this.FOTO, nombre, IMG_DIR, IMG_COMPR_LVL, requireContext())
-                    IMAGEN_URI = Uri.fromFile(fichero)
-                    Toast.makeText(context, "¡Foto rescatada de la galería!", Toast.LENGTH_SHORT)
-                        .show()
-                    detalleFotoSitio.setImageBitmap(this.FOTO)
+                        Fotos.copyPhoto(
+                            this.PHOTO,
+                            nombre,
+                            IMG_DIR,
+                            IMG_COMPR_LVL,
+                            requireContext()
+                        )
+                    IMG_URI = Uri.fromFile(fichero)
+
+                    detalleFotoSitio.setImageBitmap(this.PHOTO)
 
                 } catch (e: IOException) {
                     e.printStackTrace()
-                    Toast.makeText(context, "¡Fallo Galeria!", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "ERROR - GALERIA", Toast.LENGTH_SHORT).show()
                 }
             }
         } else if (requestCode == CAMARA) {
-            Log.i("FOTO", "Entramos en Camara")
             try {
                 if (Build.VERSION.SDK_INT < 28) {
-                    this.FOTO =
-                        MediaStore.Images.Media.getBitmap(context?.contentResolver, IMAGEN_URI)
+                    this.PHOTO =
+                        MediaStore.Images.Media.getBitmap(context?.contentResolver, IMG_URI)
                 } else {
                     val source: ImageDecoder.Source =
-                        ImageDecoder.createSource(context?.contentResolver!!, IMAGEN_URI)
-                    this.FOTO = ImageDecoder.decodeBitmap(source)
+                        ImageDecoder.createSource(context?.contentResolver!!, IMG_URI)
+                    this.PHOTO = ImageDecoder.decodeBitmap(source)
                 }
-                Log.i("SitioDetalleFragment", IMAGEN_URI.path.toString())
-                Fotos.comprimirImagen(IMAGEN_URI.toFile(), this.FOTO, this.IMG_COMPR_LVL)
-                detalleFotoSitio.setImageBitmap(this.FOTO)
+                Log.i("SitioDetalleFragment", IMG_URI.path.toString())
+                Fotos.comprimirImagen(IMG_URI.toFile(), this.PHOTO, this.IMG_COMPR_LVL)
+                detalleFotoSitio.setImageBitmap(this.PHOTO)
             } catch (e: Exception) {
                 e.printStackTrace()
                 Log.i("SitioDetalleFragment", "Fallo camara")

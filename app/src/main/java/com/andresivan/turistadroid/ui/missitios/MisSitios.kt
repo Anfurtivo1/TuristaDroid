@@ -25,7 +25,7 @@ import java.text.SimpleDateFormat
 
 class MisSitios : Fragment() {
     // Propiedades
-    private var SITIOS = mutableListOf<Lugar>()
+    private var SITIOS:MutableList<Lugar> = mutableListOf()
     private lateinit var sitiosAdapter: SitiosListAdapter
     private lateinit var tareaSitios: TareaCargarSitios
     private var paintSweep = Paint()
@@ -202,7 +202,7 @@ class MisSitios : Fragment() {
      */
     private fun abrirSitioDetalle() {
 
-        val navHostFragment = getFragmentManager()?.findFragmentById(R.id.mobile_navigation) as NavHostFragment
+        val navHostFragment = getFragmentManager()?.findFragmentById(R.id.sitioDetalleFragment) as NavHostFragment
         val navController = navHostFragment.navController
 
     }
@@ -323,7 +323,7 @@ class MisSitios : Fragment() {
         sitiosAdapter.notifyDataSetChanged()
     }
 
-    fun actualizarVistaLista() {
+    fun actualizarRevyclerView() {
         sitiosRecycler.adapter = sitiosAdapter
     }
 

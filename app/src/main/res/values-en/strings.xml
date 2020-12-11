@@ -24,4 +24,7 @@
     <string name="tituloSplashScreen">TuristaDroid</string>
     <string name="login_lbl_Correo">Email</string>
     <string name="mp_hint_twitter">Link Twitter</string>
+    <string name="nav_header_title">Header Title</string>
+    <string name="nav_header_subtitle">Header Subtitle</string>
+    <string name="nav_header_desc">User photo</string>
 </resources>
