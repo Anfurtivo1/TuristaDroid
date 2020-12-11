@@ -1,0 +1,161 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.andresivan.turistadroid"
+4    android:versionCode="1"
+5    android:versionName="1.0" >
+6
+7    <uses-sdk
+8        android:minSdkVersion="23"
+8-->C:\Users\Andres\Desktop\TuristaDroid\app\src\main\AndroidManifest.xml
+9        android:targetSdkVersion="30" />
+9-->C:\Users\Andres\Desktop\TuristaDroid\app\src\main\AndroidManifest.xml
+10
+11    <!--
+12         The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
+13         Google Maps Android API v2, but you must specify either coarse or fine
+14         location permissions for the "MyLocation" functionality.
+15    -->
+16    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+16-->C:\Users\Andres\Desktop\TuristaDroid\app\src\main\AndroidManifest.xml:10:5-79
+16-->C:\Users\Andres\Desktop\TuristaDroid\app\src\main\AndroidManifest.xml:10:22-76
+17    <uses-permission android:name="android.permission.INTERNET" />
+17-->C:\Users\Andres\Desktop\TuristaDroid\app\src\main\AndroidManifest.xml:11:5-66
+17-->C:\Users\Andres\Desktop\TuristaDroid\app\src\main\AndroidManifest.xml:11:22-64
+18    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+18-->C:\Users\Andres\Desktop\TuristaDroid\app\src\main\AndroidManifest.xml:12:5-78
+18-->C:\Users\Andres\Desktop\TuristaDroid\app\src\main\AndroidManifest.xml:12:22-76
+19<!--              Permisos de camara -->
+20
+21    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+21-->C:\Users\Andres\Desktop\TuristaDroid\app\src\main\AndroidManifest.xml:17:5-79
+21-->C:\Users\Andres\Desktop\TuristaDroid\app\src\main\AndroidManifest.xml:17:22-77
+22    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+22-->C:\Users\Andres\Desktop\TuristaDroid\app\src\main\AndroidManifest.xml:18:5-80
+22-->C:\Users\Andres\Desktop\TuristaDroid\app\src\main\AndroidManifest.xml:18:22-78
+23    <uses-permission android:name="android.permission.CAMERA" />
+23-->C:\Users\Andres\Desktop\TuristaDroid\app\src\main\AndroidManifest.xml:19:5-64
+23-->C:\Users\Andres\Desktop\TuristaDroid\app\src\main\AndroidManifest.xml:19:22-62
+24
+25    <uses-feature
+25-->[com.google.android.gms:play-services-maps:17.0.0] C:\Users\Andres\.gradle\caches\transforms-2\files-2.1\b74972b5723bc03ece4c898748898e0f\jetified-play-services-maps-17.0.0\AndroidManifest.xml:26:5-28:35
+26        android:glEsVersion="0x00020000"
+26-->[com.google.android.gms:play-services-maps:17.0.0] C:\Users\Andres\.gradle\caches\transforms-2\files-2.1\b74972b5723bc03ece4c898748898e0f\jetified-play-services-maps-17.0.0\AndroidManifest.xml:27:9-41
+27        android:required="true" />
+27-->[com.google.android.gms:play-services-maps:17.0.0] C:\Users\Andres\.gradle\caches\transforms-2\files-2.1\b74972b5723bc03ece4c898748898e0f\jetified-play-services-maps-17.0.0\AndroidManifest.xml:28:9-32
+28
+29    <application
+29-->C:\Users\Andres\Desktop\TuristaDroid\app\src\main\AndroidManifest.xml:21:5-55:19
+30        android:name="com.andresivan.turistadroid.app.MyApp"
+30-->C:\Users\Andres\Desktop\TuristaDroid\app\src\main\AndroidManifest.xml:22:9-34
+31        android:allowBackup="true"
+31-->C:\Users\Andres\Desktop\TuristaDroid\app\src\main\AndroidManifest.xml:23:9-35
+32        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+32-->[androidx.core:core:1.3.2] C:\Users\Andres\.gradle\caches\transforms-2\files-2.1\67c768d74678346e198806daeb079217\core-1.3.2\AndroidManifest.xml:24:18-86
+33        android:debuggable="true"
+34        android:extractNativeLibs="false"
+35        android:icon="@mipmap/ic_launcher"
+35-->C:\Users\Andres\Desktop\TuristaDroid\app\src\main\AndroidManifest.xml:24:9-43
+36        android:label="@string/app_name"
+36-->C:\Users\Andres\Desktop\TuristaDroid\app\src\main\AndroidManifest.xml:25:9-41
+37        android:roundIcon="@mipmap/ic_launcher_round"
+37-->C:\Users\Andres\Desktop\TuristaDroid\app\src\main\AndroidManifest.xml:26:9-54
+38        android:supportsRtl="true"
+38-->C:\Users\Andres\Desktop\TuristaDroid\app\src\main\AndroidManifest.xml:27:9-35
+39        android:testOnly="true"
+40        android:theme="@style/AppTheme" >
+40-->C:\Users\Andres\Desktop\TuristaDroid\app\src\main\AndroidManifest.xml:28:9-40
+41
+42        <!--
+43             The API key for Google Maps-based APIs is defined as a string resource.
+44             (See the file "res/values/google_maps_api.xml").
+45             Note that the API key is linked to the encryption key used to sign the APK.
+46             You need a different API key for each encryption key, including the release key that is used to
+47             sign the APK for publishing.
+48             You can define the keys for the debug and release targets in src/debug/ and src/release/.
+49        -->
+50        <meta-data
+50-->C:\Users\Andres\Desktop\TuristaDroid\app\src\main\AndroidManifest.xml:38:9-40:55
+51            android:name="com.google.android.geo.API_KEY"
+51-->C:\Users\Andres\Desktop\TuristaDroid\app\src\main\AndroidManifest.xml:39:13-58
+52            android:value="@string/google_maps_key" />
+52-->C:\Users\Andres\Desktop\TuristaDroid\app\src\main\AndroidManifest.xml:40:13-52
+53
+54        <activity
+54-->C:\Users\Andres\Desktop\TuristaDroid\app\src\main\AndroidManifest.xml:42:9-45:59
+55            android:name="com.andresivan.turistadroid.pantallaprincipal"
+55-->C:\Users\Andres\Desktop\TuristaDroid\app\src\main\AndroidManifest.xml:43:13-46
+56            android:label="@string/title_activity_pantallaprincipal"
+56-->C:\Users\Andres\Desktop\TuristaDroid\app\src\main\AndroidManifest.xml:44:13-69
+57            android:theme="@style/AppTheme.NoActionBar" />
+57-->C:\Users\Andres\Desktop\TuristaDroid\app\src\main\AndroidManifest.xml:45:13-56
+58        <activity android:name="com.andresivan.turistadroid.registrarse" />
+58-->C:\Users\Andres\Desktop\TuristaDroid\app\src\main\AndroidManifest.xml:46:9-49
+58-->C:\Users\Andres\Desktop\TuristaDroid\app\src\main\AndroidManifest.xml:46:19-46
+59        <activity android:name="com.andresivan.turistadroid.login" />
+59-->C:\Users\Andres\Desktop\TuristaDroid\app\src\main\AndroidManifest.xml:47:9-43
+59-->C:\Users\Andres\Desktop\TuristaDroid\app\src\main\AndroidManifest.xml:47:19-40
+60        <activity android:name="com.andresivan.turistadroid.MainActivity" >
+60-->C:\Users\Andres\Desktop\TuristaDroid\app\src\main\AndroidManifest.xml:48:9-54:20
+60-->C:\Users\Andres\Desktop\TuristaDroid\app\src\main\AndroidManifest.xml:48:19-47
+61            <intent-filter>
+61-->C:\Users\Andres\Desktop\TuristaDroid\app\src\main\AndroidManifest.xml:49:13-53:29
+62                <action android:name="android.intent.action.MAIN" />
+62-->C:\Users\Andres\Desktop\TuristaDroid\app\src\main\AndroidManifest.xml:50:17-69
+62-->C:\Users\Andres\Desktop\TuristaDroid\app\src\main\AndroidManifest.xml:50:25-66
+63
+64                <category android:name="android.intent.category.LAUNCHER" />
+64-->C:\Users\Andres\Desktop\TuristaDroid\app\src\main\AndroidManifest.xml:52:17-77
+64-->C:\Users\Andres\Desktop\TuristaDroid\app\src\main\AndroidManifest.xml:52:27-74
+65            </intent-filter>
+66        </activity>
+67        <activity
+67-->[com.karumi:dexter:6.2.1] C:\Users\Andres\.gradle\caches\transforms-2\files-2.1\35c04c5fcf40548abddd81bb72a73420\jetified-dexter-6.2.1\AndroidManifest.xml:27:9-29:72
+68            android:name="com.karumi.dexter.DexterActivity"
+68-->[com.karumi:dexter:6.2.1] C:\Users\Andres\.gradle\caches\transforms-2\files-2.1\35c04c5fcf40548abddd81bb72a73420\jetified-dexter-6.2.1\AndroidManifest.xml:28:13-60
+69            android:theme="@style/Dexter.Internal.Theme.Transparent" /> <!-- Needs to be explicitly declared on P+ -->
+69-->[com.karumi:dexter:6.2.1] C:\Users\Andres\.gradle\caches\transforms-2\files-2.1\35c04c5fcf40548abddd81bb72a73420\jetified-dexter-6.2.1\AndroidManifest.xml:29:13-69
+70        <uses-library
+70-->[com.google.android.gms:play-services-maps:17.0.0] C:\Users\Andres\.gradle\caches\transforms-2\files-2.1\b74972b5723bc03ece4c898748898e0f\jetified-play-services-maps-17.0.0\AndroidManifest.xml:33:9-35:40
+71            android:name="org.apache.http.legacy"
+71-->[com.google.android.gms:play-services-maps:17.0.0] C:\Users\Andres\.gradle\caches\transforms-2\files-2.1\b74972b5723bc03ece4c898748898e0f\jetified-play-services-maps-17.0.0\AndroidManifest.xml:34:13-50
+72            android:required="false" />
+72-->[com.google.android.gms:play-services-maps:17.0.0] C:\Users\Andres\.gradle\caches\transforms-2\files-2.1\b74972b5723bc03ece4c898748898e0f\jetified-play-services-maps-17.0.0\AndroidManifest.xml:35:13-37
+73
+74        <provider
+74-->[com.squareup.picasso:picasso:2.71828] C:\Users\Andres\.gradle\caches\transforms-2\files-2.1\1ccbbf26a2b3c2f5b0c69d506207c90d\jetified-picasso-2.71828\AndroidManifest.xml:8:9-11:40
+75            android:name="com.squareup.picasso.PicassoProvider"
+75-->[com.squareup.picasso:picasso:2.71828] C:\Users\Andres\.gradle\caches\transforms-2\files-2.1\1ccbbf26a2b3c2f5b0c69d506207c90d\jetified-picasso-2.71828\AndroidManifest.xml:9:13-64
+76            android:authorities="com.andresivan.turistadroid.com.squareup.picasso"
+76-->[com.squareup.picasso:picasso:2.71828] C:\Users\Andres\.gradle\caches\transforms-2\files-2.1\1ccbbf26a2b3c2f5b0c69d506207c90d\jetified-picasso-2.71828\AndroidManifest.xml:10:13-72
+77            android:exported="false" />
+77-->[com.squareup.picasso:picasso:2.71828] C:\Users\Andres\.gradle\caches\transforms-2\files-2.1\1ccbbf26a2b3c2f5b0c69d506207c90d\jetified-picasso-2.71828\AndroidManifest.xml:11:13-37
+78
+79        <activity
+79-->[com.google.android.gms:play-services-base:17.0.0] C:\Users\Andres\.gradle\caches\transforms-2\files-2.1\935a700f984eb054858bfc48b4880a7f\jetified-play-services-base-17.0.0\AndroidManifest.xml:23:9-26:75
+80            android:name="com.google.android.gms.common.api.GoogleApiActivity"
+80-->[com.google.android.gms:play-services-base:17.0.0] C:\Users\Andres\.gradle\caches\transforms-2\files-2.1\935a700f984eb054858bfc48b4880a7f\jetified-play-services-base-17.0.0\AndroidManifest.xml:24:13-79
+81            android:exported="false"
+81-->[com.google.android.gms:play-services-base:17.0.0] C:\Users\Andres\.gradle\caches\transforms-2\files-2.1\935a700f984eb054858bfc48b4880a7f\jetified-play-services-base-17.0.0\AndroidManifest.xml:25:13-37
+82            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+82-->[com.google.android.gms:play-services-base:17.0.0] C:\Users\Andres\.gradle\caches\transforms-2\files-2.1\935a700f984eb054858bfc48b4880a7f\jetified-play-services-base-17.0.0\AndroidManifest.xml:26:13-72
+83
+84        <meta-data
+84-->[com.google.android.gms:play-services-basement:17.0.0] C:\Users\Andres\.gradle\caches\transforms-2\files-2.1\fccefd6e31e835c914c117aca03d6864\jetified-play-services-basement-17.0.0\AndroidManifest.xml:23:9-25:69
+85            android:name="com.google.android.gms.version"
+85-->[com.google.android.gms:play-services-basement:17.0.0] C:\Users\Andres\.gradle\caches\transforms-2\files-2.1\fccefd6e31e835c914c117aca03d6864\jetified-play-services-basement-17.0.0\AndroidManifest.xml:24:13-58
+86            android:value="@integer/google_play_services_version" />
+86-->[com.google.android.gms:play-services-basement:17.0.0] C:\Users\Andres\.gradle\caches\transforms-2\files-2.1\fccefd6e31e835c914c117aca03d6864\jetified-play-services-basement-17.0.0\AndroidManifest.xml:25:13-66
+87
+88        <provider
+88-->[androidx.lifecycle:lifecycle-process:2.2.0] C:\Users\Andres\.gradle\caches\transforms-2\files-2.1\380f39469f467dd1d1f52dfb833dad57\jetified-lifecycle-process-2.2.0\AndroidManifest.xml:25:9-29:43
+89            android:name="androidx.lifecycle.ProcessLifecycleOwnerInitializer"
+89-->[androidx.lifecycle:lifecycle-process:2.2.0] C:\Users\Andres\.gradle\caches\transforms-2\files-2.1\380f39469f467dd1d1f52dfb833dad57\jetified-lifecycle-process-2.2.0\AndroidManifest.xml:26:13-79
+90            android:authorities="com.andresivan.turistadroid.lifecycle-process"
+90-->[androidx.lifecycle:lifecycle-process:2.2.0] C:\Users\Andres\.gradle\caches\transforms-2\files-2.1\380f39469f467dd1d1f52dfb833dad57\jetified-lifecycle-process-2.2.0\AndroidManifest.xml:27:13-69
+91            android:exported="false"
+91-->[androidx.lifecycle:lifecycle-process:2.2.0] C:\Users\Andres\.gradle\caches\transforms-2\files-2.1\380f39469f467dd1d1f52dfb833dad57\jetified-lifecycle-process-2.2.0\AndroidManifest.xml:28:13-37
+92            android:multiprocess="true" />
+92-->[androidx.lifecycle:lifecycle-process:2.2.0] C:\Users\Andres\.gradle\caches\transforms-2\files-2.1\380f39469f467dd1d1f52dfb833dad57\jetified-lifecycle-process-2.2.0\AndroidManifest.xml:29:13-40
+93    </application>
+94
+95</manifest>
