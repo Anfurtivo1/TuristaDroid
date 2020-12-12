@@ -5,13 +5,15 @@
     android:id="@+id/misSitios"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.missitios.MisSitios">
+    android:background="@color/recyclerListColor">
+
 
     <Spinner
         android:id="@+id/misSitiosSpinnerFiltro"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
+        android:background="@color/recyclerListColor"
         android:gravity="right" android:entries="@array/filtros" android:spinnerMode="dropdown" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -48,6 +50,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:scrollbars="vertical"
+            android:background="@color/recyclerListColor"
             tools:listitem="@layout/item_lugar"/>
 
 

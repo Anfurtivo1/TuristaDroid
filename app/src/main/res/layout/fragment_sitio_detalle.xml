@@ -10,13 +10,12 @@
     <ImageView
         android:id="@+id/detalleFotoSitio"
         android:layout_width="match_parent"
-        android:layout_height="145dp"/>
-        <!--android:background="@color/itemListColor"
+        android:layout_height="145dp"
+        android:background="@color/recyclerListColor"
         android:scaleType="centerCrop"
-        android:src="@mipmap/ic_launcher_foreground"
-        app:srcCompat="@mipmap/ic_launcher_foreground"
-        tools:srcCompat="@mipmap/ic_launcher_foreground"/>
-        !-->
+        android:src="@mipmap/ic_launcher" app:srcCompat="@mipmap/ic_launcher"
+        tools:srcCompat="@mipmap/ic_launcher"/>
+        !
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/detalleCamaraSitio"
@@ -90,15 +89,11 @@
                 android:layout_gravity="left|center_vertical"/>
 
             <TextView
-                android:id="@+id/detalleFavoritos"
+                android:text="20 votos"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:clickable="false"
-                android:gravity="right|center_vertical"
-                android:text="valoraciones"
-                android:textColor="@color/colorPrimary"
-                android:textStyle="bold" />
+                android:layout_height="match_parent" android:id="@+id/detalleSitioValoracion"
+                android:layout_weight="1" android:textColor="@color/colorPrimary" android:clickable="false"
+                android:gravity="right|center_vertical" android:textStyle="bold"/>
 
         </LinearLayout>
 
@@ -121,7 +116,8 @@
             tools:context=".ui.cercademi"
             android:name="com.google.android.gms.maps.SupportMapFragment" android:layout_marginTop="5dp"
             android:layout_marginStart="0dp" android:layout_marginEnd="0dp"
-            android:layout_below="@+id/linearLayoutSitioInfo"/>
+            android:layout_below="@+id/linearLayoutSitioInfo"
+            tools:layout="@layout/fragment_cercademi" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             style="@android:style/Widget.Material.ImageButton"

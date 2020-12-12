@@ -1,17 +1,21 @@
 package com.andresivan.turistadroid.ui.missitios
 
+import android.app.Activity.RESULT_CANCELED
+import android.app.Activity.RESULT_OK
+import android.content.Intent
 import android.graphics.*
 import android.os.AsyncTask
 import android.os.Bundle
+import android.speech.RecognizerIntent
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
-import androidx.navigation.fragment.NavHostFragment
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -19,65 +23,97 @@ import com.andresivan.turistadroid.R
 import com.andresivan.turistadroid.entidades.lugares.Lugar
 import com.andresivan.turistadroid.entidades.lugares.LugarController
 import com.andresivan.turistadroid.ui.missitios.Filtross.FiltrosControlador
+import com.andresivan.turistadroid.ui.missitios.ModosAccesos
+import com.andresivan.turistadroid.ui.missitios.SitioDetalleFragment
+import com.andresivan.turistadroid.ui.missitios.SitiosListAdapter
 import com.andresivan.turistadroid.ui.missitios.filtros.Filtros
 import kotlinx.android.synthetic.main.fragment_missitios.*
 import java.text.SimpleDateFormat
+import java.util.*
+
 
 class MisSitios : Fragment() {
     // Propiedades
-    private var SITIOS:MutableList<Lugar> = mutableListOf()
-    private lateinit var sitiosAdapter: SitiosListAdapter
-    private lateinit var tareaSitios: TareaCargarSitios
+    private var LUGARES = mutableListOf<Lugar>()
+    private lateinit var lugaresAdapter: SitiosListAdapter //Adaptador de Noticias de Recycler
+    private lateinit var tareaLugares: TareaCargarLugares // Tarea en segundo plano
     private var paintSweep = Paint()
+
+    // Búsquedas
     private var FILTRO = Filtros.NADA
+    private val VOZ = 10
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_missitios, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        iniciarInterfazUsuario()
+        // Iniciamos la interfaz
+        initUI()
     }
 
-    private fun iniciarInterfazUsuario() {
+    /**
+     * Inicia la Interfaz de Usuario
+     */
+    private fun initUI() {
+        Log.i("Lugares", "Init IU")
         iniciarSwipeRecarga()
         cargarLugares()
-        initSpinner()
+        iniciarSpinner()
         iniciarSwipeHorizontal()
         sitiosRecycler.layoutManager = LinearLayoutManager(context)
-        fabNuevo.setOnClickListener {
-            Log.i("Lugares", "fabNuevo")
-            nuevoElemento() }
+        fabNuevo.setOnClickListener { nuevoElemento() }
+
+        Log.i("Lugares", "Fin la IU")
     }
 
-    private fun initSpinner() {
-        val condicionBusq = resources.getStringArray(R.array.filtros)
-        val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, condicionBusq)
-
+    private fun iniciarSpinner() {
+        val tipoBusqueda = resources.getStringArray(R.array.filtros)
+        val adapter = ArrayAdapter(context!!,
+            android.R.layout.simple_spinner_item, tipoBusqueda)
         misSitiosSpinnerFiltro.adapter = adapter
         misSitiosSpinnerFiltro.onItemSelectedListener = object :
             AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>, view: View?, pos: Int, id: Long) {
-                FILTRO = FiltrosControlador.indiceFiltrosSpinner(pos)
+            override fun onItemSelected(parent: AdapterView<*>,
+                                        view: View, position: Int, id: Long) {
+                FILTRO = FiltrosControlador.indiceFiltrosSpinner(position)
+                // Listamos los lugares y cargamos el recycler
+                Log.i("Filtros", position.toString())
+                Toast.makeText(context!!, "Ordenando por: " + tipoBusqueda[position], Toast.LENGTH_SHORT).show()
                 visualizarListaItems()
             }
-
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-                TODO("Not yet implemented")
+            override fun onNothingSelected(parent: AdapterView<*>) {
+                // write code to perform some action
             }
-
         }
     }
 
+    /**
+     * Deslizamiento vertical para recargar
+     */
+    private fun iniciarSwipeRecarga() {
+        sitiosSwipeRefresh.setColorSchemeResources(R.color.colorPrimaryDark)
+        sitiosSwipeRefresh.setProgressBackgroundColorSchemeResource(R.color.colorAccent)
+        sitiosSwipeRefresh.setOnRefreshListener {
+            cargarLugares()
+        }
+    }
+
+    /**
+     * Realiza el swipe horizontal si es necesario
+     */
     private fun iniciarSwipeHorizontal() {
-        val simpleItemTouchCallback: ItemTouchHelper.SimpleCallback = object :
-            ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
+        val simpleItemTouchCallback: ItemTouchHelper.SimpleCallback = object : ItemTouchHelper.SimpleCallback(
+            0, ItemTouchHelper.LEFT or
+                    ItemTouchHelper.RIGHT
+        ) {
+            // Sobreescribimos los métodos
             override fun onMove(
                 recyclerView: RecyclerView,
                 viewHolder: RecyclerView.ViewHolder,
@@ -86,8 +122,11 @@ class MisSitios : Fragment() {
                 return false
             }
 
+            // Analizamos el evento según la dirección
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val position = viewHolder.adapterPosition
+                // Si pulsamos a la de izquierda o a la derecha
+                // Programamos la accion
                 when (direction) {
                     ItemTouchHelper.LEFT -> {
                         borrarElemento(position)
@@ -98,6 +137,13 @@ class MisSitios : Fragment() {
                 }
             }
 
+            // Dibujamos los botones y eveneto. Nos lo creemos :):)
+            // IMPORTANTE
+            // Para que no te explote las imagenes deben ser PNG
+            // Así que añade un IMAGE ASEET bjándtelos de internet
+            // https://material.io/resources/icons/?style=baseline
+            // como PNG y cargas el de mayor calidad
+            // de otra forma Bitmap no funciona bien
             override fun onChildDraw(
                 canvas: Canvas,
                 recyclerView: RecyclerView,
@@ -111,39 +157,33 @@ class MisSitios : Fragment() {
                     val itemView = viewHolder.itemView
                     val height = itemView.bottom.toFloat() - itemView.top.toFloat()
                     val width = height / 3
+                    // Si es dirección a la derecha: izquierda->derecta
+                    // Pintamos de azul y ponemos el icono
                     if (dX > 0) {
                         // Pintamos el botón izquierdo
-                        btnIzq(canvas, dX, itemView, width)
+                        botonIzquierdo(canvas, dX, itemView, width)
                     } else {
                         // Caso contrario
-                        btnDer(canvas, dX, itemView, width)
+                        botonDerecho(canvas, dX, itemView, width)
                     }
                 }
-                super.onChildDraw(
-                    canvas,
-                    recyclerView,
-                    viewHolder,
-                    dX,
-                    dY,
-                    actionState,
-                    isCurrentlyActive
-                )
+                super.onChildDraw(canvas, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
             }
         }
-
+        // Añadimos los eventos al RV
         val itemTouchHelper = ItemTouchHelper(simpleItemTouchCallback)
         itemTouchHelper.attachToRecyclerView(sitiosRecycler)
     }
 
-    private fun editarElemento(pos: Int) {
-        abrirDetalle(SITIOS[pos], ModosAccesos.ACTUALIZAR, this, pos)
-    }
-
-    private fun borrarElemento(pos: Int) {
-        abrirDetalle(SITIOS[pos], ModosAccesos.ELIMINAR, this, pos)
-    }
-
-    private fun btnDer(canvas: Canvas, dX: Float, itemView: View, width: Float) {
+    /**
+     * Mostramos el elemento iquierdo
+     * @param canvas Canvas
+     * @param dX Float
+     * @param itemView View
+     * @param width Float
+     */
+    private fun botonDerecho(canvas: Canvas, dX: Float, itemView: View, width: Float) {
+        // Pintamos de rojo y ponemos el icono
         paintSweep.color = Color.RED
         val background = RectF(
             itemView.right.toFloat() + dX,
@@ -165,7 +205,8 @@ class MisSitios : Fragment() {
      * @param itemView View
      * @param width Float
      */
-    private fun btnIzq(canvas: Canvas, dX: Float, itemView: View, width: Float) {
+    private fun botonIzquierdo(canvas: Canvas, dX: Float, itemView: View, width: Float) {
+        // Pintamos de azul y ponemos el icono
         paintSweep.setColor(Color.BLUE)
         val background = RectF(
             itemView.left.toFloat(), itemView.top.toFloat(), dX,
@@ -180,75 +221,174 @@ class MisSitios : Fragment() {
         canvas.drawBitmap(icon, null, iconDest, paintSweep)
     }
 
+    /**
+     * Carga los lugares
+     */
+    private fun cargarLugares() {
+        tareaLugares = TareaCargarLugares()
+        tareaLugares.execute()
+    }
+
+    /**
+     * Abre un nuevo elemeneto
+     */
     private fun nuevoElemento() {
-        Log.i("Lugares", "Nuevo elemento")
+        Log.i("Lugares", "Nuevo lugar")
         abrirDetalle(null, ModosAccesos.INSERTAR, this, null)
     }
 
-    private fun abrirDetalle(
-        sitio: Lugar?,
-        modosAccesos: ModosAccesos?,
-        anterior: MisSitios?,
-        position: Int?
-    ) {
-        Log.i("Lugares", "abrir Detalle")
-        val sitioDetalle = SitioDetalleFragment(sitio, modosAccesos, anterior, position)
-        Log.i("Lugares",sitioDetalle.toString())
-        abrirSitioDetalle()
+    /**
+     * Inserta un elemento en la lista
+     */
+    fun insertarItemLista(item: Lugar) {
+        this.lugaresAdapter.addItem(item)
+        lugaresAdapter.notifyDataSetChanged()
     }
 
     /**
-     * Se abre el fragment de SitioDetalle
+     * Edita el elemento en la posición seleccionada
+     * @param position Int
      */
-    private fun abrirSitioDetalle() {
-
-        val navHostFragment = getFragmentManager()?.findFragmentById(R.id.sitioDetalleFragment) as NavHostFragment
-        val navController = navHostFragment.navController
-
+    private fun editarElemento(position: Int) {
+        Log.i("Lugares", "Editando el elemento pos: " + position)
+        abrirDetalle(LUGARES[position], ModosAccesos.ACTUALIZAR, this, position)
     }
 
-    private fun iniciarSwipeRecarga() {
-        sitiosSwipeRefresh.setColorSchemeResources(R.color.colorPrimaryDark)
-        sitiosSwipeRefresh.setProgressBackgroundColorSchemeResource(R.color.colorAccent)
-        sitiosSwipeRefresh.setOnRefreshListener {
-            cargarLugares()
+    fun actualizarItemLista(item: Lugar, position: Int) {
+        this.lugaresAdapter.updateItem(item, position)
+        lugaresAdapter.notifyDataSetChanged()
+    }
+
+    /**
+     * Borra el elemento en la posición seleccionada
+     * @param position Int
+     */
+    private fun borrarElemento(position: Int) {
+        Log.i("Lugares", "Borrando el elemento pos: " + position)
+        abrirDetalle(LUGARES[position], ModosAccesos.ELIMINAR, this, position)
+    }
+
+    /**
+     * Elimina un elemento de la vista
+     * @param position Int
+     */
+    fun eliminarItemLista(position: Int) {
+        this.lugaresAdapter.removeItem(position)
+        lugaresAdapter.notifyDataSetChanged()
+    }
+
+    fun actualizarVistaLista() {
+        sitiosRecycler.adapter = lugaresAdapter
+    }
+
+    /**
+     * Abre el elemento en la posición didicada
+     * @param lugar Lugar
+     */
+    private fun abrirElemento(lugar: Lugar) {
+        Log.i("Lugares", "Visualizando el elemento: " + lugar.id)
+        abrirDetalle(lugar, ModosAccesos.VISUALIZAR, this, null)
+    }
+
+    /**
+     * Abre el detalle del item
+     * @param lugar Lugar?
+     * @param modo Modo?
+     * @param anterior LugaresFragment?
+     * @param position Int?
+     */
+    private fun abrirDetalle(lugar: Lugar?, modo: ModosAccesos?, anterior: MisSitios?, position: Int?) {
+        Log.i("Lugares", "Abriendo el elemento pos: " + lugar?.id)
+        val lugarDetalle = SitioDetalleFragment(lugar, modo, anterior, position)
+        val transaction = activity!!.supportFragmentManager.beginTransaction()
+        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+        transaction.add(R.id.nav_host_fragment, lugarDetalle)
+        transaction.addToBackStack(null)
+        transaction.commit()
+    }
+
+    /**
+     * Evento clic asociado a una fila
+     * @param lugar Lugar
+     */
+    private fun eventoClicFila(lugar: Lugar) {
+        abrirElemento(lugar)
+    }
+
+    /**
+     * Resultadp de las acciones
+     * @param requestCode Int
+     * @param resultCode Int
+     * @param data Intent?
+     */
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == RESULT_CANCELED) {
+            return
         }
     }
 
-    private fun cargarLugares() {
-        tareaSitios = TareaCargarSitios()
+    /**
+     * función para ordenar la lista como mayores y menores
+     */
+    private fun ordenarLugares() {
+        /*
+        Log.i("Filtros", FILTRO.toString())
+        when (FILTRO) {
+            Filtros.NADA -> this.LUGARES.sortWith ( l1: Lugar, l2: Lugar -> l1.id.compareTo(l2.id) )
+            // Nombre
+            Filtros.NOMBRE_ASCENDENTE -> this.LUGARES.sortWith { l1: Lugar, l2: Lugar -> l1.nombre.toLowerCase().compareTo(l2.nombre.toLowerCase()) }
+            Filtros.NOMBRE_DESCENDENTE -> this.LUGARES.sortWith { l1: Lugar, l2: Lugar -> l2.nombre.toLowerCase().compareTo(l1.nombre.toLowerCase()) }
+
+            /*
+            // Fecha
+            Filtros.FECHA_ASCENDENTE -> this.LUGARES.sortWith { l1: Lugar, l2: Lugar ->
+                SimpleDateFormat("dd/MM/yyyy").parse(l1.fecha).compareTo(SimpleDateFormat("dd/MM/yyyy").parse(l2.fecha))
+            }
+            Filtros.FECHA_ASCENDENTE -> this.LUGARES.sortWith { l1: Lugar, l2: Lugar ->
+                SimpleDateFormat("dd/MM/yyyy").parse(l2.fecha).compareTo(SimpleDateFormat("dd/MM/yyyy").parse(l1.fecha))
+            }
+            */
+            // Votos
+            Filtros.VALORACION_ASCENDENTE -> this.LUGARES.sortWith { l1: Lugar, l2: Lugar -> l1.valoracion.compareTo(l2.valoracion) }
+            Filtros.VALORACION_ASCENDENTE -> this.LUGARES.sortWith { l1: Lugar, l2: Lugar -> l2.valoracion.compareTo(l1.valoracion) }
+
+            else -> {
+            }
+        }
+         */
     }
 
-
     /**
-     * Esta clase embebida en el fragment de mis sitios, permite se ejecuta a la par de la aplicación
+     * Tarea asíncrona para la carga de noticias
      */
-    inner class TareaCargarSitios : AsyncTask<Void?, Void?, Void?>() {
+    inner class TareaCargarLugares : AsyncTask<Void?, Void?, Void?>() {
         // Pre-Tarea
         override fun onPreExecute() {
             if (sitiosSwipeRefresh.isRefreshing) {
                 sitiosSwipeRefresh.isRefreshing = false
             }
+            Toast.makeText(context, "Obteniendo lugares", Toast.LENGTH_LONG).show()
         }
-
         // Tarea
         override fun doInBackground(vararg args: Void?): Void? {
             try {
-                SITIOS = LugarController.selectAll()!!
+                LUGARES = LugarController.selectAll()!!
+                Log.i("Lugares", "Lista de lugares de tamaño: " + LUGARES.size)
             } catch (e: Exception) {
+                Log.e("T2Plano ", e.message.toString());
             }
             return null
         }
-
         //Post-Tarea
         override fun onPostExecute(args: Void?) {
-            //ordenarSitios()
-            sitiosAdapter = SitiosListAdapter(SITIOS) {
+            ordenarLugares()
+            lugaresAdapter = SitiosListAdapter(LUGARES) {
                 eventoClicFila(it)
             }
-            sitiosRecycler.adapter = sitiosAdapter
+            sitiosRecycler.adapter = lugaresAdapter
             // Avismos que ha cambiado
-            sitiosAdapter.notifyDataSetChanged()
+            lugaresAdapter.notifyDataSetChanged()
             sitiosRecycler.setHasFixedSize(true)
             sitiosSwipeRefresh.isRefreshing = false
             Toast.makeText(context, "Lugares cargados", Toast.LENGTH_LONG).show()
@@ -257,81 +397,21 @@ class MisSitios : Fragment() {
     }
 
     /**
-     * Función que muestra la lista de ubicaciones
+     * Visualiza la lista de items
      */
     private fun visualizarListaItems() {
-        ordenarSitios()
-        //sitiosRecycler.adapter = sitiosAdapter
-    }
-
-    private fun ordenarSitios() {
-        /*
-        Log.i("Filtro", "ORDENANDO POR: " + FILTRO.toString())
-        when (FILTRO) {
-            Filtros.NADA -> this.SITIOS.sortWith { l1: Lugar, l2: Lugar -> l1.id.compareTo(l2.id) }
-
-            Filtros.NOMBRE_ASCENDENTE -> this.SITIOS.sortWith { l1: Lugar, l2: Lugar ->
-                l1.nombre.toLowerCase().compareTo(l2.nombre.toLowerCase())
-            }
-            Filtros.NOMBRE_DESCENDENTE -> this.SITIOS.sortWith { l1: Lugar, l2: Lugar ->
-                l2.nombre.toLowerCase().compareTo(l1.nombre.toLowerCase())
-            }
-
-            Filtros.FECHA_ASCENDENTE -> this.SITIOS.sortWith { l1: Lugar, l2: Lugar ->
-                SimpleDateFormat("dd/MM/yyyy").parse(l1.fecha)
-                    .compareTo(SimpleDateFormat("dd/MM/yyyy").parse(l2.fecha))
-            }
-            Filtros.FECHA_DESCENDENTE -> this.SITIOS.sortWith { l1: Lugar, l2: Lugar ->
-                SimpleDateFormat("dd/MM/yyyy").parse(l2.fecha)
-                    .compareTo(SimpleDateFormat("dd/MM/yyyy").parse(l1.fecha))
-            }
-
-            Filtros.VALORACION_ASCENDENTE -> this.SITIOS.sortWith { l1: Lugar, l2: Lugar ->
-                l1.valoracion.compareTo(l2.valoracion)}
-            Filtros.VALORACION_ASCENDENTE -> this.SITIOS.sortWith { l1: Lugar, l2: Lugar ->
-                l2.votos.compareTo(l1.votos) }
-            else -> {
-            }
-        }
-         */
-    }
-
-    private fun eventoClicFila(lugar: Lugar) {
-        abrirElemento(lugar)
-    }
-
-    private fun abrirElemento(lugar: Lugar) {
-        Log.i("Mis Sitios", "Abrimos el lugar" + lugar.id)
-        abrirDetalle(lugar, ModosAccesos.VISUALIZAR, this, null)
+        ordenarLugares()
+        sitiosRecycler.adapter = lugaresAdapter
+        // lugaresAdapter.notifyDataSetChanged()
+        // lugaresRecycler.setHasFixedSize(true)
     }
 
     /**
-     * Si cancelamos la tarea
+     * Si paramos cancelamos la tarea
      */
     override fun onStop() {
         super.onStop()
-        tareaSitios.cancel(true)
+        tareaLugares.cancel(true)
     }
-
-    fun insertarItemLista(lugar: Lugar) {
-        this.sitiosAdapter.addItem(lugar)
-        sitiosAdapter.notifyDataSetChanged()
-    }
-
-    fun eliminarItemLista(pos: Int) {
-        this.sitiosAdapter.removeItem(pos)
-        sitiosAdapter.notifyDataSetChanged()
-    }
-
-    fun actualizarRevyclerView() {
-        sitiosRecycler.adapter = sitiosAdapter
-    }
-
-    fun actualizarItemLista(lugar: Lugar, lugarIndex: Int) {
-        this.sitiosAdapter.updateItem(lugar, lugarIndex)
-        sitiosAdapter.notifyDataSetChanged()
-    }
-
 }
-
 

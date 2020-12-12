@@ -15,28 +15,39 @@ import com.andresivan.turistadroid.entidades.lugares.LugarController
 import com.andresivan.turistadroid.utils.ABase64
 import kotlinx.android.synthetic.main.item_lugar.view.*
 
-class SitiosListAdapter(
-    private val listaSitios: MutableList<Lugar>,
-    private val funcionPrincipal: (Lugar) -> Unit
 
-) : RecyclerView.Adapter<SitiosListAdapter.SitioViewHolder>() {
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SitioViewHolder {
-        return SitioViewHolder(
+class SitiosListAdapter(
+    private val listaLugares: MutableList<Lugar>,
+    // Famos a tener distintas acciones y eventos
+    private val accionPrincipal: (Lugar) -> Unit
+
+) : RecyclerView.Adapter<SitiosListAdapter.LugarViewHolder>() {
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LugarViewHolder {
+        return LugarViewHolder(
             LayoutInflater.from(parent.context)
                 .inflate(R.layout.item_lugar, parent, false)
         )
     }
 
-    override fun onBindViewHolder(holder: SitioViewHolder, position: Int) {
-        holder.itemLugarNombre.text = listaSitios[position].nombre
-        holder.itemLugarFecha.text = listaSitios[position].fecha
-        holder.itemLugarTipo.text = listaSitios[position].tipo
-        holder.itemLugarVotos.text = listaSitios[position].valoracion.toString()
-        holder.itemLugarImagen.setImageBitmap(imagenSitio(listaSitios[position], holder))
-        colorBotonFav(position, holder)
+    /**
+     * Procesamos los lugares y las metemos en un Holder
+     * @param holder
+     * @param position
+     */
+    override fun onBindViewHolder(holder: LugarViewHolder, position: Int) {
+        holder.itemLugarNombre.text = listaLugares[position].nombre
+        holder.itemLugarFecha.text = listaLugares[position].fecha
+        holder.itemLugarTipo.text = listaLugares[position].tipo
+        holder.itemLugarVotos.text = listaLugares[position].valoracion.toString()
+        holder.itemLugarImagen.setImageBitmap(imagenLugar(listaLugares[position], holder))
+
+        // procesamos el ffavorito
+        // color
+        colorBotonFavorito(position, holder)
         // Queda procesar el botón de favoritos...
         holder.itemLugarFavorito.setOnClickListener {
-            eventoBotonFav(position, holder)
+            eventoBotonFavorito(position, holder)
 
         }
 
@@ -44,55 +55,98 @@ class SitiosListAdapter(
         holder.itemLugarImagen
             .setOnClickListener {
                 // Devolvemos la noticia
-                funcionPrincipal(listaSitios[position])
+                accionPrincipal(listaLugares[position])
             }
     }
 
 
+    /**
+     * Elimina un item de la lista
+     *
+     * @param position
+     */
     fun removeItem(position: Int) {
-        listaSitios.removeAt(position)
+        listaLugares.removeAt(position)
         notifyItemRemoved(position)
-        notifyItemRangeChanged(position, listaSitios.size)
+        notifyItemRangeChanged(position, listaLugares.size)
     }
 
+    /**
+     * Recupera un Item de la lista
+     *
+     * @param item
+     * @param position
+     */
     fun updateItem(item: Lugar, position: Int) {
-        listaSitios[position] = item
+        listaLugares[position] = item
         notifyItemInserted(position)
-        notifyItemRangeChanged(position, listaSitios.size)
+        notifyItemRangeChanged(position, listaLugares.size)
     }
 
+    /**
+     * Para añadir un elemento
+     * @param item
+     */
     fun addItem(item: Lugar) {
-        listaSitios.add(item)
+        listaLugares.add(item)
         notifyDataSetChanged()
     }
 
-    private fun eventoBotonFav(position: Int, holder: SitioViewHolder) {
-        // Cambiamos el favorito
-        listaSitios[position].fav = !listaSitios[position].fav
-        // Procesamos el color
-        colorBotonFav(position, holder)
-        // Procesamos el número de votos
-        if (listaSitios[position].fav)
-            listaSitios[position].valoracion++
-        else
-            listaSitios[position].valoracion--
 
-        LugarController.update(listaSitios[position])
-        holder.itemLugarVotos.text = listaSitios[position].valoracion.toString()
-        Log.i("Favorito", listaSitios[position].fav.toString())
-        Log.i("Favorito", listaSitios[position].valoracion.toString())
-    }
-
+    /**
+     * Devuelve el número de items de la lista
+     *
+     * @return
+     */
     override fun getItemCount(): Int {
-        return listaSitios.size
+        return listaLugares.size
     }
 
-    private fun colorBotonFav(
+    /**
+     * Devuelve la imagen de un lugar
+     * @param lugar Lugar
+     * @return Bitmap?
+     */
+    private fun imagenLugar(lugar: Lugar, holder: LugarViewHolder): Bitmap? {
+        try {
+            val fotografia = FotoController.selectById(lugar.imgID)
+            return ABase64.toBitmap(fotografia?.imgLugar.toString())
+        } catch (ex: Exception) {
+            return BitmapFactory.decodeResource(holder.context?.resources, R.drawable.ic_sitio);
+        }
+    }
 
+    /**
+     * Procesa el favorito
+     * @param position Int
+     */
+    private fun eventoBotonFavorito(position: Int, holder: LugarViewHolder) {
+        // Cambiamos el favorito
+        listaLugares[position].fav = !listaLugares[position].fav
+        // Procesamos el color
+        colorBotonFavorito(position, holder)
+        // Procesamos el número de votos
+        if(listaLugares[position].fav)
+            listaLugares[position].valoracion ++
+        else
+            listaLugares[position].valoracion --
+
+        LugarController.update(listaLugares[position])
+        holder.itemLugarVotos.text = listaLugares[position].valoracion.toString()
+        Log.i("Favorito", listaLugares[position].fav.toString())
+        Log.i("Favorito", listaLugares[position].valoracion.toString())
+    }
+
+    /**
+     * Pone el color del fondo del botom de favoritos
+     * @param position Int
+     * @param holder LugarViewHolder
+     */
+    private fun colorBotonFavorito(
         position: Int,
-        holder: SitioViewHolder
+        holder: LugarViewHolder
     ) {
-        if (listaSitios[position].fav)
+        if (listaLugares[position].fav)
             holder.itemLugarFavorito.backgroundTintList =
                 AppCompatResources.getColorStateList(holder.context, R.color.favYes)
         else
@@ -100,17 +154,11 @@ class SitiosListAdapter(
                 AppCompatResources.getColorStateList(holder.context, R.color.favNo)
     }
 
-    private fun imagenSitio(lugar: Lugar, holder: SitioViewHolder): Bitmap? {
-        try {
-            val fotoSitio = FotoController.selectById(lugar.imgID)
-            return ABase64.toBitmap(fotoSitio?.imgLugar.toString())
-        } catch (ex: Exception) {
-            return BitmapFactory.decodeResource(holder.context?.resources, R.drawable.ic_sitio);
-        }
-    }
-
-    class SitioViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
+    /**
+     * Holder que encapsula los objetos a mostrar en la lista
+     */
+    class LugarViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        // Elementos graficos con los que nos asociamos
         var itemLugarImagen = itemView.itemLugarImagen
         var itemLugarNombre = itemView.itemLugarNombre
         var itemLugarFecha = itemView.itemLugarFecha
@@ -121,4 +169,3 @@ class SitiosListAdapter(
 
     }
 }
-

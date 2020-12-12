@@ -62,6 +62,7 @@ class login : AppCompatActivity() {
                 var usuario = selectByCorreo(CORREO)
                 if (usuario != null) {
                     Log.i("INICIO SESION", "Id usuario: "+usuario.id)
+                    MyApp.USUARIO_ACTIVO = usuario
                     var sesion = Sesion(
                     idUsuarioActivo = usuario.id
                     )

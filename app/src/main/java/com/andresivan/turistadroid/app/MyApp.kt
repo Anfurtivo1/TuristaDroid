@@ -17,6 +17,11 @@ import io.realm.RealmConfiguration
 class MyApp : Application() {
     lateinit var SESION_USUARIO:Usuario
         private set
+
+    companion object{
+        lateinit var USUARIO_ACTIVO:Usuario
+    }
+
     private val nombreBD = "ANDRESIVAN_MIS_LUGARES"
     private val versionBD = 1L
     var PERMISOS = false

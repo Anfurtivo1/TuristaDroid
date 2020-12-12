@@ -19,14 +19,14 @@
 
         <ImageView
                 android:id="@+id/itemLugarImagen"
-                android:layout_height="225dp"
+                android:layout_height="125dp"
                 android:scaleType="centerCrop"
                 android:background="@color/colorAccent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" android:layout_marginTop="16dp"
                 android:adjustViewBounds="true"
-                android:layout_width="300dp" />
+                android:layout_width="370dp" />
 
 
         <TextView

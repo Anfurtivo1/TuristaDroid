@@ -99,7 +99,7 @@ class SitioDetalleFragment(
      * Iniciamos los elementos de la interfaz
      */
     private fun inicializarInterfaz() {
-        ANTERIOR?.actualizarRevyclerView()
+        ANTERIOR?.actualizarVistaLista()
         initPermissions()
         initUser()
         /*
@@ -126,7 +126,7 @@ class SitioDetalleFragment(
      * Lee el usuario
      */
     private fun initUser() {
-        this.USER = (activity?.application as MyApp).SESION_USUARIO
+        this.USER = MyApp.USUARIO_ACTIVO
     }
 
     /**
@@ -143,7 +143,7 @@ class SitioDetalleFragment(
      */
     private fun initInsertMode() {
         Log.i("Lugares", "Modo Insertar")
-        detalleFavoritos.visibility = View.GONE
+        detalleSitioValoracion.visibility = View.GONE
         detalleSitioInput.setText("")
         val date = LocalDateTime.now()
         detalleBtnFecha.text = DateTimeFormatter.ofPattern("dd/MM/yyyy").format(date)
@@ -164,7 +164,7 @@ class SitioDetalleFragment(
         detalleSitioInput.setText(SITIO?.nombre)
         detalleSitioInput.isEnabled = false
         detalleBtnFecha.text = SITIO?.fecha
-        detalleFavoritos.text = SITIO?.valoracion.toString() + " likes"
+        detalleSitioValoracion.text = SITIO?.valoracion.toString() + " likes"
         detalleSpnTipo.setSelection(
             (detalleSpnTipo.adapter as ArrayAdapter<String?>).getPosition(
                 SITIO?.tipo
@@ -307,9 +307,7 @@ class SitioDetalleFragment(
      */
     private fun updatePlace() {
         if (chequearComponentes()) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                alertDialog("Modificar Lugar", "¿Desea modificar este lugar?")
-            }
+            alertDialog("Modificar Lugar", "¿Desea modificar este lugar?")
         }
     }
 
@@ -338,9 +336,7 @@ class SitioDetalleFragment(
             }
             LugarController.update(SITIO!!)
             ANTERIOR?.actualizarItemLista(SITIO!!, SITIO_POSICION!!)
-            Snackbar.make(requireView(), "ACTUALIZADO", Snackbar.LENGTH_LONG)
-                .show();
-
+            Snackbar.make(requireView(), "ACTUALIZADO", Snackbar.LENGTH_LONG).show();
             volver()
 
         } catch (ex: Exception) {
