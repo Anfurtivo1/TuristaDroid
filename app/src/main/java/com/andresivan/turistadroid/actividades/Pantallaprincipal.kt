@@ -28,12 +28,7 @@ import kotlinx.android.synthetic.main.nav_header_main.*
 class pantallaprincipal : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
-    //Variables para la linterna
-    lateinit var camera: Camera
-    var parameters: Camera.Parameters? = null
-    var isFlash = false
     var estado = true
-    var permisos:Boolean = false
     lateinit var USUARIO:Usuario
 
     override fun onCreate(savedInstanceState: Bundle?) {
