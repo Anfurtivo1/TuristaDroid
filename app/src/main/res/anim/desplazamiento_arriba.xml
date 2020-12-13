@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<set xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- !-->
+    <!-- Para mover en el eje Y lo que sea durante dos segundos !-->
+    <translate
+        android:fromXDelta="0%"
+        android:fromYDelta="-30%"
+        android:duration="2000"
+        />
+    <!-- El phading que tendrá durante dos segundos!-->
+    <alpha
+        android:fromAlpha="0.1"
+        android:toAlpha="1.0"
+        android:duration="2000"
+        />
+</set>

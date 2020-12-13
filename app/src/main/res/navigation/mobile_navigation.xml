@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@id/ndCercaDeMi">
+
+    <fragment
+        android:id="@+id/ndCercaDeMi"
+        android:name="com.andresivan.turistadroid.ui.cercademi"
+        android:label="fragment_cercademi"
+        tools:layout="@layout/fragment_cercademi" />
+
+    <fragment
+        android:id="@+id/ndMisSitios"
+        android:name="com.andresivan.turistadroid.ui.missitios.MisSitios"
+        android:label="fragment_missitios"
+        tools:layout="@layout/fragment_missitios" >
+        <action
+            android:id="@+id/action_ndMisSitios_to_sitioDetalleFragment1"
+            app:destination="@id/sitioDetalleFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/ndMiPerfil"
+        android:name="com.andresivan.turistadroid.ui.miperfil"
+        android:label="fragment_miperfil"
+        tools:layout="@layout/fragment_miperfil" />
+    <fragment
+        android:id="@+id/sitioDetalleFragment"
+        android:name="com.andresivan.turistadroid.ui.missitios.SitioDetalleFragment"
+        android:label="SitioDetalleFragment"
+        tools:layout="@layout/fragment_sitio_detalle"/>
+
+</navigation>

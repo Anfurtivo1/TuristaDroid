@@ -1,0 +1,5 @@
+package com.andresivan.turistadroid.ui.missitios.filtros
+
+enum class Filtros {
+    NADA, NOMBRE_ASCENDENTE, NOMBRE_DESCENDENTE, FECHA_DESCENDENTE, FECHA_ASCENDENTE, VALORACION_ASCENDENTE, VALORACION_DESCENDENTE
+}
