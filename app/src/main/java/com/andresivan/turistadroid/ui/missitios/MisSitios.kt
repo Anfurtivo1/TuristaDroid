@@ -11,7 +11,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -26,15 +25,12 @@ import kotlinx.android.synthetic.main.fragment_missitios.*
 
 
 class MisSitios : Fragment() {
-    // Propiedades
-    private var LUGARES = mutableListOf<Lugar>()
-    private lateinit var lugaresAdapter: SitiosListAdapter //Adaptador de Noticias de Recycler
-    private lateinit var tareaLugares: TareaCargarLugares // Tarea en segundo plano
-    private var paintSweep = Paint()
 
-    // Búsquedas
-    private var FILTRO = Filtros.NADA
-
+    private var SITIOS = mutableListOf<Lugar>()
+    private lateinit var sitiosAdapter: SitiosListAdapter
+    private lateinit var tarea2doPlanos: TareaCargarLugares
+    private var fondoAlDeslizar = Paint()
+    private var FILTRO_ORDENACIÓN = Filtros.NADA
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -43,69 +39,83 @@ class MisSitios : Fragment() {
     ): View? {
         return inflater.inflate(R.layout.fragment_missitios, container, false)
     }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        // Iniciamos la interfaz
-        initUI()
+        iniciarInterfaz()
     }
 
     /**
-     * Inicia la Interfaz de Usuario
+     * Función que crea todas las funcionalidades necesarias para este fragment, lo que hacemos es
+     * llamar a las ditintas funciones dentro de esta, en el caso que se quisiera dar nueva
+     * funcionalidad a algo visual, seria el lugar correcto para declararla
      */
-    private fun initUI() {
-        Log.i("Lugares", "Init IU")
-        iniciarSwipeRecarga()
-        cargarLugares()
-        iniciarSpinner()
-        iniciarSwipeHorizontal()
+    private fun iniciarInterfaz() {
+        actualizar()
+        // COGEMOS DE LA BBDD TODOS LOS REGISTROS
+        cargarRegistros()
+        //spinner que permite que el usuario ordene los registros por algo en concreto
+        //NO SE HA IMPLEMENTADO
+        cargarFiltros()
+        //para cuando queremos modificar o borrar un registro
+        deslizarHorizontalmente()
+        // esta es una referencia al recyclerView del fragmente de mis sitios
         sitiosRecycler.layoutManager = LinearLayoutManager(context)
-        fabNuevo.setOnClickListener { nuevoElemento() }
-
-        Log.i("Lugares", "Fin la IU")
+        /*
+        este es el momento en el que al floatActionButton que tenemos abajo a la derecha, se le
+        asgina una funcionalidad, y esta funcionalidad es la de añadir nuevos lugares
+         */
+        fabNuevo.setOnClickListener { nuevoRegistro() }
     }
 
-    private fun iniciarSpinner() {
-        val tipoBusqueda = resources.getStringArray(R.array.filtros)
-        val adapter = ArrayAdapter(requireContext(),
-            android.R.layout.simple_spinner_item, tipoBusqueda)
+    /**
+     * Función que permite cargar los filtros de ordenación dentro del spinner del fragment de
+     * Mis sitios
+     */
+    private fun cargarFiltros() {
+        //cargamos el array de condiciones de ordenacion de string.xml. llamando al array de filtros que creamos
+        val tipoOrdenacion = resources.getStringArray(R.array.filtros)
+        // lo cargamos en un adaptador
+        val adapter = ArrayAdapter(requireContext(),android.R.layout.simple_spinner_item, tipoOrdenacion)
+        //y relacionamos el adaptador
         misSitiosSpinnerFiltro.adapter = adapter
-        misSitiosSpinnerFiltro.onItemSelectedListener = object :
-            AdapterView.OnItemSelectedListener {
+
+        misSitiosSpinnerFiltro.onItemSelectedListener = object :AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>,
                                         view: View, position: Int, id: Long) {
-                FILTRO = FiltrosControlador.indiceFiltrosSpinner(position)
-                // Listamos los lugares y cargamos el recycler
-                Log.i("Filtros", position.toString())
-                Toast.makeText(context!!, "Ordenando por: " + tipoBusqueda[position], Toast.LENGTH_SHORT).show()
-                visualizarListaItems()
+                FILTRO_ORDENACIÓN = FiltrosControlador.indiceFiltrosSpinner(position)
+                mostrarListaRegistros()
             }
             override fun onNothingSelected(parent: AdapterView<*>) {
-
+                /*
+                NO HACEMOS NADA PORQUE HEMOS INDICADO AL INICIALIZAR LA VARIABLE FILTRO, QUE SI NO
+                CAMBIA, POR DEFECTO, ORDENE POR NADA, PORLO QUE CARGARÁN POR ORDEN DE CREACION DEL
+                REGISTRO
+                 */
             }
         }
     }
 
     /**
-     * Deslizamiento vertical para recargar
+     * Función que permite recargar la pantalla para comprobar si ha habido alguna modificacion, o
+     * nuevo registro o alguno eliminado
      */
-    private fun iniciarSwipeRecarga() {
+    private fun actualizar() {
         sitiosSwipeRefresh.setColorSchemeResources(R.color.colorPrimaryDark)
         sitiosSwipeRefresh.setProgressBackgroundColorSchemeResource(R.color.colorAccent)
         sitiosSwipeRefresh.setOnRefreshListener {
-            cargarLugares()
+            cargarRegistros()
         }
     }
 
     /**
-     * Realiza el swipe horizontal si es necesario
+     * Función que permite al usuario deslizar horizantalmente sobre uno de los items del RecyclerView
+     * Le asignamos una funcioanlidad, y un color en el fondo cuando deslizamos
      */
-    private fun iniciarSwipeHorizontal() {
+    private fun deslizarHorizontalmente() {
         val simpleItemTouchCallback: ItemTouchHelper.SimpleCallback = object : ItemTouchHelper.SimpleCallback(
             0, ItemTouchHelper.LEFT or
                     ItemTouchHelper.RIGHT
         ) {
-            // Sobreescribimos los métodos
             override fun onMove(
                 recyclerView: RecyclerView,
                 viewHolder: RecyclerView.ViewHolder,
@@ -114,176 +124,181 @@ class MisSitios : Fragment() {
                 return false
             }
 
-            // Analizamos el evento según la dirección
+            /**
+             * Función que se encargar de controlar sobre que direcciñon de la pantalla deslizamos
+             * segun la direccion, nos interesa realizar una función u otra, en este caso, se nos
+             * pedía que al deslizar, debíamos modificar u eliminar un registro de la BBDD, cargado
+             * en el RecyclerView del fragment de Mis sitios
+             * @param viewHolder
+             * @param direction Int
+             */
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                val position = viewHolder.adapterPosition
-                // Si pulsamos a la de izquierda o a la derecha
-                // Programamos la accion
+                /*
+                la posicion es el registro que queremos modificar o eliminar, es la podicion
+                que tiene el registro en el array de Lugares
+                 */
+                val indiceRegistro = viewHolder.adapterPosition
                 when (direction) {
                     ItemTouchHelper.LEFT -> {
-                        borrarElemento(position)
+                        borrar(indiceRegistro)
                     }
                     else -> {
-                        editarElemento(position)
+                        modificar(indiceRegistro)
                     }
                 }
             }
-
-            // Dibujamos los botones y eveneto. Nos lo creemos :):)
-            // IMPORTANTE
-            // Para que no te explote las imagenes deben ser PNG
-            // Así que añade un IMAGE ASEET bjándtelos de internet
-            // https://material.io/resources/icons/?style=baseline
-            // como PNG y cargas el de mayor calidad
-            // de otra forma Bitmap no funciona bien
-            override fun onChildDraw(
-                canvas: Canvas,
-                recyclerView: RecyclerView,
-                viewHolder: RecyclerView.ViewHolder,
-                dX: Float,
-                dY: Float,
-                actionState: Int,
-                isCurrentlyActive: Boolean
-            ) {
+            override fun onChildDraw(canvas: Canvas, recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder,
+                dX: Float, dY: Float, actionState: Int, isCurrentlyActive: Boolean) {
                 if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
                     val itemView = viewHolder.itemView
                     val height = itemView.bottom.toFloat() - itemView.top.toFloat()
                     val width = height / 3
-                    // Si es dirección a la derecha: izquierda->derecta
-                    // Pintamos de azul y ponemos el icono
                     if (dX > 0) {
-                        // Pintamos el botón izquierdo
-                        botonIzquierdo(canvas, dX, itemView, width)
+                        pintarDirIzq(canvas, dX, itemView, width)
                     } else {
-                        // Caso contrario
-                        botonDerecho(canvas, dX, itemView, width)
+                        pintarDirDer(canvas, dX, itemView, width)
                     }
                 }
                 super.onChildDraw(canvas, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
             }
         }
-        // Añadimos los eventos al RV
         val itemTouchHelper = ItemTouchHelper(simpleItemTouchCallback)
+        /*
+        Le asignamos la funcion del ItemTouchHelper al RecyclerView del fragment
+         */
         itemTouchHelper.attachToRecyclerView(sitiosRecycler)
     }
 
     /**
-     * Mostramos el elemento iquierdo
+     * Función que permite pintar hacia la der el fondo de color rojo para poder mostrarnos que vamos
+     * a eliminar el registro, a la vez, vamos a mostrar un vector asset, con un loguito pequeño para
+     * indicar que lo que estamos haciendo es eliminar
      * @param canvas Canvas
      * @param dX Float
      * @param itemView View
      * @param width Float
      */
-    private fun botonDerecho(canvas: Canvas, dX: Float, itemView: View, width: Float) {
-        // Pintamos de rojo y ponemos el icono
-        paintSweep.color = Color.RED
+    private fun pintarDirDer(canvas: Canvas, dX: Float, itemView: View, width: Float) {
+        fondoAlDeslizar.color = Color.RED
         val background = RectF(
             itemView.right.toFloat() + dX,
             itemView.top.toFloat(), itemView.right.toFloat(), itemView.bottom.toFloat()
         )
-        canvas.drawRect(background, paintSweep)
+        canvas.drawRect(background, fondoAlDeslizar)
         val icon: Bitmap = BitmapFactory.decodeResource(resources, R.drawable.ic_borrar)
         val iconDest = RectF(
             itemView.right.toFloat() - 2 * width, itemView.top.toFloat() + width, itemView.right
                 .toFloat() - width, itemView.bottom.toFloat() - width
         )
-        canvas.drawBitmap(icon, null, iconDest, paintSweep)
+        canvas.drawBitmap(icon, null, iconDest, fondoAlDeslizar)
     }
 
     /**
-     * Mostramos el elemento izquierdo
+     * Función que permite pintar hacia la izq el fondo de color azul para poder mostrarnos que vamos
+     * a modificar el registro, a la vez, vamos a mostrar un vector asset, con un loguito pequeño para
+     * indicar que vamos a modificar
      * @param canvas Canvas
      * @param dX Float
      * @param itemView View
      * @param width Float
      */
-    private fun botonIzquierdo(canvas: Canvas, dX: Float, itemView: View, width: Float) {
+    private fun pintarDirIzq(canvas: Canvas, dX: Float, itemView: View, width: Float) {
         // Pintamos de azul y ponemos el icono
-        paintSweep.setColor(Color.BLUE)
+        fondoAlDeslizar.color = Color.BLUE
         val background = RectF(
             itemView.left.toFloat(), itemView.top.toFloat(), dX,
             itemView.bottom.toFloat()
         )
-        canvas.drawRect(background, paintSweep)
+        canvas.drawRect(background, fondoAlDeslizar)
         val icon: Bitmap = BitmapFactory.decodeResource(resources, R.drawable.ic_editar)
         val iconDest = RectF(
             itemView.left.toFloat() + width, itemView.top.toFloat() + width, itemView.left
                 .toFloat() + 2 * width, itemView.bottom.toFloat() - width
         )
-        canvas.drawBitmap(icon, null, iconDest, paintSweep)
+        canvas.drawBitmap(icon, null, iconDest, fondoAlDeslizar)
     }
 
     /**
-     * Carga los lugares
+     * Función que se encarga de llamar a la funcion cargarRegistros() que es la función que carga
+     * la información de los registros de la bbdd
      */
-    private fun cargarLugares() {
-        tareaLugares = TareaCargarLugares()
-        tareaLugares.execute()
+    private fun cargarRegistros() {
+        tarea2doPlanos = TareaCargarLugares()
+        tarea2doPlanos.execute()
     }
 
     /**
-     * Abre un nuevo elemeneto
+     * Esta función permite abrir el fragment de SitiosDetalleFragment en modo INSERTAR, esto viene de
+     * tu práctica, porque nos estabamos liando mucho con la pila de frgments y llamadas
      */
-    private fun nuevoElemento() {
-        Log.i("Lugares", "Nuevo lugar")
+    private fun nuevoRegistro() {
         abrirDetalle(null, ModosAccesos.INSERTAR, this, null)
     }
 
     /**
-     * Inserta un elemento en la lista
+     * Función que se encarga de añadir nuevo registro al adaptador y notificar que el RecylcerView
+     * ha sido modificado
+     * @param item Lugar que se añade al recyclerView
      */
-    fun insertarItemLista(item: Lugar) {
-        this.lugaresAdapter.addItem(item)
-        lugaresAdapter.notifyDataSetChanged()
+    fun insertarRegistroLista(item: Lugar) {
+        this.sitiosAdapter.addRegistroALista(item)
+        sitiosAdapter.notifyDataSetChanged()
     }
 
     /**
-     * Edita el elemento en la posición seleccionada
-     * @param position Int
+     * Esta función permite abrir el fragment de SitiosDetalleFragment en modo ACTUALIZAR,
+     * lo que hace es abrir el fragment en modo ACTUALIZAR
+     * @param position Int es la posicion del item en la que aparece en la lista
      */
-    private fun editarElemento(position: Int) {
+    private fun modificar(position: Int) {
         Log.i("Lugares", "Editando el elemento pos: " + position)
-        abrirDetalle(LUGARES[position], ModosAccesos.ACTUALIZAR, this, position)
+        abrirDetalle(SITIOS[position], ModosAccesos.ACTUALIZAR, this, position)
     }
 
-    fun actualizarItemLista(item: Lugar, position: Int) {
-        this.lugaresAdapter.updateItem(item, position)
-        lugaresAdapter.notifyDataSetChanged()
+    /**
+     * Función que se encarga de avisar al RecyclerView de que uno de sus registros ha sido modificado
+     * avisando al recycler
+     * @param item Lugar el registro que ha sido modificado
+     * @param position Int posicion del objeto en el que se encuentra el registro
+     */
+    fun actualizarRegistroLista(item: Lugar, position: Int) {
+        this.sitiosAdapter.modificarRegistroLista(item, position)
+        sitiosAdapter.notifyDataSetChanged()
     }
 
     /**
      * Borra el elemento en la posición seleccionada
      * @param position Int
      */
-    private fun borrarElemento(position: Int) {
-        Log.i("Lugares", "Borrando el elemento pos: " + position)
-        abrirDetalle(LUGARES[position], ModosAccesos.ELIMINAR, this, position)
+    private fun borrar(position: Int) {
+        abrirDetalle(SITIOS[position], ModosAccesos.ELIMINAR, this, position)
     }
 
     /**
-     * Elimina un elemento de la vista
-     * @param position Int
+     * Función que elimina un item del RecyclerView, notificando de que ha habido cambios
+     * @param position Int la posicion en la que se encuentra el registro
      */
-    fun eliminarItemLista(position: Int) {
-        this.lugaresAdapter.removeItem(position)
-        lugaresAdapter.notifyDataSetChanged()
+    fun eliminarRegistroLista(position: Int) {
+        this.sitiosAdapter.eliminarRegistroLista(position)
+        sitiosAdapter.notifyDataSetChanged()
     }
 
-    fun actualizarVistaLista() {
-        sitiosRecycler.adapter = lugaresAdapter
+    fun actualizarListaRegistros() {
+        sitiosRecycler.adapter = sitiosAdapter
     }
 
     /**
      * Abre el elemento en la posición didicada
      * @param lugar Lugar
      */
-    private fun abrirElemento(lugar: Lugar) {
+    private fun abrirRegistro(lugar: Lugar) {
         Log.i("Lugares", "Visualizando el elemento: " + lugar.id)
         abrirDetalle(lugar, ModosAccesos.VISUALIZAR, this, null)
     }
 
     /**
-     * Abre el detalle del item
+     * Función que se encarga de abrir el fragment de SitioDetalleFragment según el modo de acceso
+     * que utilicemos
      * @param lugar Lugar?
      * @param modo Modo?
      * @param anterior LugaresFragment?
@@ -300,19 +315,13 @@ class MisSitios : Fragment() {
     }
 
     /**
-     * Evento clic asociado a una fila
+     * Esta función se encaga de abrir el fragment en modo visualizar
      * @param lugar Lugar
      */
-    private fun eventoClicFila(lugar: Lugar) {
-        abrirElemento(lugar)
+    private fun alPulsarRegistro(lugar: Lugar) {
+        abrirRegistro(lugar)
     }
 
-    /**
-     * Resultadp de las acciones
-     * @param requestCode Int
-     * @param resultCode Int
-     * @param data Intent?
-     */
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == RESULT_CANCELED) {
@@ -321,81 +330,45 @@ class MisSitios : Fragment() {
     }
 
     /**
-     * función para ordenar la lista como mayores y menores
-     */
-    private fun ordenarLugares() {
-        /*
-        Log.i("Filtros", FILTRO.toString())
-        when (FILTRO) {
-            Filtros.NADA -> this.LUGARES.sortWith ( l1: Lugar, l2: Lugar -> l1.id.compareTo(l2.id) )
-            // Nombre
-            Filtros.NOMBRE_ASCENDENTE -> this.LUGARES.sortWith { l1: Lugar, l2: Lugar -> l1.nombre.toLowerCase().compareTo(l2.nombre.toLowerCase()) }
-            Filtros.NOMBRE_DESCENDENTE -> this.LUGARES.sortWith { l1: Lugar, l2: Lugar -> l2.nombre.toLowerCase().compareTo(l1.nombre.toLowerCase()) }
-
-            /*
-            // Fecha
-            Filtros.FECHA_ASCENDENTE -> this.LUGARES.sortWith { l1: Lugar, l2: Lugar ->
-                SimpleDateFormat("dd/MM/yyyy").parse(l1.fecha).compareTo(SimpleDateFormat("dd/MM/yyyy").parse(l2.fecha))
-            }
-            Filtros.FECHA_ASCENDENTE -> this.LUGARES.sortWith { l1: Lugar, l2: Lugar ->
-                SimpleDateFormat("dd/MM/yyyy").parse(l2.fecha).compareTo(SimpleDateFormat("dd/MM/yyyy").parse(l1.fecha))
-            }
-            */
-            // Votos
-            Filtros.VALORACION_ASCENDENTE -> this.LUGARES.sortWith { l1: Lugar, l2: Lugar -> l1.valoracion.compareTo(l2.valoracion) }
-            Filtros.VALORACION_ASCENDENTE -> this.LUGARES.sortWith { l1: Lugar, l2: Lugar -> l2.valoracion.compareTo(l1.valoracion) }
-
-            else -> {
-            }
-        }
-         */
-    }
-
-    /**
-     * Tarea asíncrona para la carga de noticias
+     * Función que se encarga durante el mismo tiempo de ejecución en cargar los registros de la bbdd
+     * de lugares
      */
     inner class TareaCargarLugares : AsyncTask<Void?, Void?, Void?>() {
-        // Pre-Tarea
         override fun onPreExecute() {
             if (sitiosSwipeRefresh.isRefreshing) {
                 sitiosSwipeRefresh.isRefreshing = false
             }
-            Toast.makeText(context, "Obteniendo lugares", Toast.LENGTH_LONG).show()
         }
-        // Tarea
         override fun doInBackground(vararg args: Void?): Void? {
             try {
-                LUGARES = LugarController.selectAll()!!
-                Log.i("Lugares", "Lista de lugares de tamaño: " + LUGARES.size)
+                SITIOS = LugarController.selectAll()!!
             } catch (e: Exception) {
-                Log.e("T2Plano ", e.message.toString());
             }
             return null
         }
-        //Post-Tarea
         override fun onPostExecute(args: Void?) {
-            ordenarLugares()
-            lugaresAdapter = SitiosListAdapter(LUGARES) {
-                eventoClicFila(it)
+            sitiosAdapter = SitiosListAdapter(SITIOS) {
+                alPulsarRegistro(it)
             }
-            sitiosRecycler.adapter = lugaresAdapter
-            // Avismos que ha cambiado
-            lugaresAdapter.notifyDataSetChanged()
+            sitiosRecycler.adapter = sitiosAdapter
+            /*
+            por si acaso ya teniamos los registros cargado y ha habido alguna modificacion
+            avisamoes al adaptador, ya sea que se haya añadido algún nuevo registro, se haya
+            modificado alguno, o se haya eliminado algún registro
+             */
+            sitiosAdapter.notifyDataSetChanged()
             sitiosRecycler.setHasFixedSize(true)
             sitiosSwipeRefresh.isRefreshing = false
-            Toast.makeText(context, "Lugares cargados", Toast.LENGTH_LONG).show()
         }
 
     }
 
     /**
-     * Visualiza la lista de items
+     * Función que se encarga de mostrar todos los registros en el recycler view
      */
-    private fun visualizarListaItems() {
-        ordenarLugares()
-        sitiosRecycler.adapter = lugaresAdapter
-        // lugaresAdapter.notifyDataSetChanged()
-        // lugaresRecycler.setHasFixedSize(true)
+    private fun mostrarListaRegistros() {
+        //al recyclerView le asignamos el el adaptador con los registros de la bbdd
+        sitiosRecycler.adapter = sitiosAdapter
     }
 
     /**
@@ -403,7 +376,7 @@ class MisSitios : Fragment() {
      */
     override fun onStop() {
         super.onStop()
-        tareaLugares.cancel(true)
+        tarea2doPlanos.cancel(true)
     }
 }
 

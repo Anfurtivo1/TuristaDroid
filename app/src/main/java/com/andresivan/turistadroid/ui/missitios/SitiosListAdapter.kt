@@ -2,9 +2,7 @@ package com.andresivan.turistadroid.ui.missitios
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.recyclerview.widget.RecyclerView
@@ -13,159 +11,129 @@ import com.andresivan.turistadroid.entidades.fotos.FotoController
 import com.andresivan.turistadroid.entidades.lugares.Lugar
 import com.andresivan.turistadroid.entidades.lugares.LugarController
 import com.andresivan.turistadroid.utils.ABase64
-import kotlinx.android.synthetic.main.item_lugar.view.*
 
 
 class SitiosListAdapter(
-    private val listaLugares: MutableList<Lugar>,
-    // Famos a tener distintas acciones y eventos
-    private val accionPrincipal: (Lugar) -> Unit
+    private val sitiosLst: MutableList<Lugar>,
+    private val mainFuntcion: (Lugar) -> Unit
 
-) : RecyclerView.Adapter<SitiosListAdapter.LugarViewHolder>() {
+) : RecyclerView.Adapter<SitiosViewHolder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LugarViewHolder {
-        return LugarViewHolder(
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SitiosViewHolder {
+        return SitiosViewHolder(
             LayoutInflater.from(parent.context)
                 .inflate(R.layout.item_lugar, parent, false)
         )
     }
 
     /**
-     * Procesamos los lugares y las metemos en un Holder
+     * Función que se encarga de cargar el registro dado por parametro es decir, por su posicion,
+     * y cargar su inforamción en el formulario
      * @param holder
      * @param position
      */
-    override fun onBindViewHolder(holder: LugarViewHolder, position: Int) {
-        holder.itemLugarNombre.text = listaLugares[position].nombre
-        holder.itemLugarFecha.text = listaLugares[position].fecha
-        holder.itemLugarTipo.text = listaLugares[position].tipo
-        holder.itemLugarVotos.text = listaLugares[position].valoracion.toString()
-        holder.itemLugarImagen.setImageBitmap(imagenLugar(listaLugares[position], holder))
-
-        // procesamos el ffavorito
-        // color
-        colorBotonFavorito(position, holder)
-        // Queda procesar el botón de favoritos...
-        holder.itemLugarFavorito.setOnClickListener {
-            eventoBotonFavorito(position, holder)
-
+    override fun onBindViewHolder(holder: SitiosViewHolder, position: Int) {
+        holder.itemNombre.text = sitiosLst[position].nombre
+        holder.itemFecha.text = sitiosLst[position].fecha
+        holder.itemTipo.text = sitiosLst[position].tipo
+        holder.itemValoracion.text = sitiosLst[position].valoracion.toString()
+        holder.itemFoto.setImageBitmap(fotoLugar(sitiosLst[position], holder))
+        btnFavColor(position, holder)
+        holder.itemFav.setOnClickListener {
+            btnFavAcciones(position, holder)
         }
-
-        // Programamos el clic de cada fila (itemView)
-        holder.itemLugarImagen
-            .setOnClickListener {
-                // Devolvemos la noticia
-                accionPrincipal(listaLugares[position])
-            }
+        holder.itemFoto.setOnClickListener {
+            mainFuntcion(sitiosLst[position])
+        }
     }
 
 
     /**
-     * Elimina un item de la lista
+     * Función que se encarga de eliminar un registro dado su índice en el que se encontraba
+     * anteriormente
      *
-     * @param position
+     * @param position Int donde se encontraba anteriormente en la lista
      */
-    fun removeItem(position: Int) {
-        listaLugares.removeAt(position)
+    fun eliminarRegistroLista(position: Int) {
+        sitiosLst.removeAt(position)
         notifyItemRemoved(position)
-        notifyItemRangeChanged(position, listaLugares.size)
+        notifyItemRangeChanged(position, sitiosLst.size)
     }
 
     /**
-     * Recupera un Item de la lista
+     * Función que se encarga de encontrar un registro que hemos modificado anteriormente por su
+     * posicion
      *
-     * @param item
-     * @param position
+     * @param item Lugar el registro que hemos modificado
+     * @param position Int la posicion en la que se encontraba anteriormente
      */
-    fun updateItem(item: Lugar, position: Int) {
-        listaLugares[position] = item
+    fun modificarRegistroLista(item: Lugar, position: Int) {
+        sitiosLst[position] = item
         notifyItemInserted(position)
-        notifyItemRangeChanged(position, listaLugares.size)
+        notifyItemRangeChanged(position, sitiosLst.size)
     }
 
     /**
-     * Para añadir un elemento
-     * @param item
+     * Función para añadir un nuevo registro a la lista de registros
+     * @param item Lugar que añadimos a la lista de registros
      */
-    fun addItem(item: Lugar) {
-        listaLugares.add(item)
+    fun addRegistroALista(item: Lugar) {
+        sitiosLst.add(item)
         notifyDataSetChanged()
     }
 
 
     /**
-     * Devuelve el número de items de la lista
-     *
-     * @return
+     * Función que noe permite contar el numero de registros de la lista
+     * @return el tamaño de la lista de imagenes
      */
     override fun getItemCount(): Int {
-        return listaLugares.size
+        return sitiosLst.size
     }
 
     /**
-     * Devuelve la imagen de un lugar
-     * @param lugar Lugar
-     * @return Bitmap?
+     * Funcion para mostrar la imagen de un lugar, pasando por parámetro el objeto lugar, con el id
+     * de la imagen
      */
-    private fun imagenLugar(lugar: Lugar, holder: LugarViewHolder): Bitmap? {
-        try {
+    private fun fotoLugar(lugar: Lugar, holder: SitiosViewHolder): Bitmap? {
+        return try {
             val fotografia = FotoController.selectById(lugar.imgID)
-            return ABase64.toBitmap(fotografia?.imgLugar.toString())
+            ABase64.toBitmap(fotografia?.imgLugar.toString())
         } catch (ex: Exception) {
-            return BitmapFactory.decodeResource(holder.context?.resources, R.drawable.ic_sitio);
+            BitmapFactory.decodeResource(holder.context.resources, R.drawable.ic_sitio)
         }
     }
 
     /**
-     * Procesa el favorito
-     * @param position Int
+     * Esta función realiza todas las tareas que se necesitan para cuando pulsamos el boton de like
      */
-    private fun eventoBotonFavorito(position: Int, holder: LugarViewHolder) {
-        // Cambiamos el favorito
-        listaLugares[position].fav = !listaLugares[position].fav
-        // Procesamos el color
-        colorBotonFavorito(position, holder)
-        // Procesamos el número de votos
-        if(listaLugares[position].fav)
-            listaLugares[position].valoracion ++
-        else
-            listaLugares[position].valoracion --
+    private fun btnFavAcciones(index: Int, holder: SitiosViewHolder) {
+        sitiosLst[index].fav = !sitiosLst[index].fav
+        btnFavColor(index, holder)
+        if (sitiosLst[index].fav){
+            sitiosLst[index].valoracion++
+        } else {
+            sitiosLst[index].valoracion--
+        }
 
-        LugarController.update(listaLugares[position])
-        holder.itemLugarVotos.text = listaLugares[position].valoracion.toString()
-        Log.i("Favorito", listaLugares[position].fav.toString())
-        Log.i("Favorito", listaLugares[position].valoracion.toString())
+        LugarController.update(sitiosLst[index])
+        holder.itemValoracion.text = sitiosLst[index].valoracion.toString()
     }
 
     /**
-     * Pone el color del fondo del botom de favoritos
-     * @param position Int
-     * @param holder LugarViewHolder
+     * Función que según si le damos a like a la publicación, el color de botón cambiará a un color
+     * u otro
      */
-    private fun colorBotonFavorito(
-        position: Int,
-        holder: LugarViewHolder
-    ) {
-        if (listaLugares[position].fav)
-            holder.itemLugarFavorito.backgroundTintList =
+    private fun btnFavColor(position: Int, holder: SitiosViewHolder) {
+        if (sitiosLst[position].fav) {
+            holder.itemFav.backgroundTintList =
                 AppCompatResources.getColorStateList(holder.context, R.color.favYes)
-        else
-            holder.itemLugarFavorito.backgroundTintList =
+        }else {
+            holder.itemFav.backgroundTintList =
                 AppCompatResources.getColorStateList(holder.context, R.color.favNo)
+        }
     }
 
-    /**
-     * Holder que encapsula los objetos a mostrar en la lista
-     */
-    class LugarViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        // Elementos graficos con los que nos asociamos
-        var itemLugarImagen = itemView.itemLugarImagen
-        var itemLugarNombre = itemView.itemLugarNombre
-        var itemLugarFecha = itemView.itemLugarFecha
-        var itemLugarTipo = itemView.itemLugarTipo
-        var itemLugarVotos = itemView.itemLugar_Valoraciones
-        var itemLugarFavorito = itemView.itemSitioFav
-        var context = itemView.context
 
-    }
+
 }

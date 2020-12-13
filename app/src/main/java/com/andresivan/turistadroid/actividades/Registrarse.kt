@@ -42,9 +42,6 @@ class registrarse : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_registrarse)
-
-        initPermisos()
-
         imgCamaraRegistrarse.setOnClickListener { tomarFotoCamara() }
         imgGaleriaRegistrarse.setOnClickListener { elegirFotoGaleria() }
         btnRegistrarse.setOnClickListener{ registrarUsuario() }
@@ -71,48 +68,6 @@ class registrarse : AppCompatActivity() {
         intent.putExtra(MediaStore.EXTRA_OUTPUT, IMAGEN_URI)
         //Le pasamos el intent que hemos creado antes y le pasamos la variable camara al activityOnResult, porque si no no sabemos que opcion hemos elegido
         startActivityForResult(intent, CAMARA)
-    }
-
-
-
-
-    /**
-     * En este metodo vamos a comprobar los permisos con Dexter
-     */
-    private fun initPermisos() {
-        // Indicamos el permisos y el manejador de eventos de los mismos
-        Dexter.withContext(this)
-            // Lista de permisos a comprobar
-            .withPermissions(
-                Manifest.permission.CAMERA,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                Manifest.permission.READ_EXTERNAL_STORAGE,
-                Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.INTERNET,
-                Manifest.permission.ACCESS_NETWORK_STATE
-            )
-            // Este listener lo que hará es que comprobará los permisos
-            .withListener(object : MultiplePermissionsListener {
-                override fun onPermissionsChecked(report: MultiplePermissionsReport) {
-                    // Si estan todos los permisos concedidos, nos mostrará un toast diciendo que estan concedidos
-                    if (report.areAllPermissionsGranted()) {
-                        Toast.makeText(applicationContext, "¡Todos los permisos concedidos!", Toast.LENGTH_SHORT).show()
-                    }
-
-
-                }
-
-                /**
-                 * En este metodo comprobamos los permisos que tenemos, si hay algún error nos mostrará un toast diciendo que hay algún error
-                 */
-                override fun onPermissionRationaleShouldBeShown(
-                    permissions: List<PermissionRequest?>?,
-                    token: PermissionToken
-                ) {
-                    token.continuePermissionRequest()
-                }
-                //En caso de que se encuentre algún error salta este toast
-            }).withErrorListener { Toast.makeText(applicationContext, "Existe errores! ", Toast.LENGTH_SHORT).show() }
     }
 
     /**

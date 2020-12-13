@@ -28,15 +28,6 @@ object SesionController {
     }
 
     /**
-     * Función que se encarga de obtener el registro de una sesión de un usuario
-     */
-    fun selectByIdUsuarioActivo(idUsuarioActivo: String): Sesion? {
-        return Realm.getDefaultInstance().copyFromRealm(
-            Realm.getDefaultInstance().where<Sesion>().equalTo("idUsuarioActivo", idUsuarioActivo).findFirst()
-        )
-    }
-
-    /**
      * Función que nos permite borrar todas las sesiones que haya en la base de datos salvo la que
      * vayamos a usar
      */
@@ -48,11 +39,4 @@ object SesionController {
             result.deleteAllFromRealm()
         }
     }
-
-    fun removeAll() {
-        Realm.getDefaultInstance().executeTransaction {
-            it.deleteAll()
-        }
-    }
-
 }

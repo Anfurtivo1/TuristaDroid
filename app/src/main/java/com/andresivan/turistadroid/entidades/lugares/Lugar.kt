@@ -12,52 +12,29 @@ import io.realm.annotations.Required
 import java.util.*
 
 open class Lugar(
-    @PrimaryKey
-    var id: String = "",
-    @Required
-    var nombre: String = "",
-    @Required
-    var tipo: String = "Poblacion",
-    @Required
-    var fecha: String = "",
-    @Required
-    var latitud: String = "",
-    @Required
-    var longitud: String = "",
-    @Required
-    var imgID: String = "",
+    @PrimaryKey var id: String = "",
+    @Required var nombre: String = "",
+    @Required var tipo: String = "Poblacion",
+    @Required var fecha: String = "",
+    @Required var latitud: String = "",
+    @Required var altitud: String = "",
+    @Required var imgID: String = "",
     var valoracion: Int = 0,
     var fav: Boolean = false,
-    @Required
-    var usuarioID: String = ""
+    @Required var usuarioID: String = ""
 ) : RealmObject() {
 
     constructor(
-        nombre: String,
-        tipo: String,
-        fecha: String,
-        latitud: String,
-        longitud: String,
-        imgID: String,
-        valoracion: Int,
-        fav: Boolean,
-        usuarioID: String
-    ) :
-            this(
-                (UUID.randomUUID().toString()),
-                nombre,
-                tipo,
-                fecha,
-                latitud,
-                longitud,
-                imgID,
-                valoracion,
-                fav,
-                usuarioID
-            )
+        nombre: String, tipo: String, fecha: String, latitud: String, altitud: String, imgID: String,
+        valoracion: Int, fav: Boolean, usuarioID: String
+    ) : this((UUID.randomUUID().toString()),  nombre, tipo, fecha, latitud, altitud, imgID, valoracion,
+        fav, usuarioID
+    )
 
     override fun toString(): String {
-        return "Lugar(id='$id', nombre='$nombre', tipo='$tipo', fecha='$fecha', latitud='$latitud', longitud='$longitud', imgID='$imgID', favorito=$fav, valoracion=$valoracion, usuarioID='$usuarioID')"
+        return "Lugar(id='$id', nombre='$nombre', tipo='$tipo', fecha='$fecha', latitud='$latitud'," +
+                "altitud='$altitud', imgID='$imgID', favorito=$fav, valoracion=$valoracion," +
+                "usuarioID='$usuarioID')"
     }
 
     override fun equals(other: Any?): Boolean {
@@ -68,26 +45,12 @@ open class Lugar(
         if (tipo != other.tipo) return false
         if (fecha != other.fecha) return false
         if (latitud != other.latitud) return false
-        if (longitud != other.longitud) return false
+        if (altitud != other.altitud) return false
         if (imgID != other.imgID) return false
         if (fav != other.fav) return false
         if (valoracion != other.valoracion) return false
         if (usuarioID != other.usuarioID) return false
         return true
-    }
-
-    override fun hashCode(): Int {
-        var result = id.hashCode()
-        result = 31 * result + nombre.hashCode()
-        result = 31 * result + tipo.hashCode()
-        result = 31 * result + fecha.hashCode()
-        result = 31 * result + latitud.hashCode()
-        result = 31 * result + longitud.hashCode()
-        result = 31 * result + imgID.hashCode()
-        result = 31 * result + fav.hashCode()
-        result = 31 * result + valoracion
-        result = 31 * result + usuarioID.hashCode()
-        return result
     }
 
 }

@@ -4,16 +4,6 @@ import io.realm.Realm
 import io.realm.kotlin.where
 
 object FotoController {
-    /**
-     * Función que nos permite obtener todas las fotos de un lugar
-     * @return MutableList<Foto>? nos devuelve todas las fotos que haya en la base de datos, la
-     * interrogación nos indica que puede que no tengamos registros en la BBDD
-     */
-    fun selectAll(): MutableList<Foto>? {
-        return Realm.getDefaultInstance().copyFromRealm(
-            Realm.getDefaultInstance().where<Foto>().findAll()
-        )
-    }
 
     /**
      * Función que nos permite añadir una fotografia a la base de datos
@@ -36,7 +26,6 @@ object FotoController {
         }
     }
 
-
     /**
      * Función que recibe el identificador de una fotografia y que nos permite localizarla en la base de datos
      * @param id String el identificador que utlizamos para buscar la foto
@@ -46,15 +35,6 @@ object FotoController {
         return Realm.getDefaultInstance().copyFromRealm(
             Realm.getDefaultInstance().where<Foto>().equalTo("id", id).findFirst()
         )
-    }
-
-    /**
-     * Función que nos permite borrara todos las fotos de la base de datos
-     */
-    fun removeAll() {
-        Realm.getDefaultInstance().executeTransaction {
-            Realm.getDefaultInstance().where<Foto>().findAll().deleteAllFromRealm();
-        }
     }
 
     fun update(foto: Foto) {

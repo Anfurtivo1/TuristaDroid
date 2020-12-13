@@ -45,35 +45,5 @@ object LugarController {
         }
     }
 
-    /**
-     * Función que permite buscar un Lugar dado su nombre
-     * @param nombre String es el nombre del lugar que nos permite buscar un lugar o no
-     * @return Lugar? puede que devuelva un lun lugar o no dependiendo de si existe o no
-     */
-    fun selectByNombre(nombre: String): Lugar? {
-        return Realm.getDefaultInstance().copyFromRealm(
-            Realm.getDefaultInstance().where<Lugar>().equalTo("nombre", nombre).findFirst()
-        )
-    }
-
-    /**
-     * Función que devuelve un registro de un lugar dado su ID
-     * @param id String es el identificador del lugar
-     * @return Lugar? puede que devuelva un lugar o no dependiendo de si existe o no
-     */
-    fun selectById(id: String): Lugar? {
-        return Realm.getDefaultInstance().copyFromRealm(
-            Realm.getDefaultInstance().where<Lugar>().equalTo("id", id).findFirst()
-        )
-    }
-
-    /**
-     * Función que nos permite eliminar todos los registros de la tabla Lugar
-     */
-    fun removeAll() {
-        Realm.getDefaultInstance().executeTransaction {
-            Realm.getDefaultInstance().where<Lugar>().findAll().deleteAllFromRealm();
-        }
-    }
 
 }

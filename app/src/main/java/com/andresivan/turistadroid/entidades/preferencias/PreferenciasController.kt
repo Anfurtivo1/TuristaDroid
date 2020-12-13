@@ -11,17 +11,6 @@ import com.google.gson.Gson
 
 object PreferenciasController {
 
-    private var USER_ID: String = ""
-    private lateinit var USER: Usuario
-
-    fun comprobarSesion(context: Context): Boolean {
-        // Abrimos las preferencias en modo lectura
-        val prefs = context.getSharedPreferences("MisLugares", Context.MODE_PRIVATE)
-        USER_ID = prefs.getString("USER_ID", "").toString()
-        Log.i("Config", "Usuario ID: " + USER_ID)
-        return USER_ID.isNotEmpty()
-    }
-
     /**
      * Función que se encarga de recoger por parámetro los distintos valores pasados por parámetro para crear
      * un usuario en insertarlo en la Base de Datos
@@ -37,50 +26,19 @@ object PreferenciasController {
         )
 
         if (existeUsuario(correo, contrasena)){
-           Toast.makeText(context, "Ya existe un usuario con ese correo", Toast.LENGTH_SHORT).show()
+           Toast.makeText(context, "YA EXISTE UN USUARIO CON ESE CORREO", Toast.LENGTH_SHORT).show()
         }else{
             UsuarioControlador.insert(usuario)
-            Toast.makeText(context, "Usuario registrado correctamente", Toast.LENGTH_SHORT).show()
-            Log.i("REGISTRO", "USUARIO REGISTRADO $usuario")
+            Toast.makeText(context, "REGISTRADO", Toast.LENGTH_SHORT).show()
         }
     }
 
     fun iniciarSesionUsuario(context: Context, correo: String, contrasena:String):Boolean {
-        val usuario = Usuario(
-            correo = correo,
-            contrasena = CifradorContrasena.convertirHash(contrasena, "SHA-256")!!,
-            nombre = "",
-            fotoUsuario = "",
-            cuentaTwitter = ""
-        )
-        //SesionController.removeAll()
-        if (existeUsuario(correo, contrasena)){
-            Toast.makeText(context, "Iniciando sesión", Toast.LENGTH_SHORT).show()
-            return true
+        return if (existeUsuario(correo, contrasena)){
+            Toast.makeText(context, "SESIÓN INICIADA", Toast.LENGTH_SHORT).show()
+            true
         }else{
-            return false
+            false
         }
     }
-
-    private fun abrirPreferecias (context: Context, usuario: Usuario): Usuario{
-        // Abrimos las preferemcias en modo escritura
-        val prefs = context.getSharedPreferences("MisLugares", Context.MODE_PRIVATE)
-        val editor = prefs.edit()
-        editor.putString("USER_ID", usuario.id)
-        // Escribimos el usuario como JSON
-        editor.putString("USER", Gson().toJson(usuario))
-        editor.apply()
-        return usuario
-    }
-
-    /**
-     * Leemos la sesion activa
-     * @param context Context
-     * @return Usuario
-     */
-    fun leerSesion(context: Context): Usuario {
-        val prefs = context.getSharedPreferences("MisLugares", Context.MODE_PRIVATE)
-        return Gson().fromJson(prefs.getString("USER", ""), Usuario::class.java)
-    }
-
 }

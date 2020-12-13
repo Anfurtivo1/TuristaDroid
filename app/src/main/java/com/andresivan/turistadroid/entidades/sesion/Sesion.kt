@@ -5,8 +5,7 @@ import io.realm.annotations.PrimaryKey
 import java.util.*
 
 open class Sesion(
-    @PrimaryKey
-    var id: String = "",
+    @PrimaryKey var id: String = "",
     var idUsuarioActivo: String = ""
 ):RealmObject(){
     constructor(

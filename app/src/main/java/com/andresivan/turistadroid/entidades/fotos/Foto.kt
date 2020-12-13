@@ -6,17 +6,22 @@ import io.realm.annotations.Required
 import java.util.*
 
 open class Foto(
-    @PrimaryKey
-    var id: String = "",
-    @Required
-    var imgLugar: String = "",
-    @Required
-    var uri: String = "",
-    @Required
-    var hash: String = "",
-    @Required
-    var usuarioID: String = ""
+    @PrimaryKey var id: String = "",
+    @Required var imgLugar: String = "",
+    @Required var uri: String = "",
+    @Required var hash: String = "",
+    @Required var usuarioID: String = ""
 ) : RealmObject() {
-    constructor(imgLugar: String, uri: String, hash: String, usuarioID: String) :
-            this((UUID.randomUUID().toString()), imgLugar, uri, hash, usuarioID)
+    constructor(
+        imgLugar: String,
+        uri: String,
+        hash: String,
+        usuarioID: String
+    ) :this(
+        (UUID.randomUUID().toString()),
+        imgLugar,
+        uri,
+        hash,
+        usuarioID
+    )
 }

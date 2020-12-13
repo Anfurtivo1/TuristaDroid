@@ -73,20 +73,6 @@ object UsuarioControlador {
     }
 
     /**
-     * Función que se encarga de comprobar si existe algún usuario en la aplicación con ese correo y
-     * contraseña, dependiendo del valor boolean que devuelva hará una cosa u otra
-     * @param correo String es el correo electrónico introducido en cuadro de texto de correo
-     * @param contrasena String es la contrasena introducida en el cuadro de texto de contrasena
-     */
-    fun existeUsuarioLogin(correo: String, contrasena: String): Boolean {
-        var realm = Realm.getDefaultInstance()
-        var query =
-            realm.where<Usuario>().equalTo("correo", correo).and().equalTo("contrasena", contrasena)
-                .findAll()
-        return query.count() > 0
-    }
-
-    /**
      * Función que nos permite buscar un usuario en nuestra base de datos, está función es igual que la anterior, pero
      * esta vez, buscamos por el id del usuario
      * @param id String
@@ -114,14 +100,4 @@ object UsuarioControlador {
         realm.commitTransaction()
     }
 
-    /**
-     * Función que nos permite borrar todos los usuarios de la base de datos
-     * Esta función no recibe parámetro como las anteriores, debido a que no nos hace falta ya que queremos borrar
-     * a todos los usuarios que existan
-     */
-    fun removeAll() {
-        getDefaultInstance().executeTransaction {
-            it.deleteAll()
-        }
-    }
 }
