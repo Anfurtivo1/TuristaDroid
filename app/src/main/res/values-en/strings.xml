@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">TuristaDroid</string>
+    <string name="login_lbl_Contrasena">password</string>
+    <string name="login_btn_iniciarSesion">Log in</string>
+    <string name="login_link_registrarse">Register</string>
+    <string name="register_lbl_nombreUsu">Username</string>
+    <string name="mp_hint_nombreusu">Username</string>
+    <string name="mp_hint_contrasena">Password</string>
+    <string name="title_activity_pantallaprincipal">MainScreen</string>
+    <string name="Si">Yes</string>
+    <string name="No">No</string>
+    <string name="Salir">¿Do you want to exit?</string>
+    <string name="aceptar">Accept</string>
+    <string name="cancelar">Cancel</string>
+    <string name="cercaDeMi">Near me</string>
+    <string name="mis_sitios">My sites</string>
+    <string name="mi_perfil">My profile</string>
+    <string name="nombreApellidos">Name and surname</string>
+    <string name="editar_perfil">Edit profile</string>
+    <string name="EncenderLinterna">Flashlight</string>
+    <string name="ok">Accept</string>
+    <string name="no">Cancel</string>
+    <string name="tituloSplashScreen">TuristaDroid</string>
+    <string name="login_lbl_Correo">Email</string>
+    <string name="mp_hint_twitter">Link Twitter</string>
+    <string name="nav_header_title">Header Title</string>
+    <string name="nav_header_subtitle">Header Subtitle</string>
+    <string name="nav_header_desc">User photo</string>
+</resources>
