@@ -28,7 +28,7 @@ class MisSitios : Fragment() {
 
     private var SITIOS = mutableListOf<Lugar>()
     private lateinit var sitiosAdapter: SitiosListAdapter
-    private lateinit var tarea2doPlanos: TareaCargarLugares
+    private lateinit var tarea2doPlanos: TareaCargarRegistros
     private var fondoAlDeslizar = Paint()
     private var FILTRO_ORDENACIÓN = Filtros.NADA
 
@@ -223,7 +223,7 @@ class MisSitios : Fragment() {
      * la información de los registros de la bbdd
      */
     private fun cargarRegistros() {
-        tarea2doPlanos = TareaCargarLugares()
+        tarea2doPlanos = TareaCargarRegistros()
         tarea2doPlanos.execute()
     }
 
@@ -333,7 +333,7 @@ class MisSitios : Fragment() {
      * Función que se encarga durante el mismo tiempo de ejecución en cargar los registros de la bbdd
      * de lugares
      */
-    inner class TareaCargarLugares : AsyncTask<Void?, Void?, Void?>() {
+    inner class TareaCargarRegistros : AsyncTask<Void?, Void?, Void?>() {
         override fun onPreExecute() {
             if (sitiosSwipeRefresh.isRefreshing) {
                 sitiosSwipeRefresh.isRefreshing = false
