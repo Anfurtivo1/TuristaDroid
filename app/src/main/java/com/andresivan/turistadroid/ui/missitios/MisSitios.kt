@@ -251,7 +251,6 @@ class MisSitios : Fragment() {
      * @param position Int es la posicion del item en la que aparece en la lista
      */
     private fun modificar(position: Int) {
-        Log.i("Lugares", "Editando el elemento pos: " + position)
         abrirDetalle(SITIOS[position], ModosAccesos.ACTUALIZAR, this, position)
     }
 
@@ -305,7 +304,6 @@ class MisSitios : Fragment() {
      * @param position Int?
      */
     private fun abrirDetalle(lugar: Lugar?, modo: ModosAccesos?, anterior: MisSitios?, position: Int?) {
-        Log.i("Lugares", "Abriendo el elemento pos: " + lugar?.id)
         val lugarDetalle = SitioDetalleFragment(lugar, modo, anterior, position)
         val transaction = requireActivity().supportFragmentManager.beginTransaction()
         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
