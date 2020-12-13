@@ -84,6 +84,7 @@ class SitioDetalleFragment(
         savedInstanceState: Bundle?
     ): View? {
         return inflater.inflate(R.layout.fragment_miperfil, container, false)
+        inicializarInterfaz()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -91,8 +92,6 @@ class SitioDetalleFragment(
         view.setOnTouchListener { view, motionEvent ->
             return@setOnTouchListener true
         }
-        inicializarInterfaz()
-
     }
 
     /**
