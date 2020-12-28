@@ -97,7 +97,6 @@ object UsuarioControlador {
         realm.executeTransaction { realm ->
             realm.insertOrUpdate(usuario)
         }
-        realm.commitTransaction()
     }
 
 }

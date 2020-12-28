@@ -304,10 +304,9 @@ class MisSitios : Fragment() {
      * @param position Int?
      */
     private fun abrirDetalle(lugar: Lugar?, modo: ModosAccesos?, anterior: MisSitios?, position: Int?) {
-        val lugarDetalle = SitioDetalleFragment(lugar, modo, anterior, position)
+        val lugarDetalle = SitioDetalleFragment(lugar,modo,anterior,position)
         val transaction = requireActivity().supportFragmentManager.beginTransaction()
-        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-        transaction.add(R.id.nav_host_fragment, lugarDetalle)
+        transaction.replace(R.id.misSitios, lugarDetalle)
         transaction.addToBackStack(null)
         transaction.commit()
     }

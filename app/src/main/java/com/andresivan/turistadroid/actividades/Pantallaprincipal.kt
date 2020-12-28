@@ -3,6 +3,7 @@ package com.andresivan.turistadroid.actividades
 import android.hardware.Camera
 import android.hardware.camera2.CameraManager
 import android.os.Bundle
+import android.os.Environment
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
@@ -22,6 +23,7 @@ import com.andresivan.turistadroid.usuario.UsuarioControlador
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
+import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.nav_header_main.*
 
 
@@ -36,12 +38,6 @@ class pantallaprincipal : AppCompatActivity() {
         setContentView(R.layout.activity_pantallaprincipal)
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
-
-        val fab: FloatingActionButton = findViewById(R.id.fab)
-        fab.setOnClickListener { view ->
-            Snackbar.make(view, "", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show()
-        }
 
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
         val navView: NavigationView = findViewById(R.id.nav_view)
@@ -84,7 +80,7 @@ class pantallaprincipal : AppCompatActivity() {
 
             nav_header_nombre_usuario.text = USUARIO.nombre
             nav_header_correo.text = USUARIO.correo
-
+            Picasso.get().load((this.getExternalFilesDir(Environment.DIRECTORY_PICTURES)?.absolutePath) +USUARIO.fotoUsuario).into(nav_header_imagen)
         }
     }
 

@@ -83,7 +83,7 @@ class SitioDetalleFragment(
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_miperfil, container, false)
+        return inflater.inflate(R.layout.fragment_sitio_detalle, container, false)
         inicializarInterfaz()
     }
 
@@ -385,7 +385,7 @@ class SitioDetalleFragment(
     }
 
     /**
-     * Funcion que permite comprobar el contido del formulario del fragment
+     * Funcion que permite comprobar el contenido del formulario del fragment
      * @return Boolean
      */
     private fun esRegistroValido(): Boolean {

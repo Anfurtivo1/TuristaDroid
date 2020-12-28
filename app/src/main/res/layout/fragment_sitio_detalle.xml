@@ -14,12 +14,11 @@
         android:background="@color/recyclerListColor"
         android:scaleType="centerCrop"
         android:src="@mipmap/ic_launcher" app:srcCompat="@mipmap/ic_launcher"
-        tools:srcCompat="@mipmap/ic_launcher"/>
-        !
+        tools:srcCompat="@mipmap/ic_launcher"
+        android:contentDescription="TODO" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/detalleCamaraSitio"
-        style="@android:style/Widget.Material.ImageButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="right"
@@ -42,7 +41,6 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/detalleSitioNombreText"
-            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
@@ -57,7 +55,6 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/detalleTipoSitio"
-            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/detalleSitioNombreText"
@@ -77,7 +74,6 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/detalleBtnFecha"
-                style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
                 android:layout_width="14dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -113,14 +109,13 @@
             android:layout_width="match_parent"
             android:layout_marginBottom="5dp"
             android:id="@+id/detalleMapa"
-            tools:context=".ui.cercademi"
+            tools:context=".ui.sitiodetalle"
             android:name="com.google.android.gms.maps.SupportMapFragment" android:layout_marginTop="5dp"
             android:layout_marginStart="0dp" android:layout_marginEnd="0dp"
             android:layout_below="@+id/linearLayoutSitioInfo"
-            tools:layout="@layout/fragment_cercademi" />
+            tools:layout="@layout/fragment_sitio_detalle" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            style="@android:style/Widget.Material.ImageButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
