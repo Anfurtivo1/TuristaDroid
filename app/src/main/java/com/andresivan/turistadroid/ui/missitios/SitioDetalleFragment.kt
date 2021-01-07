@@ -95,7 +95,7 @@ class SitioDetalleFragment(
     }
 
     /**
-     * Esta función es bastante impoertante, es la que se encarga de diferenciar el modo de acceso
+     * Esta función es bastante importante, es la que se encarga de diferenciar el modo de acceso
      * al fragment de SitioDetalleFragmen, como le pasamos el modo de acceso por parámetro,
      * distinguimos y llamamos a una función u otra
      */

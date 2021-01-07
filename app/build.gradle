@@ -60,5 +60,7 @@ dependencies {
     // RELACIONADO CON LOS QR
     implementation 'com.google.zxing:core:3.4.1'
     implementation 'com.journeyapps:zxing-android-embedded:3.4.0'
+    //LIBRERIA PARA EXPORTAR E IMPORTAR
+    implementation 'com.google.code.gson:gson:2.8.5'
 
 }

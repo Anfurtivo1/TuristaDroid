@@ -7,10 +7,14 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.net.Uri
 import android.os.Build
+import android.os.Environment
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentActivity
+import com.andresivan.turistadroid.entidades.usuario.UsuarioDTO
+import com.google.gson.GsonBuilder
+import java.io.File
 
 class Utilidades {
     /**
@@ -124,4 +128,21 @@ class Utilidades {
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse(enlace))
         activity!!.startActivity(intent)
     }
+
+    fun convertirListaJSON(listaUsuario: MutableList<UsuarioDTO>) {
+        val gsonPretty = GsonBuilder().setPrettyPrinting().create()
+
+
+        val jsonTutsListPretty: String = gsonPretty.toJson(listaUsuario)
+
+        println(jsonTutsListPretty)
+
+    }
+
+    fun crearArchivoJSON(context: Context){
+        //val path="backup"
+        //File((context.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS)?.absolutePath) + path).createNewFile()
+
+    }
+
 }

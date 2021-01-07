@@ -1,9 +1,8 @@
 package com.andresivan.turistadroid.actividades
 
-import android.hardware.Camera
+import android.content.Intent
 import android.hardware.camera2.CameraManager
 import android.os.Bundle
-import android.os.Environment
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
@@ -20,9 +19,8 @@ import com.andresivan.turistadroid.R
 import com.andresivan.turistadroid.entidades.sesion.SesionController
 import com.andresivan.turistadroid.entidades.usuario.Usuario
 import com.andresivan.turistadroid.usuario.UsuarioControlador
-import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.andresivan.turistadroid.utils.Utilidades
 import com.google.android.material.navigation.NavigationView
-import com.google.android.material.snackbar.Snackbar
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.nav_header_main.*
 
@@ -80,7 +78,9 @@ class pantallaprincipal : AppCompatActivity() {
 
             nav_header_nombre_usuario.text = USUARIO.nombre
             nav_header_correo.text = USUARIO.correo
-            Picasso.get().load((this.getExternalFilesDir(Environment.DIRECTORY_PICTURES)?.absolutePath) +USUARIO.fotoUsuario).into(nav_header_imagen)
+            //Picasso.get().load("https://ichef.bbci.co.uk/news/640/cpsprodpb/4172/production/_108545761_mediaitem108545760.jpg").resize(150, 150).into(nav_header_imagen)
+
+            Picasso.get().load((this.filesDir?.absolutePath) +"/"+USUARIO.fotoUsuario).resize(150, 150).into(nav_header_imagen)
         }
     }
 
@@ -96,6 +96,21 @@ class pantallaprincipal : AppCompatActivity() {
                 true
 
             }
+            R.id.CerrarSesion -> {
+
+                cerrarSesion()
+
+                true
+            }
+
+            R.id.SacarDatos ->{
+                val utils= Utilidades()
+                val listaUsuario=UsuarioControlador.todosUsuarios()
+                utils.convertirListaJSON(listaUsuario)
+
+                true
+            }
+
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -103,6 +118,14 @@ class pantallaprincipal : AppCompatActivity() {
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.nav_host_fragment)
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
+    }
+
+    /**
+     * Este metodo carga la pantalla del login y simula el cierre de sesion
+     */
+    private fun cerrarSesion(){
+        val intent = Intent(this, login::class.java)
+        startActivity(intent)
     }
 
     /**

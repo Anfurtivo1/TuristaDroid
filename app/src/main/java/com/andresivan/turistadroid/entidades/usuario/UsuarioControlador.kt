@@ -3,10 +3,12 @@ package com.andresivan.turistadroid.usuario
 import android.util.Log
 import android.widget.Toast
 import com.andresivan.turistadroid.entidades.usuario.Usuario
+import com.andresivan.turistadroid.entidades.usuario.UsuarioDTO
 import com.andresivan.turistadroid.utils.CifradorContrasena
 import io.realm.Realm
 
 import io.realm.Realm.*
+import io.realm.RealmResults
 import io.realm.kotlin.where
 
 object UsuarioControlador {
@@ -70,6 +72,29 @@ object UsuarioControlador {
             .equalTo("contrasena", CifradorContrasena.convertirHash(contrasena, "SHA-256"))
             .findAll()
         return query.count() > 0
+    }
+
+    /**
+     * Funcion que devuelve una lista con todos los usuarios
+     */
+    fun todosUsuarios(): MutableList<UsuarioDTO> {
+        val realm = Realm.getDefaultInstance()
+        var query = realm.where<Usuario>().findAll()
+        val listaNueva=mutableListOf<UsuarioDTO>()
+
+        for (usuario in query){
+            val usuarioNuevo=pasarUsuario(usuario)
+            listaNueva.add(usuarioNuevo)
+        }
+        return listaNueva
+    }
+
+    /**
+     * Se convierte el usuario de Realm a un objeto mas simple
+     */
+    fun pasarUsuario(usuario:Usuario): UsuarioDTO {
+        val usuarioPlano=UsuarioDTO(usuario.id,usuario.correo,usuario.contrasena,usuario.nombre,usuario.fotoUsuario,usuario.cuentaTwitter)
+        return usuarioPlano
     }
 
     /**

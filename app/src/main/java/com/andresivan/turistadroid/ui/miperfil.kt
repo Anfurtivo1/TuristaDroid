@@ -17,19 +17,15 @@ import android.widget.Toast
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import com.andresivan.turistadroid.R
-import com.andresivan.turistadroid.entidades.sesion.Sesion
+import com.andresivan.turistadroid.actividades.login
 import com.andresivan.turistadroid.entidades.sesion.SesionController
 import com.andresivan.turistadroid.entidades.usuario.Usuario
 import com.andresivan.turistadroid.usuario.UsuarioControlador
 import com.andresivan.turistadroid.utils.CifradorContrasena
 import com.andresivan.turistadroid.utils.Fotos
-import io.realm.exceptions.RealmError
-import io.realm.exceptions.RealmException
-import kotlinx.android.synthetic.main.activity_registrarse.*
 import kotlinx.android.synthetic.main.fragment_miperfil.*
-import kotlinx.android.synthetic.main.fragment_miperfil.imgCamaraRegistrarse
-import kotlinx.android.synthetic.main.fragment_miperfil.imgGaleriaRegistrarse
 import java.io.IOException
+
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -128,7 +124,7 @@ class miperfil : Fragment() {
     }
 
     /**
-     * Este es el metodo en si que edita el usuario, pese a dar un error al ejecutarlo, actualiza de forma correcta el usuario
+     * Este es el metodo en si que edita el usuario
      * Si en el enlace del Twitter se pone un texto que no es una URL valida, dara error al abrir el twitter por esa misma razón
      */
     private fun editarPerfil() {
@@ -149,8 +145,18 @@ class miperfil : Fragment() {
                 }
 
         }
+        cargarLogin()
 
     }
+
+    /**
+     * Este metodo carga la pantalla del login al editar el usuario
+     */
+    private fun cargarLogin(){
+        val intent = Intent(activity, login::class.java)
+        requireActivity().startActivity(intent)
+    }
+
     /**
      * Este metodo elegirá una foto de la galeria
      */
