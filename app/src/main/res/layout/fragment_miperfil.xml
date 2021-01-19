@@ -5,7 +5,7 @@
     android:id="@+id/frameLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#D61010"
+    android:background="@color/colorPrimary"
     tools:context=".ui.miperfil">
 
     <Button
@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="286dp"
         android:layout_marginBottom="20dp"
-        android:backgroundTint="@android:color/holo_blue_dark"
+        android:backgroundTint="@color/colorBTN_Dark"
         android:text="@string/editar_perfil"
         android:textColor="@android:color/background_light"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -30,7 +30,7 @@
         android:layout_height="104dp"
         android:layout_marginStart="24dp"
         android:layout_marginTop="16dp"
-        android:src="@drawable/imagenusuarioregistro"
+        android:src="@drawable/ic_profile_pic"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -55,6 +55,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="62dp"
+        android:layout_marginTop="3dp"
         android:layout_marginEnd="81dp"
         android:text="Nombre usuario"
         android:textSize="19sp"
@@ -106,33 +107,40 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imgMiPerfil" />
 
-    <ImageView
-        android:id="@+id/imgTwitterMiPerfil"
-        android:layout_width="58dp"
-        android:layout_height="60dp"
-        android:layout_marginEnd="36dp"
-        android:layout_marginBottom="36dp"
-        android:src="@drawable/twitter"
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabMP_Twitter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="40dp"
+        android:layout_marginBottom="40dp"
+        android:clickable="true"
+        android:src="@drawable/ic_twitter"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        android:backgroundTint="@color/colorBTN_Dark"/>
 
-    <ImageView
-        android:id="@+id/imgGaleriaRegistrarse"
-        android:layout_width="78dp"
-        android:layout_height="65dp"
-        android:layout_marginStart="14dp"
-        android:layout_marginBottom="20dp"
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabMP_Camara"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="40dp"
+        android:layout_marginBottom="40dp"
+        android:backgroundTint="@color/colorBTN_Dark"
+        android:clickable="true"
+        android:src="@drawable/ic_camara"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@drawable/imagengaleriaregistro" />
+        app:layout_constraintStart_toStartOf="parent" />
 
-    <ImageView
-        android:id="@+id/imgCamaraRegistrarse"
-        android:layout_width="78dp"
-        android:layout_height="65dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginBottom="10dp"
-        app:layout_constraintBottom_toTopOf="@+id/imgGaleriaRegistrarse"
-        app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@drawable/imagencamararegistro" />
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabMP_Galeria"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="40dp"
+        android:layout_marginBottom="17dp"
+        android:backgroundTint="@color/colorBTN_Dark"
+        android:clickable="true"
+        android:src="@drawable/ic_galeria"
+        app:layout_constraintBottom_toTopOf="@+id/fabMP_Camara"
+        app:layout_constraintStart_toStartOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

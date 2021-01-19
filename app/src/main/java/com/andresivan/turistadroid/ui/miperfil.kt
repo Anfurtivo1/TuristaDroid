@@ -27,8 +27,6 @@ import io.realm.exceptions.RealmError
 import io.realm.exceptions.RealmException
 import kotlinx.android.synthetic.main.activity_registrarse.*
 import kotlinx.android.synthetic.main.fragment_miperfil.*
-import kotlinx.android.synthetic.main.fragment_miperfil.imgCamaraRegistrarse
-import kotlinx.android.synthetic.main.fragment_miperfil.imgGaleriaRegistrarse
 import java.io.IOException
 
 // TODO: Rename parameter arguments, choose names that match
@@ -121,10 +119,10 @@ class miperfil : Fragment() {
 
         btnEditarPerfil.setOnClickListener{editarPerfil()}
 
-        imgTwitterMiPerfil.setOnClickListener{abrirPaginaWeb(USUARIO.cuentaTwitter)}
+        fabMP_Twitter.setOnClickListener{abrirPaginaWeb(USUARIO.cuentaTwitter)}
 
-        imgCamaraRegistrarse.setOnClickListener{abrirCamara()}
-        imgGaleriaRegistrarse.setOnClickListener{abrirGaleria()}
+        fabMP_Camara.setOnClickListener{abrirCamara()}
+        fabMP_Galeria.setOnClickListener{abrirGaleria()}
     }
 
     /**

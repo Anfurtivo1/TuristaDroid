@@ -2,6 +2,7 @@
 <resources>
     <color name="colorPrimary">#F370CA9C</color>
     <color name="colorPrimaryDark">#73AF6C</color>
+    <color name="colorBTN_Dark">#86AC82</color>
     <color name="fabBtnColor">#B6E3A5</color>
     <color name="colorAccent">#03DAC5</color>
     <color name="favNo">#FFFFDFDF</color>

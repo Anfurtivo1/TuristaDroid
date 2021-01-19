@@ -43,8 +43,8 @@ class registrarse : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_registrarse)
-        imgCamaraRegistrarse.setOnClickListener { tomarFotoCamara() }
-        imgGaleriaRegistrarse.setOnClickListener { elegirFotoGaleria() }
+        fabRegCamara.setOnClickListener { tomarFotoCamara() }
+        fabRegGaleria.setOnClickListener { elegirFotoGaleria() }
         btnRegistrarse.setOnClickListener{ registrarUsuario() }
 
     }
