@@ -1,42 +1,23 @@
 package com.andresivan.turistadroid.entidades.sesion
 
-import com.andresivan.turistadroid.entidades.lugares.Lugar
+import android.content.Context
+import android.util.Log
+import com.andresivan.turistadroid.entidades.preferencias.PreferenciasController
 import com.andresivan.turistadroid.entidades.usuario.Usuario
-import io.realm.Realm
-import io.realm.kotlin.where
+import java.lang.Exception
 
 object SesionController {
 
-    /**
-     * Función que se encarga de insertar un usuario en la tabla de Sesión, esto nos valdrá para
-     * usar ese usuario en la base de datos
-     * @param sesion Sesion le introducimos lo necesario para iniciar sesion el usuario
-     */
-    fun insert (sesion: Sesion) {
-        Realm.getDefaultInstance().executeTransaction {
-            it.copyToRealm(sesion)
+    fun getSesionActual(context: Context): Usuario?{
+        if (PreferenciasController.comprobarSesion(context)){
+            try{
+                return PreferenciasController.leerSesion(context)
+            } catch (ex: Exception) {
+                Log.i("SESION", "ERROR EN LA LECTURA DE SESION" + ex.localizedMessage)
+                return null
+            }
         }
+        return null
     }
 
-    /**
-     * Función que se encarga de obtener todos los 
-     */
-    fun selectAll(): MutableList<Sesion>? {
-        return Realm.getDefaultInstance().copyFromRealm(
-            Realm.getDefaultInstance().where<Sesion>().findAll()
-        )
-    }
-
-    /**
-     * Función que nos permite borrar todas las sesiones que haya en la base de datos salvo la que
-     * vayamos a usar
-     */
-    fun deleteSesion(idUsuarioActivo: String){
-        var realm = Realm.getDefaultInstance()
-        val result = realm.where<Sesion>().notEqualTo("idUsuarioActivo", idUsuarioActivo).findAll()
-
-        realm.executeTransaction{ realm ->
-            result.deleteAllFromRealm()
-        }
-    }
 }

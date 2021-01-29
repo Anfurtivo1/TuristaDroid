@@ -6,39 +6,32 @@
     android:layout_height="match_parent"
     android:background="@color/recyclerListColor">
 
-
     <ImageView
         android:id="@+id/detalleFotoSitio"
         android:layout_width="match_parent"
         android:layout_height="145dp"
         android:background="@color/recyclerListColor"
         android:scaleType="centerCrop"
-        android:src="@mipmap/ic_launcher" app:srcCompat="@mipmap/ic_launcher"
-        tools:srcCompat="@mipmap/ic_launcher"
-        android:contentDescription="TODO" />
+        android:src="@mipmap/ic_launcher_round"
+        android:contentDescription="TODO"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/detalleCamaraSitio"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="right"
+        android:layout_gravity="left"
         android:layout_marginTop="115dp"
-        android:layout_marginRight="8dp"
-        android:backgroundTint="@color/fabBtnColor"
+        android:layout_marginLeft="8dp"
+        android:backgroundTint="@color/colorBTN_Dark"
         android:clickable="true"
-        android:src="@drawable/ic_tomar_foto"
-        app:rippleColor="#FFFFFF"/>
+        android:src="@drawable/ic_camara"/>
 
     <RelativeLayout
-
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginStart="10dp"
         android:layout_marginTop="145dp"
-        android:layout_marginEnd="10dp"
-        android:background="#FFFFFF">
-
-
+        android:layout_marginEnd="10dp">
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/detalleSitioNombreText"
             android:layout_width="match_parent"
@@ -49,7 +42,8 @@
 
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" android:id="@+id/detalleSitioInput"/>
+                android:layout_height="wrap_content"
+                android:id="@+id/detalleSitioInput"/>
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -58,41 +52,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/detalleSitioNombreText"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:background="#FFFFFF"
-            android:hint="Tipo"/>
-
-
-        <LinearLayout
-            android:id="@+id/linearLayoutSitioInfo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/detalleSpnTipo"
-            android:layout_marginTop="20dp"
-            android:orientation="horizontal">
-
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/detalleBtnFecha"
-                android:layout_width="14dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-                app:icon="@drawable/ic_calendario" android:textColor="@color/colorPrimary"
-                app:iconTint="@color/colorPrimary"
-                android:paddingLeft="10dp"
-                android:gravity="left|center_vertical" tools:ignore="RtlHardcoded"
-                android:layout_gravity="left|center_vertical"/>
-
-            <TextView
-                android:text="20 votos"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent" android:id="@+id/detalleSitioValoracion"
-                android:layout_weight="1" android:textColor="@color/colorPrimary" android:clickable="false"
-                android:gravity="right|center_vertical" android:textStyle="bold"/>
-
-        </LinearLayout>
-
+            android:hint="TipoLugar"/>
 
         <Spinner
             android:id="@+id/detalleSpnTipo"
@@ -104,22 +66,55 @@
             android:spinnerMode="dialog"
             android:entries="@array/filtros"/>
 
-        <fragment
-            android:layout_height="match_parent"
+        <LinearLayout
+            android:id="@+id/linearLayoutSitioInfo"
             android:layout_width="match_parent"
-            android:layout_marginBottom="5dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/detalleSpnTipo"
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/detalleBtnFecha"
+                android:layout_width="14dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                app:icon="@drawable/ic_calendario" android:textColor="@color/colorPrimary"
+                app:iconTint="@color/specialTextColor"
+                android:paddingLeft="10dp"
+                android:gravity="left|center_vertical" tools:ignore="RtlHardcoded"
+                android:layout_gravity="left|center_vertical"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="votos"
+                android:id="@+id/detalleSitioValoracion"
+                android:layout_weight="1" android:textColor="@color/specialTextColor"
+                android:clickable="false"
+                android:gravity="right|center_vertical" android:textStyle="bold"/>
+
+        </LinearLayout>
+
+        <fragment
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="10dp"
             android:id="@+id/detalleMapa"
-            tools:context=".ui.sitiodetalle"
-            android:name="com.google.android.gms.maps.SupportMapFragment" android:layout_marginTop="5dp"
-            android:layout_marginStart="0dp" android:layout_marginEnd="0dp"
+            tools:context="ui.sitiodetalle"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="0dp"
+            android:layout_marginEnd="0dp"
             android:layout_below="@+id/linearLayoutSitioInfo"
-            tools:layout="@layout/fragment_sitio_detalle" />
+            tools:layout="@layout/fragment_sitio_detalle"/>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
+            android:layout_width="wrap_content"
             android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
             android:layout_marginBottom="10dp"
             android:layout_marginStart="10dp"
             android:focusable="true"
@@ -127,5 +122,6 @@
             android:id="@+id/detalleSitioFabFuncion"
             android:src="@drawable/ic_add_sitio"
             android:backgroundTint="@color/fabBtnColor"/>
+
     </RelativeLayout>
 </FrameLayout>

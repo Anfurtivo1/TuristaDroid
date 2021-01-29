@@ -2,104 +2,103 @@
 
 
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-                                   xmlns:app="http://schemas.android.com/apk/res-auto"
-                                   android:id="@+id/itemLugar2"
-                                   android:layout_width="match_parent"
-                                   android:layout_height="wrap_content"
-                                   android:layout_margin="16dp"
-                                   app:cardCornerRadius="20dp"
-                                   app:cardElevation="10dp"
-                                   app:cardUseCompatPadding="false" app:cardPreventCornerOverlap="false"
-                                   app:contentPaddingBottom="2dp">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/itemLugar2"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="16dp"
+    app:cardCornerRadius="20dp"
+    app:cardElevation="10dp"
+    app:cardUseCompatPadding="false" app:cardPreventCornerOverlap="false"
+    app:contentPaddingBottom="2dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/linearLayout4">
+        android:id="@+id/linearLayout4"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorBTN_Dark">
+
 
         <ImageView
-                android:id="@+id/itemLugarImagen"
-                android:layout_height="125dp"
-                android:scaleType="centerCrop"
-                android:background="@color/colorAccent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" android:layout_marginTop="16dp"
-                android:adjustViewBounds="true"
-                android:layout_width="370dp" />
-
+            android:id="@+id/itemLugarImagen"
+            android:layout_width="381dp"
+            android:layout_height="158dp"
+            android:layout_marginTop="76dp"
+            android:adjustViewBounds="true"
+            android:background="@color/colorPrimary"
+            android:scaleType="centerCrop"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/itemLugarNombre"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="4dp"
             android:text="Nombre"
-            android:textColor="@color/colorPrimaryDark"
+            android:textColor="@color/specialTextColor"
             android:textSize="20dp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_bias="0.486"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/itemLugarImagen" />
-
-        <TextView
-            android:id="@+id/itemLugarFecha"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-
-            android:layout_marginEnd="12dp"
-            android:layout_marginBottom="16dp"
-            android:text="fecha"
-            android:textColor="@color/colorPrimary"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/itemLugarTipo"
-            app:layout_constraintTop_toBottomOf="@+id/itemLugarNombre"
-            app:layout_constraintVertical_bias="0.0" />
-
-        <TextView
-            android:id="@+id/itemLugarTipo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-
-            android:layout_marginBottom="16dp"
-            android:text="TipoLugar"
-            android:textColor="@color/colorPrimary"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/itemLugarFecha"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/itemLugarNombre" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/itemLugar_Valoraciones"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="12dp"
-            android:layout_marginBottom="16dp"
+            android:layout_marginTop="45dp"
+            android:layout_marginEnd="85dp"
             android:text="votos"
-            android:textColor="@color/colorPrimary"
+            android:textColor="@color/specialTextColor"
             android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/itemLugarTipo"
-            app:layout_constraintTop_toBottomOf="@+id/itemLugarNombre" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/itemSitioFav"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
-            android:layout_marginBottom="72dp"
+            android:layout_marginBottom="16dp"
+            android:backgroundTint="@color/colorPrimary"
             android:clickable="true"
             android:src="@drawable/ic_like"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
+
+        <TextView
+            android:id="@+id/itemLugarFecha"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_marginStart="95dp"
+            android:layout_marginTop="45dp"
+            android:text="fecha"
+            android:textColor="@color/specialTextColor"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/itemLugarTipo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_marginStart="27dp"
+            android:layout_marginTop="14dp"
+            android:layout_marginEnd="36dp"
+            android:text="TipoLugar"
+            android:textColor="@color/specialTextColor"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@+id/itemLugar_Valoraciones"
+            app:layout_constraintStart_toEndOf="@+id/itemLugarFecha"
+            app:layout_constraintTop_toBottomOf="@+id/itemLugarNombre" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

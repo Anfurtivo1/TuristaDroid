@@ -9,6 +9,7 @@
     <color name="favYes">#5EB867</color>
     <color name="recyclerListColor">#F370CA9C</color>
     <color name="itemlstColour">#D6D6D6</color>
+    <color name="specialTextColor">#FFFFFF</color>
     <color name="qrCodeColor">#F370CA9C</color>
     <color name="removeColor">#73AF6C</color>
     <color name="updateColor">#73AF6C</color>

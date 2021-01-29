@@ -12,13 +12,11 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.andresivan.turistadroid.R
 import com.andresivan.turistadroid.entidades.lugares.Lugar
-import com.andresivan.turistadroid.entidades.lugares.LugarController
 import com.andresivan.turistadroid.ui.missitios.Filtross.FiltrosControlador
 import com.andresivan.turistadroid.ui.missitios.filtros.Filtros
 import kotlinx.android.synthetic.main.fragment_missitios.*

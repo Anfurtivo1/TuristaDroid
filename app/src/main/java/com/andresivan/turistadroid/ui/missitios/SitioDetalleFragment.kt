@@ -27,9 +27,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.net.toFile
 import androidx.fragment.app.Fragment
 import com.andresivan.turistadroid.app.MyApp
-import com.andresivan.turistadroid.entidades.fotos.FotoController
 import com.andresivan.turistadroid.entidades.lugares.Lugar
-import com.andresivan.turistadroid.entidades.lugares.LugarController
 import com.andresivan.turistadroid.entidades.usuario.Usuario
 import com.andresivan.turistadroid.utils.ABase64
 import com.andresivan.turistadroid.utils.CifradorContrasena

@@ -7,9 +7,7 @@ import android.view.ViewGroup
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.recyclerview.widget.RecyclerView
 import com.andresivan.turistadroid.R
-import com.andresivan.turistadroid.entidades.fotos.FotoController
 import com.andresivan.turistadroid.entidades.lugares.Lugar
-import com.andresivan.turistadroid.entidades.lugares.LugarController
 import com.andresivan.turistadroid.utils.ABase64
 
 
