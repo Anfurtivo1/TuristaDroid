@@ -8,7 +8,7 @@ import android.util.Log
 import android.widget.Toast
 import com.andresivan.turistadroid.R
 import com.andresivan.turistadroid.app.MyApp
-import com.andresivan.turistadroid.entidades.preferencias.PreferenciasController.iniciarSesionUsuario
+//import com.andresivan.turistadroid.entidades.preferencias.PreferenciasController.iniciarSesionUsuario
 import com.andresivan.turistadroid.entidades.sesion.Sesion
 import com.andresivan.turistadroid.entidades.sesion.SesionController
 import com.andresivan.turistadroid.usuario.UsuarioControlador.selectByCorreo

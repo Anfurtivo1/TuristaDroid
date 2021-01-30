@@ -17,6 +17,8 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.andresivan.turistadroid.R
+import com.andresivan.turistadroid.entidades.lugares.Lugar
+import com.andresivan.turistadroid.entidades.lugares.LugarControlador
 import com.andresivan.turistadroid.entidades.sesion.SesionController
 import com.andresivan.turistadroid.entidades.usuario.Usuario
 import com.andresivan.turistadroid.usuario.UsuarioControlador
@@ -66,6 +68,12 @@ class pantallaprincipal : AppCompatActivity() {
     }
 
     private fun initUI() {
+
+        val lugar=Lugar("Un id","Un lugar creado","El tipo del lugar","La fecha de hoy",
+            "La latidud que sea","La longitud que sea","El id de la imagen",
+            1555,true,"El id del usuario")
+        LugarControlador.crearLugar(lugar)
+
         for (sesion in SesionController.selectAll()!!){
             Log.i("Sesion",sesion.toString())
 
