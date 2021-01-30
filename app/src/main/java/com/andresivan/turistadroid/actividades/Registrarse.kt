@@ -29,7 +29,7 @@ import java.io.IOException
 import java.lang.Exception
 import java.lang.NullPointerException
 
-class registrarse : AppCompatActivity() {
+class Registrarse : AppCompatActivity() {
 
 
     // Variables para la camara de fotos
@@ -151,7 +151,7 @@ class registrarse : AppCompatActivity() {
         var nombreUsuario = registrarse_et_nombreusu.text.toString()
         //Si esta vacio algún campo, no dejamos que se registre
         if (correo == "" || contrasena == "" || nombreUsuario == ""){
-            Toast.makeText(this, "Rellene todos los campos para registrarse", Toast.LENGTH_SHORT)
+            Toast.makeText(this, "Rellene todos los campos para Registrarse", Toast.LENGTH_SHORT)
         }else{
             crearSesion(this,  correo, contrasena, nombreUsuario, IMAGEN_NOMBRE)
         }

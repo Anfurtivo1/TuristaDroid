@@ -40,11 +40,11 @@
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name=".actividades.pantallaprincipal"
+            android:name=".actividades.PantallaPrincipal"
             android:label="@string/title_activity_pantallaprincipal"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".actividades.registrarse" />
-        <activity android:name=".actividades.login" />
+        <activity android:name=".actividades.Registrarse" />
+        <activity android:name=".actividades.Login" />
         <activity android:name=".actividades.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

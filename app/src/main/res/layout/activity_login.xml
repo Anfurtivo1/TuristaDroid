@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimary"
-    tools:context=".actividades.login">
+    tools:context=".actividades.Login">
 
     <EditText
         android:id="@+id/login_et_contrasena"

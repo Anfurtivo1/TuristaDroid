@@ -5,7 +5,7 @@ import kotlin.experimental.and
 
 object CifradorContrasena {
 
-    fun convertirHash(cadena: String, tipo: String): String? {
+    fun convertirHash(cadena: String, tipo: String = "SHA-256"): String? {
         var md: MessageDigest? = null
         var hash: ByteArray? = null
         try {

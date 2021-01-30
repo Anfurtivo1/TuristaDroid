@@ -1,6 +1,6 @@
 package com.andresivan.turistadroid.entidades.sesion
 
-object SessionMapper {
+object SesionMapeado {
 
     fun fromDTO(items: List<SesionDTO>): List<Sesion>{
         return items.map { fromDTO(it) }

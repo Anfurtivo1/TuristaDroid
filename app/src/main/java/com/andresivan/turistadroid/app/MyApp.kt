@@ -20,6 +20,8 @@ class MyApp : Application() {
         lateinit var USUARIO_ACTIVO:Usuario
     }
 
+    lateinit var SESION_USUARIO: Usuario
+
     private val nombreBD = "ANDRESIVAN_MIS_LUGARES"
     private val versionBD = 1L
 
