@@ -19,6 +19,7 @@ import androidx.core.net.toFile
 import com.andresivan.turistadroid.R
 import com.andresivan.turistadroid.entidades.usuario.Usuario
 import com.andresivan.turistadroid.entidades.usuario.UsuarioControlador
+import com.andresivan.turistadroid.utils.CifradorContrasena
 //import com.andresivan.turistadroid.entidades.preferencias.PreferenciasController.crearSesion
 import com.andresivan.turistadroid.utils.Fotos
 import com.karumi.dexter.Dexter
@@ -151,13 +152,14 @@ class Registrarse : AppCompatActivity() {
         //Recogemos todos los datos del usuario
         var correo = registrarse_et_correo.text.toString()
         var contrasena = registrarse_et_contrasena.text.toString()
+        var pass = CifradorContrasena.convertirHash(contrasena)
         var nombreUsuario = registrarse_et_nombreusu.text.toString()
         //Si esta vacio algún campo, no dejamos que se registre
         if (correo == "" || contrasena == "" || nombreUsuario == ""){
             Toast.makeText(this, "Rellene todos los campos para Registrarse", Toast.LENGTH_SHORT)
         }else{
             var id = UUID.randomUUID().toString()
-            UsuarioControlador.crearUsuario(Usuario(id,correo,contrasena,nombreUsuario,"","https://twitter.com/Shikodena"))
+            UsuarioControlador.crearUsuario(Usuario(id,correo,pass.toString(),nombreUsuario,"","https://twitter.com/Shikodena"))
         }
 
     }

@@ -40,7 +40,6 @@ object UsuarioControlador {
 
             override fun onResponse(call: Call<UsuarioDTO>, response: Response<UsuarioDTO>) {
                 if (response.isSuccessful) {
-
                     abrir = true
                 } else {
                     Log.i("Usuario", "Error UsuarioPost isSeccesful ")

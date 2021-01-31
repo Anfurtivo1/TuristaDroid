@@ -19,6 +19,6 @@ open class Usuario(
     ) : this((UUID.randomUUID().toString()), correo, contrasena, nombre, fotoUsuario, cuentaTwitter)
 
     override fun toString(): String {
-        return "Usuario(id=$id, e-mail= '$correo', contrasena= '$contrasena', nombre= '$nombre', foto= '$fotoUsuario', twitter= '$cuentaTwitter')"
+        return "Usuario [id=$id, e-mail= '$correo', contrasena= '$contrasena', nombre= '$nombre', foto= '$fotoUsuario', twitter= '$cuentaTwitter']"
     }
 }

@@ -144,11 +144,11 @@ class SitioDetalleFragment(
      * insertar
      */
     private fun modoInsertar() {
-        detalleSitioValoracion.visibility = View.GONE
+        //detalleSitioValoracion.visibility = View.GONE
         detalleSitioInput.setText("")
         val date = LocalDateTime.now()
-        detalleBtnFecha.text = DateTimeFormatter.ofPattern("dd/MM/yyyy").format(date)
-        detalleBtnFecha.setOnClickListener { chooseDate() }
+        //detalleBtnFecha.text = DateTimeFormatter.ofPattern("dd/MM/yyyy").format(date)
+        //detalleBtnFecha.setOnClickListener { chooseDate() }
         detalleSitioFabFuncion.setOnClickListener { insertPlace() }
         detalleCamaraSitio.setOnClickListener { opcionAElegirFoto() }
 
@@ -163,14 +163,14 @@ class SitioDetalleFragment(
         detalleCamaraSitio.visibility = View.GONE
         detalleSitioInput.setText(SITIO?.nombre)
         detalleSitioInput.isEnabled = false
-        detalleBtnFecha.text = SITIO?.fecha
+/*        detalleBtnFecha.text = SITIO?.fecha
         detalleSitioValoracion.text = SITIO?.valoracion.toString() + " likes"
         detalleSpnTipo.setSelection(
             (detalleSpnTipo.adapter as ArrayAdapter<String?>).getPosition(
                 SITIO?.tipo
             )
         )
-        detalleSpnTipo.isEnabled = false
+        detalleSpnTipo.isEnabled = false*/
         //val fotografia = FotoControlador.selectById(SITIO?.imgID.toString())
         //this.PHOTO = ABase64.toBitmap(fotografia?.imgLugar.toString())!!
         //IMG_URI = Uri.parse(fotografia?.uri)
@@ -208,10 +208,10 @@ class SitioDetalleFragment(
         detalleSitioFabFuncion.visibility = View.VISIBLE
         detalleSitioFabFuncion.setImageResource(R.drawable.ic_update)
         detalleSitioFabFuncion.backgroundTintList =  AppCompatResources.getColorStateList(requireContext(), R.color.updateColor)
-        detalleBtnFecha.setOnClickListener { chooseDate() }
+        //detalleBtnFecha.setOnClickListener { chooseDate() }
         detalleCamaraSitio.visibility = View.VISIBLE
         detalleCamaraSitio.setOnClickListener { opcionAElegirFoto() }
-        detalleSpnTipo.isEnabled = true
+        //detalleSpnTipo.isEnabled = true
         detalleSitioInput.isEnabled = true
         detalleSitioFabFuncion.setOnClickListener { updatePlace() }
     }
@@ -245,8 +245,8 @@ class SitioDetalleFragment(
             SITIO = Lugar(
                 id = UUID.randomUUID().toString(),
                 nombre = detalleSitioInput.text.toString().trim(),
-                tipo = (detalleSpnTipo.selectedItem as String),
-                fecha = detalleBtnFecha.text.toString(),
+                tipo = "",
+                fecha = "",
                 latitud = ubicacion?.latitude.toString(),
                 longitud = ubicacion?.longitude.toString(),
                 imgID = fotografia.id,
@@ -348,19 +348,19 @@ class SitioDetalleFragment(
         activity?.onBackPressed()
     }
 
-    /**
+/*    *//**
      * Esta función nos muestra el dialogo del datePickerDialog
-     */
+     *//*
     private fun chooseDate() {
         val date = LocalDateTime.now()
         val datePickerDialog = DatePickerDialog(
             requireContext(),
             { _, mYear, mMonth, mDay ->
-                detalleBtnFecha.text = (mDay.toString() + "/" + (mMonth + 1) + "/" + mYear)
+                //detalleBtnFecha.text = (mDay.toString() + "/" + (mMonth + 1) + "/" + mYear)
             }, date.year, date.monthValue - 1, date.dayOfMonth
         )
         datePickerDialog.show()
-    }
+    }*/
 
     /**
      * Como anteriormente hemos creado el cuadro de dialogo , en esta función mosrtamos los componentes de este

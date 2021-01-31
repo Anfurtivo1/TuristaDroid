@@ -56,46 +56,18 @@
             android:background="#FFFFFF"
             android:hint="TipoLugar"/>
 
-        <Spinner
-            android:id="@+id/detalleSpnTipo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/detalleTipoSitio"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="10dp"
-            android:spinnerMode="dialog"
-            android:entries="@array/filtros"/>
-
         <LinearLayout
             android:id="@+id/linearLayoutSitioInfo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/detalleSpnTipo"
             android:layout_marginTop="20dp"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:layout_below="@+id/detalleSitioNombreText">
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/detalleBtnFecha"
-                android:layout_width="14dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-                app:icon="@drawable/ic_calendario" android:textColor="@color/colorPrimary"
-                app:iconTint="@color/specialTextColor"
-                android:paddingLeft="10dp"
-                android:gravity="left|center_vertical" tools:ignore="RtlHardcoded"
-                android:layout_gravity="left|center_vertical"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text="votos"
-                android:id="@+id/detalleSitioValoracion"
-                android:layout_weight="1" android:textColor="@color/specialTextColor"
-                android:clickable="false"
-                android:gravity="right|center_vertical" android:textStyle="bold"/>
 
         </LinearLayout>
+
+        <!-- android:layout_below="@+id/detalleSpnTipo" -->
 
         <fragment
             android:layout_width="match_parent"
