@@ -1,19 +1,15 @@
 package com.andresivan.turistadroid.entidades.usuario
 
-import io.realm.RealmObject
-import io.realm.annotations.PrimaryKey
-import io.realm.annotations.Required
 import java.util.*
 
 open class Usuario(
-    @PrimaryKey var id: String = "",
-    @Required var correo: String = "",
-    @Required var contrasena: String = "",
-    @Required var nombre: String = "",
+    var id: String = "",
+    var correo: String = "",
+    var contrasena: String = "",
+    var nombre: String = "",
     var fotoUsuario: String = "",
     var cuentaTwitter: String = "https://twitter.com/ICoelloC"
-) : RealmObject(){
-
+){
     constructor(
         correo: String,
         contrasena: String,

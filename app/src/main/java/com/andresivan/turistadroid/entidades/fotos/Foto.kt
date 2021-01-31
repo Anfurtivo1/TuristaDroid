@@ -1,17 +1,14 @@
 package com.andresivan.turistadroid.entidades.fotos
 
-import io.realm.RealmObject
-import io.realm.annotations.PrimaryKey
-import io.realm.annotations.Required
 import java.util.*
 
 open class Foto(
-    @PrimaryKey var id: String = "",
-    @Required var imgLugar: String = "",
-    @Required var uri: String = "",
-    @Required var hash: String = "",
-    @Required var usuarioID: String = ""
-) : RealmObject() {
+    var id: String = "",
+    var imgLugar: String = "",
+    var uri: String = "",
+    var hash: String = "",
+    var usuarioID: String = ""
+){
     constructor(
         imgLugar: String,
         uri: String,

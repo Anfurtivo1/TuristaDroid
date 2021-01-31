@@ -14,9 +14,12 @@ import android.provider.MediaStore
 import android.util.Log
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.core.content.FileProvider
 import androidx.core.net.toFile
 import com.andresivan.turistadroid.R
-import com.andresivan.turistadroid.entidades.preferencias.PreferenciasController.crearSesion
+import com.andresivan.turistadroid.entidades.usuario.Usuario
+import com.andresivan.turistadroid.entidades.usuario.UsuarioControlador
+//import com.andresivan.turistadroid.entidades.preferencias.PreferenciasController.crearSesion
 import com.andresivan.turistadroid.utils.Fotos
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.MultiplePermissionsReport
@@ -27,23 +30,24 @@ import kotlinx.android.synthetic.main.activity_registrarse.*
 import java.io.IOException
 import java.lang.Exception
 import java.lang.NullPointerException
+import java.util.*
 
-class registrarse : AppCompatActivity() {
+class Registrarse : AppCompatActivity() {
 
 
     // Variables para la camara de fotos
-    private val GALERIA = 1
-    private val CAMARA = 2
-    private var IMAGEN_NOMBRE: String = ""
-    private lateinit var IMAGEN_URI: Uri
-    private val IMAGEN_DIR = "/TuristaDroid"
-    private lateinit var FOTO: Bitmap
+    private val GALERIA = 1//Para poder saber que opción se ha elegido
+    private val CAMARA = 2//Para poder saber que opción se ha elegido
+    private var IMAGEN_NOMBRE: String = ""//donde se va a construir el nombre de la imagen
+    private lateinit var IMAGEN_URI: Uri//Ruta de la imagen
+    private val IMAGEN_DIR = "/TuristaDroid"//Donde se van a guardar
+    private lateinit var FOTO: Bitmap//Para poder pasar la imagen a bitmap
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_registrarse)
-        imgCamaraRegistrarse.setOnClickListener { tomarFotoCamara() }
-        imgGaleriaRegistrarse.setOnClickListener { elegirFotoGaleria() }
+        fabRegCamara.setOnClickListener { tomarFotoCamara() }
+        fabRegGaleria.setOnClickListener { elegirFotoGaleria() }
         btnRegistrarse.setOnClickListener{ registrarUsuario() }
 
     }
@@ -52,9 +56,6 @@ class registrarse : AppCompatActivity() {
      * Este es el metodo que nos permite tomar una foto de la camara
      */
     private fun tomarFotoCamara() {
-        // En caso de que queramos fotos en alta calidad
-        val builder = StrictMode.VmPolicy.Builder()
-        StrictMode.setVmPolicy(builder.build())
 
         // Creamos el intent para poder abrir la camara
         val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
@@ -63,11 +64,13 @@ class registrarse : AppCompatActivity() {
         //Aqui lo que vamos a hacer es pasarle el directorio de nuestra app (/TuristaDroid)y el nombre de la imagen que vamos a guardar
         val fichero = Fotos.salvarFoto(IMAGEN_DIR, IMAGEN_NOMBRE, this)
         //Conseguimos el URI de la imagen que acabamos de guardar
-        IMAGEN_URI = Uri.fromFile(fichero)
+        IMAGEN_URI = FileProvider.getUriForFile(this, this.applicationContext.packageName.toString() + ".provider", fichero!!)
+
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
         //En este intent lo que hacemos es que se guarda la imagen con la URI que hemos conseguido antes
         intent.putExtra(MediaStore.EXTRA_OUTPUT, IMAGEN_URI)
         //Le pasamos el intent que hemos creado antes y le pasamos la variable camara al activityOnResult, porque si no no sabemos que opcion hemos elegido
-        startActivityForResult(intent, CAMARA)
+        startActivityForResult(intent, CAMARA)//Ejecutamos el OnActivityResult
     }
 
     /**
@@ -77,7 +80,6 @@ class registrarse : AppCompatActivity() {
      * @param data Intent?
      */
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        Log.i("FOTO", "Opción::--->$requestCode")
         super.onActivityResult(requestCode, resultCode, data)
         //En caso de que al echar la foto le demos a cancelar, saldrá este log
         if (resultCode == Activity.RESULT_CANCELED) {
@@ -94,16 +96,16 @@ class registrarse : AppCompatActivity() {
                 try {
                     // Dependiendo de la versión del SDK debemos hacerlo de una manera u otra, el imageDecoder es lo que usaremos para acceder a las fotos con el URI
                     if (Build.VERSION.SDK_INT < 28) {
-                        this.FOTO = MediaStore.Images.Media.getBitmap(this?.contentResolver, contentURI)
+                        this.FOTO = MediaStore.Images.Media.getBitmap(this.contentResolver, contentURI)
                     } else {
-                        val source: ImageDecoder.Source = ImageDecoder.createSource(this?.contentResolver!!, contentURI)
+                        val source: ImageDecoder.Source = ImageDecoder.createSource(this.contentResolver, contentURI)
                         this.FOTO = ImageDecoder.decodeBitmap(source)
                     }
-                    Toast.makeText(this, "¡Foto rescatada de la galería!", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Se ha conseguido cargar la imagen de la galeria", Toast.LENGTH_SHORT).show()
                     imgUsuario.setImageBitmap(this.FOTO)
                 } catch (e: IOException) {
                     e.printStackTrace()
-                    Toast.makeText(this, "¡Fallo Galeria!", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Ocurrió un fallo al cargar la imagen de la galeria", Toast.LENGTH_SHORT).show()
                 }
             }
         } else if (requestCode == CAMARA) {
@@ -117,8 +119,6 @@ class registrarse : AppCompatActivity() {
                     val source: ImageDecoder.Source = ImageDecoder.createSource(this?.contentResolver!!, IMAGEN_URI)
                     this.FOTO = ImageDecoder.decodeBitmap(source)
                 }
-                //En caso de que queramos usar el URI de la imagen, lo guardamos,el URI es el path de la imagen
-                IMAGEN_URI = Fotos.añadirFotoGaleria(IMAGEN_URI, IMAGEN_NOMBRE, this)!!
 
                 // Aqui mostramos la imagen que se ha elegido añadiendole el bitmap de la imagen tomada
                 imgUsuario.setImageBitmap(this.FOTO)
@@ -145,21 +145,19 @@ class registrarse : AppCompatActivity() {
     }
 
     /**
-     * Este metodo nos permite guardar un usuario en la base de datos realizada por Ivan
+     * Este metodo nos permite guardar un usuario en la API REST
      */
     private fun registrarUsuario() {
         //Recogemos todos los datos del usuario
-        var img:ImageView
-        img = findViewById(R.id.imgUsuario)
         var correo = registrarse_et_correo.text.toString()
         var contrasena = registrarse_et_contrasena.text.toString()
         var nombreUsuario = registrarse_et_nombreusu.text.toString()
-        IMAGEN_NOMBRE = img.toString()
         //Si esta vacio algún campo, no dejamos que se registre
         if (correo == "" || contrasena == "" || nombreUsuario == ""){
-            Toast.makeText(this, "Rellene todos los campos para registrarse", Toast.LENGTH_SHORT)
+            Toast.makeText(this, "Rellene todos los campos para Registrarse", Toast.LENGTH_SHORT)
         }else{
-            crearSesion(this,  correo, contrasena, nombreUsuario, IMAGEN_NOMBRE)
+            var id = UUID.randomUUID().toString()
+            UsuarioControlador.crearUsuario(Usuario(id,correo,contrasena,nombreUsuario,"","https://twitter.com/Shikodena"))
         }
 
     }

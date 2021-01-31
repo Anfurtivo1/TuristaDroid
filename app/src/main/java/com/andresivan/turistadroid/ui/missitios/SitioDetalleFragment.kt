@@ -27,9 +27,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.net.toFile
 import androidx.fragment.app.Fragment
 import com.andresivan.turistadroid.app.MyApp
-import com.andresivan.turistadroid.entidades.fotos.FotoController
 import com.andresivan.turistadroid.entidades.lugares.Lugar
-import com.andresivan.turistadroid.entidades.lugares.LugarController
 import com.andresivan.turistadroid.entidades.usuario.Usuario
 import com.andresivan.turistadroid.utils.ABase64
 import com.andresivan.turistadroid.utils.CifradorContrasena
@@ -45,6 +43,8 @@ import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.tasks.Task
 import com.andresivan.turistadroid.entidades.*
 import com.andresivan.turistadroid.entidades.fotos.Foto
+import com.andresivan.turistadroid.entidades.fotos.FotoControlador
+import com.andresivan.turistadroid.entidades.lugares.LugarControlador
 import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.fragment_sitio_detalle.*
@@ -83,7 +83,7 @@ class SitioDetalleFragment(
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_miperfil, container, false)
+        return inflater.inflate(R.layout.fragment_sitio_detalle, container, false)
         inicializarInterfaz()
     }
 
@@ -171,9 +171,9 @@ class SitioDetalleFragment(
             )
         )
         detalleSpnTipo.isEnabled = false
-        val fotografia = FotoController.selectById(SITIO?.imgID.toString())
-        this.PHOTO = ABase64.toBitmap(fotografia?.imgLugar.toString())!!
-        IMG_URI = Uri.parse(fotografia?.uri)
+        //val fotografia = FotoControlador.selectById(SITIO?.imgID.toString())
+        //this.PHOTO = ABase64.toBitmap(fotografia?.imgLugar.toString())!!
+        //IMG_URI = Uri.parse(fotografia?.uri)
         detalleFotoSitio.setImageBitmap(this.PHOTO)
 
         detalleSitioFabFuncion.visibility = View.VISIBLE
@@ -241,20 +241,20 @@ class SitioDetalleFragment(
                 hash = CifradorContrasena.convertirHash(b64, "SHA-256").toString(),
                 usuarioID = USER.id
             )
-            FotoController.insert(fotografia)
+            FotoControlador.crearFoto(fotografia)
             SITIO = Lugar(
                 id = UUID.randomUUID().toString(),
                 nombre = detalleSitioInput.text.toString().trim(),
                 tipo = (detalleSpnTipo.selectedItem as String),
                 fecha = detalleBtnFecha.text.toString(),
                 latitud = ubicacion?.latitude.toString(),
-                altitud = ubicacion?.longitude.toString(),
+                longitud = ubicacion?.longitude.toString(),
                 imgID = fotografia.id,
                 valoracion = 0,
                 fav = false,
                 usuarioID = USER.id
             )
-            LugarController.insert(SITIO!!)
+            LugarControlador.crearLugar(SITIO!!)
             ANTERIOR?.insertarRegistroLista(SITIO!!)
             Snackbar.make(requireView(), "REGISTRO AÑADIDO", Snackbar.LENGTH_SHORT).show()
             volver()
@@ -283,9 +283,9 @@ class SitioDetalleFragment(
     private fun delete() {
         try {
             val fotografiaID = SITIO?.imgID.toString()
-            val fotografia = FotoController.selectById(fotografiaID)
-            FotoController.delete(fotografia!!)
-            LugarController.delete(SITIO!!)
+            //val fotografia = FotoControlador.selectById(fotografiaID)
+            //FotoControlador.eliminarFoto(fotografia!!)
+            LugarControlador.eliminarLugar(SITIO!!)
             ANTERIOR?.eliminarRegistroLista(SITIO_POSICION!!)
             Snackbar.make(requireView(), "ELIMINADO", Snackbar.LENGTH_SHORT)
                 .show()
@@ -307,26 +307,27 @@ class SitioDetalleFragment(
     /**
      * Función que modifica un registro seleccionado anteriormente
      */
-    private fun update() {
+    /*private fun update() {
         try {
             val fotoID = SITIO?.imgID.toString()
-            val foto = FotoController.selectById(fotoID)
+            val foto = FotoControlador.selectById(fotoID)
             val b64 = ABase64.toBase64(this.PHOTO)!!
+
             with(foto!!) {
                 imgLugar = b64
                 uri = IMG_URI.toString()
                 hash = CifradorContrasena.convertirHash(b64, "").toString()
                 usuarioID = USER.id
             }
-            FotoController.update(foto)
+            FotoControlador.actualizarFoto(foto)
             with(SITIO!!) {
                 nombre = detalleSitioInput.text.toString().trim()
                 tipo = (detalleSpnTipo.selectedItem as String)
                 fecha = detalleBtnFecha.text.toString()
                 latitud = ubicacion?.latitude.toString()
-                altitud = ubicacion?.longitude.toString()
+                longitud = ubicacion?.longitude.toString()
             }
-            LugarController.update(SITIO!!)
+            LugarControlador.actualizarLugar(SITIO!!)
             ANTERIOR?.actualizarRegistroLista(SITIO!!, SITIO_POSICION!!)
             Toast.makeText(context, "MODIFICADO", Toast.LENGTH_SHORT).show()
             volver()
@@ -338,7 +339,7 @@ class SitioDetalleFragment(
             IMG_URI.toFile().delete()
         } catch (ex: Exception) {
         }
-    }
+    }*/
 
     /**
      * Esta función nos permite volver atrás
@@ -374,7 +375,7 @@ class SitioDetalleFragment(
                 when (MODO_ACCESO_FRAGMENT) {
                     ModosAccesos.INSERTAR -> insertar()
                     ModosAccesos.ELIMINAR -> delete()
-                    ModosAccesos.ACTUALIZAR -> update()
+                    //ModosAccesos.ACTUALIZAR -> update()
                     else -> {
                     }
                 }
@@ -385,7 +386,7 @@ class SitioDetalleFragment(
     }
 
     /**
-     * Funcion que permite comprobar el contido del formulario del fragment
+     * Funcion que permite comprobar el contenido del formulario del fragment
      * @return Boolean
      */
     private fun esRegistroValido(): Boolean {
@@ -540,7 +541,7 @@ class SitioDetalleFragment(
      */
     private fun opcionAElegirFoto() {
         val opcionesAElegir = arrayOf(
-            "ELEGIT FOTO",
+            "ELEGIR FOTO",
             "TOMAR FOTO"
         )
         AlertDialog.Builder(context).setTitle("ACCION")
