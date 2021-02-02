@@ -16,6 +16,7 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.andresivan.turistadroid.R
+<<<<<<< Updated upstream
 import com.andresivan.turistadroid.entidades.sesion.SesionController
 import com.andresivan.turistadroid.entidades.usuario.Usuario
 import com.andresivan.turistadroid.usuario.UsuarioControlador
@@ -23,13 +24,29 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.nav_header_main.*
+=======
+import com.andresivan.turistadroid.entidades.sesion.SesionDTO
+import com.andresivan.turistadroid.entidades.usuario.Usuario
+import com.andresivan.turistadroid.utils.servicios.MisSitiosAPI
+import com.andresivan.turistadroid.actividades.Login
+import com.google.android.material.navigation.NavigationView
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
+import com.squareup.picasso.Picasso
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+>>>>>>> Stashed changes
 
 
 class pantallaprincipal : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     var estado = true
-    lateinit var USUARIO:Usuario
+    var USUARIO:Usuario = Usuario()
+    //
+    private lateinit var Auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,8 +73,27 @@ class pantallaprincipal : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
+<<<<<<< Updated upstream
     }
 
+=======
+        USUARIO.nombre= intent.getStringExtra("nombre").toString()
+        USUARIO.correo=intent.getStringExtra("correo").toString()
+        USUARIO.fotoUsuario=intent.getStringExtra("imagen").toString()
+
+        Auth = Firebase.auth
+        leerSesionUsuarioActivo()
+
+    }
+
+    private fun leerSesionUsuarioActivo() {
+        //USUARIO.correo = Auth.currentUser?.email.toString()
+        //USUARIO.nombre = Auth.currentUser?.displayName.toString()
+
+        //USUARIO = (this.application as MyApp).SESION_USUARIO
+        //USUARIO_ACTIVO = USUARIO
+    }
+>>>>>>> Stashed changes
 
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -77,9 +113,15 @@ class pantallaprincipal : AppCompatActivity() {
 
             Log.i("Mi Perfil", USUARIO.toString())
 
+<<<<<<< Updated upstream
             Log.i("Mi perfil", "NOMBRE USUARIO: "+USUARIO.nombre)
             Log.i("Mi perfil", "CORREO ELECTRONICO USUARIO: "+ USUARIO.correo)
             Log.i("Mi perfil", "NOMBRE_FOTO: "+ USUARIO.fotoUsuario)
+=======
+        navUsername.text = USUARIO.nombre
+        navCorreo.text = USUARIO.correo
+        Picasso.get().load(USUARIO.fotoUsuario).resize(200,200).into(navImagen)
+>>>>>>> Stashed changes
 
 
             nav_header_nombre_usuario.text = USUARIO.nombre

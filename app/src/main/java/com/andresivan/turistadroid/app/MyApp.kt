@@ -17,9 +17,14 @@ import io.realm.RealmConfiguration
 class MyApp : Application() {
 
     companion object{
-        lateinit var USUARIO_ACTIVO:Usuario
+        //lateinit var USUARIO_ACTIVO:Usuario
     }
 
+<<<<<<< Updated upstream
+=======
+    //lateinit var SESION_USUARIO: Usuario
+
+>>>>>>> Stashed changes
     private val nombreBD = "ANDRESIVAN_MIS_LUGARES"
     private val versionBD = 1L
 

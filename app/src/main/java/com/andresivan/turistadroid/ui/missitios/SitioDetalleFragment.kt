@@ -53,6 +53,9 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
 import com.andresivan.turistadroid.utils.*
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 
 class SitioDetalleFragment(
     private var SITIO: Lugar? = null,
@@ -61,7 +64,7 @@ class SitioDetalleFragment(
     private val SITIO_POSICION: Int? = null
 ) : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
 
-    private lateinit var USER: Usuario
+    private var USER: Usuario = Usuario()
     private var PERMISOS: Boolean = false
     private lateinit var map: GoogleMap
     private var mapPosition: FusedLocationProviderClient? = null
@@ -77,13 +80,20 @@ class SitioDetalleFragment(
     private var IMG_COMPR_LVL = 60
     private val IMG_PREF = "Sitio"
     private val IMG_EXT = ".jpg"
+    //
+    private lateinit var Auth: FirebaseAuth
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+<<<<<<< Updated upstream
         return inflater.inflate(R.layout.fragment_miperfil, container, false)
+=======
+        return inflater.inflate(R.layout.fragment_sitio_detalle, container, false)
+        Auth = Firebase.auth
+>>>>>>> Stashed changes
         inicializarInterfaz()
     }
 
@@ -128,7 +138,10 @@ class SitioDetalleFragment(
      * especie de variable estática creada con companion object
      */
     private fun initUser() {
-        this.USER = MyApp.USUARIO_ACTIVO
+
+        USER.correo = Auth.currentUser?.email.toString()
+        USER.nombre = Auth.currentUser?.displayName.toString()
+        //this.USER = MyApp.USUARIO_ACTIVO
     }
 
     /**

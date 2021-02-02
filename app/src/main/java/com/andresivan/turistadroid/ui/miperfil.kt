@@ -10,11 +10,23 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.andresivan.turistadroid.R
+<<<<<<< Updated upstream
 import com.andresivan.turistadroid.entidades.sesion.Sesion
+=======
+import com.andresivan.turistadroid.app.MyApp
+>>>>>>> Stashed changes
 import com.andresivan.turistadroid.entidades.sesion.SesionController
 import com.andresivan.turistadroid.entidades.usuario.Usuario
 import com.andresivan.turistadroid.usuario.UsuarioControlador
 import com.andresivan.turistadroid.utils.CifradorContrasena
+<<<<<<< Updated upstream
+=======
+import com.andresivan.turistadroid.utils.Fotos
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
+import kotlinx.android.synthetic.main.activity_registrarse.*
+>>>>>>> Stashed changes
 import kotlinx.android.synthetic.main.fragment_miperfil.*
 
 // TODO: Rename parameter arguments, choose names that match
@@ -27,10 +39,26 @@ private const val ARG_PARAM2 = "param2"
  * Use the [miperfil.newInstance] factory method to
  * create an instance of this fragment.
  */
+<<<<<<< Updated upstream
 class miperfil : Fragment() {
     lateinit var USUARIO: Usuario
 
     // TODO: Rename and change types of parameters
+=======
+class MiPerfil : Fragment() {
+    var USUARIO: Usuario = Usuario()
+
+    // Variables para la camara de fotos
+    private val GALERIA = 1//Para poder saber que opción se ha elegido
+    private val CAMARA = 2//Para poder saber que opción se ha elegido
+    private var IMAGEN_NOMBRE: String = ""//donde se va a construir el nombre de la imagen
+    private lateinit var IMAGEN_URI: Uri//Ruta de la imagen
+    private val IMAGEN_DIR = "/TuristaDroid"//Donde se van a guardar
+    private lateinit var FOTO: Bitmap//Para poder pasar la imagen a bitmap
+
+    //
+    private lateinit var Auth: FirebaseAuth
+>>>>>>> Stashed changes
     private var param1: String? = null
     private var param2: String? = null
 
@@ -41,6 +69,19 @@ class miperfil : Fragment() {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
+<<<<<<< Updated upstream
+=======
+        Auth = Firebase.auth
+        leerSesionUsuarioActivo()
+
+    }
+
+    private fun leerSesionUsuarioActivo() {
+        USUARIO.correo = Auth.currentUser?.email.toString()
+        USUARIO.nombre = Auth.currentUser?.displayName.toString()
+
+        //USUARIO = USUARIO_ACTIVO
+>>>>>>> Stashed changes
     }
 
     override fun onCreateView(

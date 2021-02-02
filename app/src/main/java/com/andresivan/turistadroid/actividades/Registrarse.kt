@@ -18,6 +18,9 @@ import androidx.core.net.toFile
 import com.andresivan.turistadroid.R
 import com.andresivan.turistadroid.entidades.preferencias.PreferenciasController.crearSesion
 import com.andresivan.turistadroid.utils.Fotos
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.MultiplePermissionsReport
 import com.karumi.dexter.PermissionToken
@@ -32,12 +35,22 @@ class registrarse : AppCompatActivity() {
 
 
     // Variables para la camara de fotos
+<<<<<<< Updated upstream
     private val GALERIA = 1
     private val CAMARA = 2
     private var IMAGEN_NOMBRE: String = ""
     private lateinit var IMAGEN_URI: Uri
     private val IMAGEN_DIR = "/TuristaDroid"
     private lateinit var FOTO: Bitmap
+=======
+    private val GALERIA = 1//Para poder saber que opción se ha elegido
+    private val CAMARA = 2//Para poder saber que opción se ha elegido
+    private var IMAGEN_NOMBRE: String = ""//donde se va a construir el nombre de la imagen
+    private lateinit var IMAGEN_URI: Uri//Ruta de la imagen
+    private val IMAGEN_DIR = "/TuristaDroid"//Donde se van a guardar
+    private lateinit var FOTO: Bitmap//Para poder pasar la imagen a bitmap
+    private lateinit var auth: FirebaseAuth
+>>>>>>> Stashed changes
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,6 +59,15 @@ class registrarse : AppCompatActivity() {
         imgGaleriaRegistrarse.setOnClickListener { elegirFotoGaleria() }
         btnRegistrarse.setOnClickListener{ registrarUsuario() }
 
+        auth = Firebase.auth
+
+    }
+
+    public override fun onStart() {
+        super.onStart()
+        // Check if user is signed in (non-null) and update UI accordingly.
+        val currentUser = auth.currentUser
+        //updateUI(currentUser)
     }
 
     /**
@@ -159,9 +181,35 @@ class registrarse : AppCompatActivity() {
         if (correo == "" || contrasena == "" || nombreUsuario == ""){
             Toast.makeText(this, "Rellene todos los campos para registrarse", Toast.LENGTH_SHORT)
         }else{
+<<<<<<< Updated upstream
             crearSesion(this,  correo, contrasena, nombreUsuario, IMAGEN_NOMBRE)
+=======
+            var id = UUID.randomUUID().toString()
+            //UsuarioControlador.crearUsuario(Usuario(id,correo,pass.toString(),nombreUsuario,"","https://twitter.com/Shikodena"))
+            registrarUsuarioFireBase(correo,pass.toString())
+>>>>>>> Stashed changes
         }
 
+    }
+
+    private fun registrarUsuarioFireBase(correo:String, pass:String){
+        auth.createUserWithEmailAndPassword(correo, pass)
+            .addOnCompleteListener(this) { task ->
+                if (task.isSuccessful) {
+                    // Sign in success, update UI with the signed-in user's information
+                    Log.d("Usuario", "createUserWithEmail:success")
+                    val user = auth.currentUser
+                    Toast.makeText(baseContext, "Registro conseguido.",
+                        Toast.LENGTH_SHORT).show()
+                    //updateUI(user)
+                } else {
+                    // If sign in fails, display a message to the user.
+                    Log.w("Usuario", "createUserWithEmail:failure", task.exception)
+                    Toast.makeText(baseContext, "No se pudo registrar",
+                        Toast.LENGTH_SHORT).show()
+                    //updateUI(null)
+                }
+            }
     }
 
 }

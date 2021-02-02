@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "257503269795",
+    "project_id": "turistadroid-2cd96",
+    "storage_bucket": "turistadroid-2cd96.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:257503269795:android:a2a29d9aaeae8fcd94c016",
+        "android_client_info": {
+          "package_name": "com.andresivan.turistadroid"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "257503269795-u8c6cl1t9322cast9g9b7bca5n1mu9tv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCVjvk8EnTo6zB0D9v7Mv0SrROk6OaVlzk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "257503269795-u8c6cl1t9322cast9g9b7bca5n1mu9tv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
