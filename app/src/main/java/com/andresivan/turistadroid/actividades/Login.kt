@@ -9,15 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentActivity
 import com.andresivan.turistadroid.R
 import com.andresivan.turistadroid.app.MyApp
-import com.andresivan.turistadroid.entidades.preferencias.PreferenciasController.iniciarSesionUsuario
 import com.andresivan.turistadroid.entidades.sesion.Sesion
-<<<<<<< Updated upstream
-import com.andresivan.turistadroid.entidades.sesion.SesionController
-import com.andresivan.turistadroid.usuario.UsuarioControlador.selectByCorreo
-import kotlinx.android.synthetic.main.activity_login.*
-
-class login : AppCompatActivity() {
-=======
 import com.andresivan.turistadroid.entidades.sesion.SesionDTO
 import com.andresivan.turistadroid.entidades.sesion.SesionMapeado
 import com.andresivan.turistadroid.entidades.usuario.Usuario
@@ -31,7 +23,9 @@ import com.google.android.gms.common.SignInButton
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
 import com.google.android.material.snackbar.Snackbar
-import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.FirebaseException
+import com.google.firebase.FirebaseTooManyRequestsException
+import com.google.firebase.auth.*
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_login.*
@@ -40,22 +34,21 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.time.Instant
 import java.time.temporal.ChronoUnit
+import java.util.concurrent.TimeUnit
 
 
 class Login : AppCompatActivity() {
 
-    lateinit var usuarioGoogle: Usuario
+    lateinit var usuario: Usuario
     var loginGoogle:Boolean=true
     private lateinit var sesionRemota: Sesion
-    private val tiempoConexionSesion = 180
-    private var hayUsuarioActivo = false
     //
     private lateinit var auth: FirebaseAuth
     //
     private lateinit var clienteSignInGoogle: GoogleSignInClient
     //
     private val RC_SIGN_IN = 9001
->>>>>>> Stashed changes
+    //
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,13 +56,12 @@ class Login : AppCompatActivity() {
 
         initPermisos()
         val signInButton = findViewById<SignInButton>(R.id.sign_in_button)
-        signInButton.setOnClickListener{signIn()}
+        signInButton.setOnClickListener{signIn()}//Logearse por google
 
         login_link_registrarse.setOnClickListener { abrirRegistrarse() }
-        btnIniciarSesion.setOnClickListener { iniciarSesion() }
+        btnIniciarSesion.setOnClickListener { iniciarSesion() }//Logearse por correy contraseña
+        //btnIniciarSesionMovil.setOnClickListener {verificacionMovil()}
 
-<<<<<<< Updated upstream
-=======
         initUI()
         //
         auth = Firebase.auth
@@ -112,10 +104,10 @@ class Login : AppCompatActivity() {
             // Signed in successfully, show authenticated UI.
             //updateUI(account)
             if (account != null) {
-                usuarioGoogle= Usuario()
-                usuarioGoogle.nombre=account.displayName.toString()
-                usuarioGoogle.correo=account.email.toString()
-                usuarioGoogle.fotoUsuario=account.photoUrl.toString()
+                usuario= Usuario()
+                usuario.nombre=account.displayName.toString()
+                usuario.correo=account.email.toString()
+                usuario.fotoUsuario=account.photoUrl.toString()
                 abrirPantallaPrincipal()
             }
         } catch (e: ApiException) {
@@ -161,81 +153,59 @@ class Login : AppCompatActivity() {
             }
 
         }))
->>>>>>> Stashed changes
     }
+
+    private fun compararSesiones() {
+        val tiempo_actual =Instant.now()
+        val tiempo_sesion = Instant.parse(sesionRemota.tiempo_acceso)
+        val segundosDiferencia = ChronoUnit.SECONDS.between(tiempo_sesion,tiempo_actual)
+        /*if (segundosDiferencia <= tiempoConexionSesion ){
+            (this.application as MyApp).SESION_USUARIO = usuario
+            actualizarSesion()
+            abrirPantallaPrincipal()
+        }*/
+    }
+
+    private fun actualizarSesion() {
+        sesionRemota.tiempo_acceso = Instant.now().toString()
+        val sesionDTO = SesionMapeado.toDTO(sesionRemota)
+        val clienteREST = MisSitiosAPI.service
+        val call: Call<SesionDTO> = clienteREST.updateSesion(sesionRemota.idUsuarioActivo, sesionDTO)
+        call.enqueue((object : Callback<SesionDTO> {
+
+            override fun onResponse(call: Call<SesionDTO>, response: Response<SesionDTO>) {
+                if (response.isSuccessful) {
+                    Log.i("TuristaREST", "updateSesion RESPUESTA OK")
+                }
+            }
+
+            override fun onFailure(call: Call<SesionDTO>, t: Throwable) {
+                Toast.makeText(applicationContext,
+                    "ERROR - NO SE PUEDE ACCEDER AL SERVICIO: " + t.localizedMessage,
+                    Toast.LENGTH_LONG)
+                    .show()
+            }
+        }))
+    }
+
     private fun initPermisos() {
         if (!(this.application as MyApp).PERMISOS)
             (this.application as MyApp).initPermisos()
     }
 
     private fun abrirRegistrarse() {
-        val intent = Intent(this, registrarse::class.java)
+        val intent = Intent(this, Registrarse::class.java)
         startActivity(intent)
     }
 
     private fun iniciarSesion() {
 
-<<<<<<< Updated upstream
-=======
         if (isFormularioRelleno()) {
             var correo = login_et_correo.text.toString()
             var contrasena = login_et_contrasena.text.toString()
             val pass = CifradorContrasena.convertirHash(contrasena)
-            iniciarSesionFireBase(correo,pass.toString())
-/*            var usu = Usuario("999","1","1","1","","")
-            var correo = login_et_correo.text.toString()
-            var contrasena = login_et_contrasena.text.toString()
-            val pass = CifradorContrasena.convertirHash(contrasena)
-            usuario = Usuario("1","1","1","1","","")*/
-
-            /*UsuarioControlador.obtenerUsuarioById(usu.id)
-            if (UsuarioControlador.abrir){
-                MyApp.USUARIO_ACTIVO=usu
-                (application as MyApp).SESION_USUARIO = usu
-                abrirPantallaPrincipal()
-            }else{
-                print("No te pudiste meter")
-            }*/
-
+            iniciarSesionFireBase(correo, pass.toString())
         }
-
-        /*
->>>>>>> Stashed changes
-        var CORREO = login_et_correo.text.toString()
-        var CONTRASENA = login_et_contrasena.text.toString()
-
-        if (CORREO == "" || CONTRASENA == "") {
-            Toast.makeText(
-                this,
-                "Rellene todos los campos necesarios para iniciar sesión",
-                Toast.LENGTH_SHORT
-            )
-        } else {
-            if (iniciarSesionUsuario(this, CORREO, CONTRASENA)) {
-                var usuario = selectByCorreo(CORREO)
-                if (usuario != null) {
-                    Log.i("INICIO SESION", "Id usuario: "+usuario.id)
-                    MyApp.USUARIO_ACTIVO = usuario
-                    var sesion = Sesion(
-                    idUsuarioActivo = usuario.id
-                    )
-                    SesionController.deleteSesion(sesion.idUsuarioActivo)
-                    SesionController.insert(sesion)
-                    Log.i("CREACION SESION", sesion.toString())
-                    Toast.makeText(this, "ID del usuario: "+usuario.id, Toast.LENGTH_SHORT)
-                }
-                abrirPantallaPrincipal()
-            } else {
-                Toast.makeText(this, "Correo o Contraseña incorrectos", Toast.LENGTH_SHORT).show()
-            }
-        }
-<<<<<<< Updated upstream
-    }
-
-    private fun abrirPantallaPrincipal() {
-        val intent = Intent(this, pantallaprincipal::class.java)
-=======
-         */
     }
 
     private fun iniciarSesionFireBase(email:String, password:String){
@@ -245,79 +215,20 @@ class Login : AppCompatActivity() {
                     // Sign in success, update UI with the signed-in user's information
                     Log.d("Usuario", "signInWithEmail:success")
                     val user = auth.currentUser
+                    usuario = Usuario()
+                    usuario.nombre= auth.currentUser?.displayName.toString()
+                    usuario.correo = auth.currentUser?.email.toString()
+                    usuario.fotoUsuario = "https://upload.wikimedia.org/wikipedia/commons/9/9b/Choloepus_didactylus_2_-_Buffalo_Zoo.jpg"
                     Toast.makeText(baseContext, "Te has conectado con exito.", Toast.LENGTH_SHORT).show()
-                    //MyApp.USUARIO_ACTIVO=usu
-                    //(application as MyApp).SESION_USUARIO = usu
                     loginGoogle=false
                     abrirPantallaPrincipal()
-                    //updateUI(user)
                 } else {
                     // If sign in fails, display a message to the user.
                     Log.w("Usuario", "signInWithEmail:failure", task.exception)
                     Toast.makeText(baseContext, "Error en la contraseña o correo.",
                         Toast.LENGTH_SHORT).show()
-                    //updateUI(null)
                 }
             }
-    }
-
-    private fun errorMsg() {
-        Snackbar.make(
-            findViewById(android.R.id.content),
-            "MAIL O CORREO INCORRECTO",
-            Snackbar.LENGTH_SHORT
-        ).show()
-    }
-
-    private fun guardarSesion() {
-        if (hayUsuarioActivo) {
-            eliminarSesionRemotaActiva()
-        }
-        /*val sesion = Sesion(
-            idUsuarioActivo = usuario.id,
-            tiempo_acceso = Instant.now().toString(),
-            token = UUID.randomUUID().toString()
-        )*/
-        val clienteREST = MisSitiosAPI.service
-        //val call: Call<SesionDTO> = clienteREST.addSesion(SesionMapeado.toDTO(sesion))
-/*        call.enqueue((object : retrofit2.Callback<SesionDTO> {
-
-            override fun onResponse(call: Call<SesionDTO>, response: Response<SesionDTO>) {
-                if (response.isSuccessful) {
-                    Log.i("TuristaREST", "addSesion RESPUESTA OK")
-                    (application as MyApp).SESION_USUARIO = usuario
-                    abrirPantallaPrincipal()
-                }
-            }
-
-            override fun onFailure(call: Call<SesionDTO>, t: Throwable) {
-                Toast.makeText(applicationContext,
-                    "ERROR - NO SE PUEDE ACCEDER AL SERVICIO: " + t.localizedMessage,
-                    Toast.LENGTH_LONG)
-                    .show()
-            }
-        }))*/
-    }
-
-    private fun eliminarSesionRemotaActiva() {
-        val clienteREST = MisSitiosAPI.service
-        /*val call: Call<SesionDTO> = clienteREST.deleteSesion(usuario.id)
-        call.enqueue((object : retrofit2.Callback<SesionDTO> {
-
-            override fun onResponse(call: Call<SesionDTO>, response: Response<SesionDTO>) {
-                if (response.isSuccessful) {
-                    Log.i("TuristaREST", "deleteSesion RESPUESTA OK")
-                    hayUsuarioActivo = false
-                }
-            }
-
-            override fun onFailure(call: Call<SesionDTO>, t: Throwable) {
-                Toast.makeText(applicationContext,
-                    "ERROR - NO SE PUEDE ACCEDER AL SERVICIO: " + t.localizedMessage,
-                    Toast.LENGTH_LONG)
-                    .show()
-            }
-        }))*/
     }
 
     private fun isFormularioRelleno(): Boolean {
@@ -340,10 +251,9 @@ class Login : AppCompatActivity() {
 
     private fun abrirPantallaPrincipal() {
         val intent = Intent(this, PantallaPrincipal::class.java)
-        intent.putExtra("correo",usuarioGoogle.correo)
-        intent.putExtra("nombre",usuarioGoogle.nombre)
-        intent.putExtra("imagen",usuarioGoogle.fotoUsuario)
->>>>>>> Stashed changes
+        intent.putExtra("correo",usuario.correo)
+        intent.putExtra("nombre",usuario.nombre)
+        intent.putExtra("imagen",usuario.fotoUsuario)
         startActivity(intent)
     }
 

@@ -22,7 +22,7 @@
     </fragment>
     <fragment
         android:id="@+id/ndMiPerfil"
-        android:name="com.andresivan.turistadroid.ui.miperfil"
+        android:name="com.andresivan.turistadroid.ui.MiPerfil"
         android:label="fragment_miperfil"
         tools:layout="@layout/fragment_miperfil" />
     <fragment

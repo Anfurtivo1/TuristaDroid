@@ -7,9 +7,7 @@ import android.view.ViewGroup
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.recyclerview.widget.RecyclerView
 import com.andresivan.turistadroid.R
-import com.andresivan.turistadroid.entidades.fotos.FotoController
 import com.andresivan.turistadroid.entidades.lugares.Lugar
-import com.andresivan.turistadroid.entidades.lugares.LugarController
 import com.andresivan.turistadroid.utils.ABase64
 
 
@@ -37,7 +35,7 @@ class SitiosListAdapter(
         holder.itemFecha.text = sitiosLst[position].fecha
         holder.itemTipo.text = sitiosLst[position].tipo
         holder.itemValoracion.text = sitiosLst[position].valoracion.toString()
-        holder.itemFoto.setImageBitmap(fotoLugar(sitiosLst[position], holder))
+        //holder.itemFoto.setImageBitmap(fotoLugar(sitiosLst[position], holder))
         btnFavColor(position, holder)
         holder.itemFav.setOnClickListener {
             btnFavAcciones(position, holder)
@@ -95,14 +93,14 @@ class SitiosListAdapter(
      * Funcion para mostrar la imagen de un lugar, pasando por parámetro el objeto lugar, con el id
      * de la imagen
      */
-    private fun fotoLugar(lugar: Lugar, holder: SitiosViewHolder): Bitmap? {
+    /*private fun fotoLugar(lugar: Lugar, holder: SitiosViewHolder): Bitmap? {
         return try {
             val fotografia = FotoController.selectById(lugar.imgID)
             ABase64.toBitmap(fotografia?.imgLugar.toString())
         } catch (ex: Exception) {
             BitmapFactory.decodeResource(holder.context.resources, R.drawable.ic_sitio)
         }
-    }
+    }*/
 
     /**
      * Esta función realiza todas las tareas que se necesitan para cuando pulsamos el boton de like
@@ -116,7 +114,7 @@ class SitiosListAdapter(
             sitiosLst[index].valoracion--
         }
 
-        LugarController.update(sitiosLst[index])
+        //LugarController.update(sitiosLst[index])
         holder.itemValoracion.text = sitiosLst[index].valoracion.toString()
     }
 

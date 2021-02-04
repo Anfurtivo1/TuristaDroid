@@ -18,7 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.andresivan.turistadroid.R
 import com.andresivan.turistadroid.entidades.lugares.Lugar
-import com.andresivan.turistadroid.entidades.lugares.LugarController
+import com.andresivan.turistadroid.entidades.lugares.LugarControlador
 import com.andresivan.turistadroid.ui.missitios.Filtross.FiltrosControlador
 import com.andresivan.turistadroid.ui.missitios.filtros.Filtros
 import kotlinx.android.synthetic.main.fragment_missitios.*
@@ -26,7 +26,7 @@ import kotlinx.android.synthetic.main.fragment_missitios.*
 
 class MisSitios : Fragment() {
 
-    private var SITIOS = mutableListOf<Lugar>()
+    var SITIOS: MutableList<Lugar> = mutableListOf()
     private lateinit var sitiosAdapter: SitiosListAdapter
     private lateinit var tarea2doPlanos: TareaCargarRegistros
     private var fondoAlDeslizar = Paint()
@@ -78,6 +78,7 @@ class MisSitios : Fragment() {
         val adapter = ArrayAdapter(requireContext(),android.R.layout.simple_spinner_item, tipoOrdenacion)
         //y relacionamos el adaptador
         misSitiosSpinnerFiltro.adapter = adapter
+        //sitiosAdapter = SitiosListAdapter
 
         misSitiosSpinnerFiltro.onItemSelectedListener = object :AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>,
@@ -304,10 +305,9 @@ class MisSitios : Fragment() {
      * @param position Int?
      */
     private fun abrirDetalle(lugar: Lugar?, modo: ModosAccesos?, anterior: MisSitios?, position: Int?) {
-        val lugarDetalle = SitioDetalleFragment(lugar, modo, anterior, position)
+        val lugarDetalle = SitioDetalleFragment(lugar,modo,anterior,position)
         val transaction = requireActivity().supportFragmentManager.beginTransaction()
-        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-        transaction.add(R.id.nav_host_fragment, lugarDetalle)
+        transaction.replace(R.id.misSitios, lugarDetalle)
         transaction.addToBackStack(null)
         transaction.commit()
     }
@@ -339,21 +339,37 @@ class MisSitios : Fragment() {
         }
         override fun doInBackground(vararg args: Void?): Void? {
             try {
-                SITIOS = LugarController.selectAll()!!
+
+                sitiosAdapter = SitiosListAdapter(SITIOS) {
+                    alPulsarRegistro(it)
+                }
+                activity?.applicationContext?.let { LugarControlador.obtenerLugares(it,sitiosAdapter) }
+
+                SITIOS = LugarControlador.lugares
+                //por si acaso ya teniamos los registros cargado y ha habido alguna modificacion
+                //avisamoes al adaptador, ya sea que se haya añadido algún nuevo registro, se haya
+                //modificado alguno, o se haya eliminado algún registro
+
+                sitiosAdapter.notifyDataSetChanged()
+                sitiosRecycler.setHasFixedSize(true)
+                sitiosSwipeRefresh.isRefreshing = false
+
             } catch (e: Exception) {
             }
             return null
         }
         override fun onPostExecute(args: Void?) {
+
+            if(SITIOS==null){
+                SITIOS = mutableListOf()
+            }
+
             sitiosAdapter = SitiosListAdapter(SITIOS) {
                 alPulsarRegistro(it)
             }
+
             sitiosRecycler.adapter = sitiosAdapter
-            /*
-            por si acaso ya teniamos los registros cargado y ha habido alguna modificacion
-            avisamoes al adaptador, ya sea que se haya añadido algún nuevo registro, se haya
-            modificado alguno, o se haya eliminado algún registro
-             */
+
             sitiosAdapter.notifyDataSetChanged()
             sitiosRecycler.setHasFixedSize(true)
             sitiosSwipeRefresh.isRefreshing = false
@@ -361,12 +377,14 @@ class MisSitios : Fragment() {
 
     }
 
+
+
     /**
      * Función que se encarga de mostrar todos los registros en el recycler view
      */
     private fun mostrarListaRegistros() {
         //al recyclerView le asignamos el el adaptador con los registros de la bbdd
-        sitiosRecycler.adapter = sitiosAdapter
+        //sitiosRecycler.adapter = sitiosAdapter
     }
 
     /**

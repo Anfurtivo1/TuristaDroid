@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".actividades.login">
+    android:background="@color/colorPrimary"
+    tools:context=".actividades.Login">
 
     <com.google.android.gms.common.SignInButton
         android:id="@+id/sign_in_button"
@@ -24,7 +25,7 @@
         android:layout_marginEnd="50dp"
         android:autofillHints=""
         android:background="#B3B3B3"
-        android:backgroundTint="#B3B3B3"
+        android:backgroundTint="@color/design_default_color_background"
         android:ems="10"
         android:inputType="textPassword"
         app:layout_constraintEnd_toEndOf="parent"
@@ -39,6 +40,8 @@
         android:layout_marginTop="108dp"
         android:text="@string/login_lbl_Correo"
         android:textAlignment="center"
+        android:textColor="@color/design_default_color_background"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -51,6 +54,8 @@
         android:layout_marginTop="6dp"
         android:text="@string/login_lbl_Contrasena"
         android:textAlignment="center"
+        android:textColor="@color/design_default_color_background"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -64,7 +69,7 @@
         android:layout_marginEnd="50dp"
         android:autofillHints=""
         android:background="#B3B3B3"
-        android:backgroundTint="#B3B3B3"
+        android:backgroundTint="@color/design_default_color_background"
         android:ems="10"
         android:inputType="textEmailAddress"
         app:layout_constraintEnd_toEndOf="parent"
@@ -81,7 +86,7 @@
         android:layout_marginEnd="150dp"
         android:text="@string/login_link_registrarse"
         android:textAlignment="center"
-        android:textColor="@android:color/holo_blue_dark"
+        android:textColor="@color/cardview_light_background"
         android:textStyle="bold|italic"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -94,11 +99,21 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="36dp"
-        android:backgroundTint="@android:color/holo_blue_dark"
+        android:backgroundTint="@color/colorBTN_Dark"
         android:text="@string/login_btn_iniciarSesion"
         android:textColor="@android:color/background_light"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/login_et_contrasena" />
+
+    <Button
+        android:id="@+id/btnIniciarSesionMovil"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="476dp"
+        android:text="Iniciar sesion con el movil"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

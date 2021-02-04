@@ -20,11 +20,8 @@ class MyApp : Application() {
         //lateinit var USUARIO_ACTIVO:Usuario
     }
 
-<<<<<<< Updated upstream
-=======
     //lateinit var SESION_USUARIO: Usuario
 
->>>>>>> Stashed changes
     private val nombreBD = "ANDRESIVAN_MIS_LUGARES"
     private val versionBD = 1L
 

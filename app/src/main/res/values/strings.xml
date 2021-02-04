@@ -44,5 +44,7 @@
     <string name="nav_header_title">Titulo Cabecera</string>
     <string name="nav_header_subtitle">Subtitulo Cabecera</string>
     <string name="nav_header_desc">Foto Usuario</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>
