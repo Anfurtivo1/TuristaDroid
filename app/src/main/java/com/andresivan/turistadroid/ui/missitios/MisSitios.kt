@@ -17,10 +17,13 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.andresivan.turistadroid.R
+import com.andresivan.turistadroid.app.MyApp
 import com.andresivan.turistadroid.entidades.lugares.Lugar
 import com.andresivan.turistadroid.entidades.lugares.LugarControlador
 import com.andresivan.turistadroid.ui.missitios.Filtross.FiltrosControlador
 import com.andresivan.turistadroid.ui.missitios.filtros.Filtros
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.fragment_missitios.*
 
 
@@ -31,6 +34,7 @@ class MisSitios : Fragment() {
     private lateinit var tarea2doPlanos: TareaCargarRegistros
     private var fondoAlDeslizar = Paint()
     private var FILTRO_ORDENACIÓN = Filtros.NADA
+    val db = Firebase.firestore
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -40,8 +44,27 @@ class MisSitios : Fragment() {
         return inflater.inflate(R.layout.fragment_missitios, container, false)
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
+        consultar()
+
         super.onViewCreated(view, savedInstanceState)
         iniciarInterfaz()
+    }
+
+    private fun consultar(){
+        db.collection("Lugares")
+            .get()
+            .addOnSuccessListener { result ->
+                for (document in result) {
+                    Log.i("Consulta", "${document.id} => ${document.data}")
+                    Log.i("Consulta", document.data.getValue("NombreLugar").toString())
+
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.d("Consulta", "Error getting documents: ", exception)
+            }
+
     }
 
     /**
@@ -65,6 +88,11 @@ class MisSitios : Fragment() {
         asgina una funcionalidad, y esta funcionalidad es la de añadir nuevos lugares
          */
         fabNuevo.setOnClickListener { nuevoRegistro() }
+
+        for(elemento in MyApp.listaLugares){
+            insertarRegistroLista(elemento)
+        }
+
     }
 
     /**
@@ -78,7 +106,6 @@ class MisSitios : Fragment() {
         val adapter = ArrayAdapter(requireContext(),android.R.layout.simple_spinner_item, tipoOrdenacion)
         //y relacionamos el adaptador
         misSitiosSpinnerFiltro.adapter = adapter
-        //sitiosAdapter = SitiosListAdapter
 
         misSitiosSpinnerFiltro.onItemSelectedListener = object :AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>,
@@ -229,11 +256,11 @@ class MisSitios : Fragment() {
     }
 
     /**
-     * Esta función permite abrir el fragment de SitiosDetalleFragment en modo INSERTAR, esto viene de
-     * tu práctica, porque nos estabamos liando mucho con la pila de frgments y llamadas
+     * Esta función permite abrir el fragment de SitiosDetalleFragment
      */
     private fun nuevoRegistro() {
-        abrirDetalle(null, ModosAccesos.INSERTAR, this, null)
+        abrirDetalle(null)
+        fabNuevo.hide()
     }
 
     /**
@@ -252,18 +279,7 @@ class MisSitios : Fragment() {
      * @param position Int es la posicion del item en la que aparece en la lista
      */
     private fun modificar(position: Int) {
-        abrirDetalle(SITIOS[position], ModosAccesos.ACTUALIZAR, this, position)
-    }
-
-    /**
-     * Función que se encarga de avisar al RecyclerView de que uno de sus registros ha sido modificado
-     * avisando al recycler
-     * @param item Lugar el registro que ha sido modificado
-     * @param position Int posicion del objeto en el que se encuentra el registro
-     */
-    fun actualizarRegistroLista(item: Lugar, position: Int) {
-        this.sitiosAdapter.modificarRegistroLista(item, position)
-        sitiosAdapter.notifyDataSetChanged()
+        abrirDetalle(SITIOS[position])
     }
 
     /**
@@ -271,16 +287,7 @@ class MisSitios : Fragment() {
      * @param position Int
      */
     private fun borrar(position: Int) {
-        abrirDetalle(SITIOS[position], ModosAccesos.ELIMINAR, this, position)
-    }
-
-    /**
-     * Función que elimina un item del RecyclerView, notificando de que ha habido cambios
-     * @param position Int la posicion en la que se encuentra el registro
-     */
-    fun eliminarRegistroLista(position: Int) {
-        this.sitiosAdapter.eliminarRegistroLista(position)
-        sitiosAdapter.notifyDataSetChanged()
+        abrirDetalle(SITIOS[position])
     }
 
     fun actualizarListaRegistros() {
@@ -293,7 +300,7 @@ class MisSitios : Fragment() {
      */
     private fun abrirRegistro(lugar: Lugar) {
         Log.i("Lugares", "Visualizando el elemento: " + lugar.id)
-        abrirDetalle(lugar, ModosAccesos.VISUALIZAR, this, null)
+        abrirDetalle(lugar)
     }
 
     /**
@@ -304,8 +311,8 @@ class MisSitios : Fragment() {
      * @param anterior LugaresFragment?
      * @param position Int?
      */
-    private fun abrirDetalle(lugar: Lugar?, modo: ModosAccesos?, anterior: MisSitios?, position: Int?) {
-        val lugarDetalle = SitioDetalleFragment(lugar,modo,anterior,position)
+    private fun abrirDetalle(lugar: Lugar?) {
+        val lugarDetalle = SitioDetalleFragment(lugar)
         val transaction = requireActivity().supportFragmentManager.beginTransaction()
         transaction.replace(R.id.misSitios, lugarDetalle)
         transaction.addToBackStack(null)
@@ -383,8 +390,7 @@ class MisSitios : Fragment() {
      * Función que se encarga de mostrar todos los registros en el recycler view
      */
     private fun mostrarListaRegistros() {
-        //al recyclerView le asignamos el el adaptador con los registros de la bbdd
-        //sitiosRecycler.adapter = sitiosAdapter
+
     }
 
     /**

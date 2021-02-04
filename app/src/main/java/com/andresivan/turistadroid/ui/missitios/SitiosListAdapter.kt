@@ -90,19 +90,6 @@ class SitiosListAdapter(
     }
 
     /**
-     * Funcion para mostrar la imagen de un lugar, pasando por parámetro el objeto lugar, con el id
-     * de la imagen
-     */
-    /*private fun fotoLugar(lugar: Lugar, holder: SitiosViewHolder): Bitmap? {
-        return try {
-            val fotografia = FotoController.selectById(lugar.imgID)
-            ABase64.toBitmap(fotografia?.imgLugar.toString())
-        } catch (ex: Exception) {
-            BitmapFactory.decodeResource(holder.context.resources, R.drawable.ic_sitio)
-        }
-    }*/
-
-    /**
      * Esta función realiza todas las tareas que se necesitan para cuando pulsamos el boton de like
      */
     private fun btnFavAcciones(index: Int, holder: SitiosViewHolder) {

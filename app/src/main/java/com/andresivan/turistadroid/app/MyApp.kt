@@ -2,8 +2,10 @@ package com.andresivan.turistadroid.app
 
 import android.Manifest
 import android.app.Application
+import android.location.Location
 import android.util.Log
 import android.widget.Toast
+import com.andresivan.turistadroid.entidades.lugares.Lugar
 import com.andresivan.turistadroid.entidades.preferencias.PreferenciasController
 import com.andresivan.turistadroid.entidades.usuario.Usuario
 import com.karumi.dexter.Dexter
@@ -15,27 +17,21 @@ import io.realm.Realm
 import io.realm.RealmConfiguration
 
 class MyApp : Application() {
-
     companion object{
-        //lateinit var USUARIO_ACTIVO:Usuario
+        lateinit var posicion:Location
+        lateinit var listaLugares:MutableList<Lugar>
     }
 
-    //lateinit var SESION_USUARIO: Usuario
-
-    private val nombreBD = "ANDRESIVAN_MIS_LUGARES"
-    private val versionBD = 1L
-
     var PERMISOS = false
-        private set
 
     override fun onCreate() {
         super.onCreate()
-        initRealmBD()
+        //initRealmBD()
         initPermisos()
     }
 
 
-    private fun initRealmBD() {
+/*    private fun initRealmBD() {
         Realm.init(applicationContext)
         val config = RealmConfiguration.Builder()
             .name(nombreBD)
@@ -43,7 +39,7 @@ class MyApp : Application() {
             .deleteRealmIfMigrationNeeded()
             .build()
         Realm.setDefaultConfiguration(config)
-    }
+    }*/
 
     /**
      * Comprobamos los permisos de la aplicación

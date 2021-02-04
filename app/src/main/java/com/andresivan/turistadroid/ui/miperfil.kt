@@ -105,21 +105,6 @@ class MiPerfil : Fragment() {
 
         CorreoElectronico.text = USUARIO.correo
         NombreUsuario.text = USUARIO.nombre
-
-        /*for (sesion in SesionController.selectAll()!!){
-            Log.i("Sesion",sesion.toString())
-
-            USUARIO = UsuarioControlador.selectById(sesion.idUsuarioActivo)!!
-
-            Log.i("Mi Perfil", USUARIO.toString())
-
-            Log.i("Mi perfil", "NOMBRE USUARIO: "+USUARIO.nombre)
-            Log.i("Mi perfil", "CORREO ELECTRONICO USUARIO: "+ USUARIO.correo)
-            Log.i("Mi perfil", "NOMBRE_FOTO: "+ USUARIO.fotoUsuario)
-
-            CorreoElectronico.text = USUARIO.correo
-            NombreUsuario.text = USUARIO.nombre
-        }*/
     }
 
     /**
@@ -139,29 +124,9 @@ class MiPerfil : Fragment() {
      * Este es el metodo en si que edita el usuario, pese a dar un error al ejecutarlo, actualiza de forma correcta el usuario
      * Si en el enlace del Twitter se pone un texto que no es una URL valida, dara error al abrir el twitter por esa misma razón
      */
-/*    private fun editarPerfil() {
-        for (sesion in SesionController.selectAll()!!){
-                if (miperfil_et_nombreusuario.text.toString() != ""){
-                    USUARIO.nombre = miperfil_et_nombreusuario.text.toString()//Nombre de usuario
-                }
-                if (miperfil_et_contrasena.text.toString() != ""){
-                    USUARIO.contrasena = CifradorContrasena.convertirHash(miperfil_et_contrasena.text.toString(), "SHA-256")!!//Nueva contraseña que luego se convierte
-                    Log.i("Mod_perfil -->", "NUEVA COINTRASEÑA --> "+USUARIO.contrasena)
-                }
-                if (miperfil_et_twitter.text.toString() != ""){
-                    USUARIO.cuentaTwitter = miperfil_et_twitter.text.toString()//EL enlace de Twitter
-                }
-                if (miperfil_et_nombreusuario.text.toString() != "" && miperfil_et_contrasena.text.toString() != "" && miperfil_et_twitter.text.toString() != ""){
+   private fun editarPerfil() {
 
-
-
-                    UsuarioControlador.updateUsuario(USUARIO, sesion.idUsuarioActivo)//Si todo esta correcto se ejecuta la actualización del usuario
-                    Log.i("MI PERFIL - MOD USU", "USUARIO MODIFICADO")
-                }
-
-        }
-
-    }*/
+    }
     /**
      * Este metodo elegirá una foto de la galeria
      */

@@ -6,11 +6,14 @@ import android.location.Location
 import androidx.fragment.app.Fragment
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.app.ActivityCompat
 import com.andresivan.turistadroid.R
+import com.andresivan.turistadroid.app.MyApp
+import com.andresivan.turistadroid.entidades.lugares.Lugar
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 
@@ -19,12 +22,16 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 
 class cercademi : Fragment() {
 
     private lateinit var fusedLocationClient: FusedLocationProviderClient//Lo que nos dará la ultima ubicacion
     private lateinit var lastLocation:Location//Para obtener la ultima localización del usuario
     private lateinit var map:GoogleMap//EL mapa que se va a mostrar
+    private lateinit var lugar:Lugar
 
     private val callback = OnMapReadyCallback { googleMap ->
         /**
@@ -60,10 +67,44 @@ class cercademi : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
         mapFragment?.getMapAsync(callback)
+        consultar()
         //Esto lo usaremos para acceder a nuestra unicacion actual
         fusedLocationClient= activity?.let { LocationServices.getFusedLocationProviderClient(it) }!!
 
     }
+
+    private fun consultar(){
+        MyApp.listaLugares = mutableListOf()
+        val db = Firebase.firestore
+        db.collection("Lugares")
+            .get()
+            .addOnSuccessListener { result ->
+                for (document in result) {
+                    lugar = Lugar(
+                        "",
+                        document.data.getValue("NombreLugar").toString(),
+                        document.data.getValue("Tipo").toString(),
+                        "",
+                        document.data.getValue("Latitud").toString(),
+                        document.data.getValue("Longitud").toString(),
+                        "",
+                        0,
+                        false,
+                        ""
+                    )
+                    MyApp.listaLugares.add(lugar)
+                }
+                for (elemento in MyApp.listaLugares){
+                    val lugarMapa = LatLng(elemento.latitud.toDouble(), elemento.longitud.toDouble())
+                    map.addMarker(MarkerOptions().position(lugarMapa).title(elemento.nombre))
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.d("Consulta", "Error getting documents: ", exception)
+            }
+
+    }
+
 
     /**
      * En este metodo montamos el mapa y optamos por una opción distina a Dexter para comprobar los permisos para probar mas cosas
@@ -90,6 +131,7 @@ class cercademi : Fragment() {
             if (location!=null){
                 //Indicamos que nuestra ultima localizacion va ser la ultima localizacion nuestra
                 lastLocation=location
+                MyApp.posicion=lastLocation
                 //Asignamos al mapa nuestra ubicacion actual,13f es el zoom
                 val currentLatLong=LatLng(location.latitude,location.longitude)
                 map.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLong,13f))

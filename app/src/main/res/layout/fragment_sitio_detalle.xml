@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/sitiosDetalle"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/recyclerListColor">
+
 
     <ImageView
         android:id="@+id/detalleFotoSitio"
@@ -14,87 +14,68 @@
         android:background="@color/recyclerListColor"
         android:contentDescription="TODO"
         android:scaleType="centerCrop"
-        android:src="@mipmap/ic_launcher_round" />
+        android:src="@mipmap/ic_launcher_round"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.006"
+        tools:layout_editor_absoluteX="0dp" />
+
+    <Spinner
+        android:id="@+id/tiposLugares_spinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.286"
+        tools:layout_editor_absoluteX="16dp" />
+
+
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="111dp"
+        android:layout_height="18dp"
+        android:layout_marginEnd="268dp"
+        android:text="Nombre"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.369" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/detalleCamaraSitio"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="83dp"
         android:layout_gravity="left"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="115dp"
+        android:layout_marginEnd="336dp"
         android:backgroundTint="@color/colorBTN_Dark"
         android:clickable="true"
         android:src="@drawable/ic_camara"
-        android:contentDescription="TODO" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.148" />
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="145dp"
-        android:layout_marginEnd="10dp">
+    <EditText
+        android:id="@+id/txtNombreLugar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="92dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="Nombre"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.353" />
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/detalleSitioNombreText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:background="#FFFFFF"
-            android:hint="Nombre">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/detalleSitioInput"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/detalleTipoSitio"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/detalleSitioNombreText"
-            android:layout_marginTop="10dp"
-            android:background="#FFFFFF"
-            android:hint="TipoLugar" />
-
-        <LinearLayout
-            android:id="@+id/linearLayoutSitioInfo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/detalleSitioNombreText"
-            android:layout_marginTop="20dp"
-            android:orientation="horizontal">
-
-
-        </LinearLayout>
-
-        <fragment
-            android:id="@+id/detalleMapa"
-            android:name="com.google.android.gms.maps.SupportMapFragment"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/linearLayoutSitioInfo"
-            android:layout_marginStart="0dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="0dp"
-            android:layout_marginBottom="10dp"
-            tools:context="ui.sitiodetalle"
-            tools:layout="@layout/fragment_sitio_detalle" />
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/detalleSitioFabFuncion"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginStart="10dp"
-            android:layout_marginBottom="10dp"
-            android:backgroundTint="@color/fabBtnColor"
-            android:clickable="true"
-            android:focusable="true"
-            android:src="@drawable/ic_add_sitio" />
-
-    </RelativeLayout>
-</FrameLayout>
+    <Button
+        android:id="@+id/btnIngresar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="160dp"
+        android:text="Ingresar"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.857" />
+</androidx.constraintlayout.widget.ConstraintLayout>
