@@ -15,6 +15,7 @@ import android.widget.ImageView
 import android.widget.Toast
 import androidx.core.content.FileProvider
 import com.andresivan.turistadroid.R
+import com.andresivan.turistadroid.utils.ABase64
 import com.andresivan.turistadroid.utils.CifradorContrasena
 //import com.andresivan.turistadroid.entidades.preferencias.PreferenciasController.crearSesion
 import com.andresivan.turistadroid.utils.Fotos
@@ -166,6 +167,7 @@ class Registrarse : AppCompatActivity() {
         }else{
             imagen.isDrawingCacheEnabled = true
             val bitmap = (imagen.drawable as BitmapDrawable).bitmap
+            val base64=ABase64.toBase64(bitmap)
             val baos = ByteArrayOutputStream()
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
             val data = baos.toByteArray()
@@ -174,7 +176,8 @@ class Registrarse : AppCompatActivity() {
             val db = Firebase.firestore
             val user = hashMapOf(
                 "Correo" to correo,
-                "Nombre" to nombreUsuario
+                "Nombre" to nombreUsuario,
+                "FotoUsuario" to base64.toString()
             )
             guardarUsuarioBD(user)
             mostrarDatosUsuarios()

@@ -2,29 +2,33 @@ package com.andresivan.turistadroid.ui
 
 import android.Manifest
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.drawable.Drawable
 import android.location.Location
-import androidx.fragment.app.Fragment
-
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.app.ActivityCompat
+import androidx.fragment.app.Fragment
 import com.andresivan.turistadroid.R
 import com.andresivan.turistadroid.app.MyApp
 import com.andresivan.turistadroid.entidades.lugares.Lugar
+import com.andresivan.turistadroid.utils.CircleTransform
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
-
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.squareup.picasso.Picasso
+
 
 class cercademi : Fragment() {
 
@@ -94,10 +98,29 @@ class cercademi : Fragment() {
                     )
                     MyApp.listaLugares.add(lugar)
                 }
-                for (elemento in MyApp.listaLugares){
-                    val lugarMapa = LatLng(elemento.latitud.toDouble(), elemento.longitud.toDouble())
-                    map.addMarker(MarkerOptions().position(lugarMapa).title(elemento.nombre))
-                }
+                Picasso.get().load("https://assets.change.org/photos/5/iz/mb/uDIzmBupCuNsUUX-800x450-noPad.jpg?1519267641").transform(CircleTransform()).resize(100,100).into(object : com.squareup.picasso.Target {
+                    override fun onBitmapLoaded(bitmap: Bitmap?, from: Picasso.LoadedFrom?) {
+                        if (bitmap != null) run {
+                            for (elemento in MyApp.listaLugares) {
+                                val lugarMapa = LatLng(
+                                    elemento.latitud.toDouble(),
+                                    elemento.longitud.toDouble()
+                                )
+                                map.addMarker(
+                                    MarkerOptions()
+                                        .position(lugarMapa)
+                                        .title(elemento.nombre)
+                                        .snippet("Lugar del tipo " + elemento.tipo + " con una valoración de " + elemento.valoracion)
+                                )
+                                        .setIcon(BitmapDescriptorFactory.fromBitmap(bitmap))
+                            }
+                        }
+                    }
+
+                    override fun onPrepareLoad(placeHolderDrawable: Drawable?) {}
+
+                    override fun onBitmapFailed(e: Exception?, errorDrawable: Drawable?) {}
+                })
             }
             .addOnFailureListener { exception ->
                 Log.d("Consulta", "Error getting documents: ", exception)

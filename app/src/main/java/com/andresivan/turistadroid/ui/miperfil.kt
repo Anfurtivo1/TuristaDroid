@@ -1,6 +1,7 @@
 package com.andresivan.turistadroid.ui
 
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.ImageDecoder
@@ -20,13 +21,17 @@ import com.andresivan.turistadroid.R
 import com.andresivan.turistadroid.app.MyApp
 import com.andresivan.turistadroid.entidades.sesion.SesionController
 import com.andresivan.turistadroid.entidades.usuario.Usuario
+import com.andresivan.turistadroid.ui.missitios.SitioDetalleFragment
 import com.andresivan.turistadroid.utils.CifradorContrasena
 import com.andresivan.turistadroid.utils.Fotos
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.auth.ktx.userProfileChangeRequest
+import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_registrarse.*
 import kotlinx.android.synthetic.main.fragment_miperfil.*
+import org.w3c.dom.Text
 import java.io.IOException
 
 // TODO: Rename parameter arguments, choose names that match
@@ -52,16 +57,10 @@ class MiPerfil : Fragment() {
 
     //
     private lateinit var Auth: FirebaseAuth
-    private var param1: String? = null
-    private var param2: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
         Auth = Firebase.auth
         leerSesionUsuarioActivo()
 
@@ -70,8 +69,6 @@ class MiPerfil : Fragment() {
     private fun leerSesionUsuarioActivo() {
         USUARIO.correo = Auth.currentUser?.email.toString()
         USUARIO.nombre = Auth.currentUser?.displayName.toString()
-
-        //USUARIO = USUARIO_ACTIVO
     }
 
     override fun onCreateView(
@@ -85,7 +82,13 @@ class MiPerfil : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         //Vamos a inicializar la UI de mi perfil
-        initUI()
+        if (MyApp.loginGoogle){
+            abrirPrincipal()
+            Toast.makeText(context,"Has iniciado sesion con google, por lo que no puedes cambiar tus datos",Toast.LENGTH_LONG).show()
+        }else{
+            initUI()
+        }
+
     }
 
     /**
@@ -93,6 +96,7 @@ class MiPerfil : Fragment() {
      */
     private fun initUI() {
         cargarMiPerfilUsuario()
+        inicializarEventosBotones()
     }
 
 
@@ -112,7 +116,7 @@ class MiPerfil : Fragment() {
      */
     private fun inicializarEventosBotones() {
 
-        //btnEditarPerfil.setOnClickListener{editarPerfil()}
+        btnEditarPerfil.setOnClickListener{editarPerfil()}
 
         fabMP_Twitter.setOnClickListener{abrirPaginaWeb(USUARIO.cuentaTwitter)}
 
@@ -125,8 +129,59 @@ class MiPerfil : Fragment() {
      * Si en el enlace del Twitter se pone un texto que no es una URL valida, dara error al abrir el twitter por esa misma razón
      */
    private fun editarPerfil() {
+        var CorreoElectronico: TextView = miperfil_et_nombreusuario
+        var contrasena: TextView = miperfil_et_contrasena
+        var LinkTwitter: TextView = miperfil_et_twitter
 
+        if(CorreoElectronico.text.isNotEmpty() && LinkTwitter.text.isNotEmpty() && contrasena.text.isNotEmpty()){
+            actualizarCorreo(CorreoElectronico.text.toString())
+            actualizarContrasena(contrasena.text.toString())
+            //actualizarCorreoBD(CorreoElectronico.text.toString())
+        }else{
+            Toast.makeText(context,"Tienes que rellenar todos los campos",Toast.LENGTH_SHORT).show()
+        }
     }
+
+    private fun actualizarCorreo(correoElectronico:String){
+        val user = Firebase.auth.currentUser
+
+        user!!.updateEmail(correoElectronico)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    Toast.makeText(context,"Correo modificado correctamente",Toast.LENGTH_SHORT).show()
+                }else{
+                    Toast.makeText(context,"No se pudo actualizar el correo",Toast.LENGTH_SHORT).show()
+                }
+            }
+    }
+
+
+    private fun actualizarContrasena(contrasena:String){
+
+        val user = Firebase.auth.currentUser
+        var pass = CifradorContrasena.convertirHash(contrasena)
+
+        user!!.updatePassword(pass.toString())
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    Toast.makeText(context,"Contraseña modificada correctamente",Toast.LENGTH_SHORT).show()
+                }else{
+                    Toast.makeText(context,"No se pudo actualizar la contraseña",Toast.LENGTH_SHORT).show()
+                }
+            }
+    }
+
+    private fun actualizarCorreoBD(correoElectronico:String){
+        val db = Firebase.firestore
+        val washingtonRef = db.collection("cities").document("DC")
+
+        // Set the "isCapital" field of the city 'DC'
+        washingtonRef
+            .update("capital", true)
+            .addOnSuccessListener { Log.d("", "DocumentSnapshot successfully updated!") }
+            .addOnFailureListener {  }
+    }
+
     /**
      * Este metodo elegirá una foto de la galeria
      */
@@ -137,6 +192,14 @@ class MiPerfil : Fragment() {
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI
             )
             startActivityForResult(galleryIntent, GALERIA)//Ejecutamos el OnActivityResult
+    }
+
+    private fun abrirPrincipal(){
+        val cercaDeMi = cercademi()
+        val transaction = requireActivity().supportFragmentManager.beginTransaction()
+        transaction.replace(R.id.nav_host_fragment, cercaDeMi)
+        transaction.addToBackStack(null)
+        transaction.commit()
     }
 
     /**

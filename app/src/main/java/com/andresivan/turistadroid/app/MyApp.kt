@@ -20,26 +20,15 @@ class MyApp : Application() {
     companion object{
         lateinit var posicion:Location
         lateinit var listaLugares:MutableList<Lugar>
+        var loginGoogle = true
     }
 
     var PERMISOS = false
 
     override fun onCreate() {
         super.onCreate()
-        //initRealmBD()
         initPermisos()
     }
-
-
-/*    private fun initRealmBD() {
-        Realm.init(applicationContext)
-        val config = RealmConfiguration.Builder()
-            .name(nombreBD)
-            .schemaVersion(versionBD)
-            .deleteRealmIfMigrationNeeded()
-            .build()
-        Realm.setDefaultConfiguration(config)
-    }*/
 
     /**
      * Comprobamos los permisos de la aplicación

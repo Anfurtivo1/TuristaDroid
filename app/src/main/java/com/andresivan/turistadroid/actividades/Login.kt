@@ -27,6 +27,7 @@ import com.google.firebase.FirebaseException
 import com.google.firebase.FirebaseTooManyRequestsException
 import com.google.firebase.auth.*
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_login.*
 import retrofit2.Call
@@ -40,8 +41,6 @@ import java.util.concurrent.TimeUnit
 class Login : AppCompatActivity() {
 
     lateinit var usuario: Usuario
-    var loginGoogle:Boolean=true
-    private lateinit var sesionRemota: Sesion
     //
     private lateinit var auth: FirebaseAuth
     //
@@ -62,23 +61,22 @@ class Login : AppCompatActivity() {
         btnIniciarSesion.setOnClickListener { iniciarSesion() }//Logearse por correy contraseña
         //btnIniciarSesionMovil.setOnClickListener {verificacionMovil()}
 
-        initUI()
         //
         auth = Firebase.auth
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .build()
         // Build a GoogleSignInClient with the options specified by gso.
-        clienteSignInGoogle = GoogleSignIn.getClient(this, gso);
+        clienteSignInGoogle = GoogleSignIn.getClient(this, gso)
 
     }
 
-    public override fun onStart() {
+/*    public override fun onStart() {
         super.onStart()
         // Check if user is signed in (non-null) and update UI accordingly.
         val currentUser = auth.currentUser
         //updateUI(currentUser)
-    }
+    }*/
 
     private fun signIn() {
         val signInIntent: Intent = clienteSignInGoogle.getSignInIntent()
@@ -102,7 +100,6 @@ class Login : AppCompatActivity() {
             val account = completedTask.getResult(ApiException::class.java)
 
             // Signed in successfully, show authenticated UI.
-            //updateUI(account)
             if (account != null) {
                 usuario= Usuario()
                 usuario.nombre=account.displayName.toString()
@@ -111,81 +108,7 @@ class Login : AppCompatActivity() {
                 abrirPantallaPrincipal()
             }
         } catch (e: ApiException) {
-            // The ApiException status code indicates the detailed failure reason.
-            // Please refer to the GoogleSignInStatusCodes class reference for more information.
-            //updateUI(null)
         }
-    }
-
-    private fun initUI() {
-        cargarSesion()
-    }
-
-    private fun cargarSesion() {
-        try {
-            //usuario = SesionController.getSesionActual(this)!!
-            //comprobarSesionesActivas(usuario)
-        }catch (ex: Exception){
-            Log.i("LOGIN", "ERRORES: " + ex.localizedMessage)
-        }
-    }
-
-    private fun comprobarSesionesActivas(usuario: Usuario) {
-        val clienteREST = MisSitiosAPI.service
-        val call: Call<SesionDTO> = clienteREST.getSesionByID(usuario.id)
-        call.enqueue((object :retrofit2.Callback<SesionDTO>{
-            override fun onResponse(call: Call<SesionDTO>, response: Response<SesionDTO>) {
-                if (response.isSuccessful){
-                    Log.i("TuristaREST", "getSesionByID RESPUESTA OK")
-                    var sesionRemota = SesionMapeado.fromDTO(response.body() as SesionDTO)
-                    sesionRemota = Sesion()
-                    sesionRemota.fromSesion(sesionRemota)
-                    // Si la obtiene comparamos
-                    compararSesiones()
-                }
-            }
-
-            override fun onFailure(call: Call<SesionDTO>, t: Throwable) {
-                Toast.makeText(applicationContext,
-                    "ERROR - NO SE PUEDE ACCEDER AL SERVICIO: " + t.localizedMessage,
-                    Toast.LENGTH_LONG)
-                    .show()
-            }
-
-        }))
-    }
-
-    private fun compararSesiones() {
-        val tiempo_actual =Instant.now()
-        val tiempo_sesion = Instant.parse(sesionRemota.tiempo_acceso)
-        val segundosDiferencia = ChronoUnit.SECONDS.between(tiempo_sesion,tiempo_actual)
-        /*if (segundosDiferencia <= tiempoConexionSesion ){
-            (this.application as MyApp).SESION_USUARIO = usuario
-            actualizarSesion()
-            abrirPantallaPrincipal()
-        }*/
-    }
-
-    private fun actualizarSesion() {
-        sesionRemota.tiempo_acceso = Instant.now().toString()
-        val sesionDTO = SesionMapeado.toDTO(sesionRemota)
-        val clienteREST = MisSitiosAPI.service
-        val call: Call<SesionDTO> = clienteREST.updateSesion(sesionRemota.idUsuarioActivo, sesionDTO)
-        call.enqueue((object : Callback<SesionDTO> {
-
-            override fun onResponse(call: Call<SesionDTO>, response: Response<SesionDTO>) {
-                if (response.isSuccessful) {
-                    Log.i("TuristaREST", "updateSesion RESPUESTA OK")
-                }
-            }
-
-            override fun onFailure(call: Call<SesionDTO>, t: Throwable) {
-                Toast.makeText(applicationContext,
-                    "ERROR - NO SE PUEDE ACCEDER AL SERVICIO: " + t.localizedMessage,
-                    Toast.LENGTH_LONG)
-                    .show()
-            }
-        }))
     }
 
     private fun initPermisos() {
@@ -220,7 +143,7 @@ class Login : AppCompatActivity() {
                     usuario.correo = auth.currentUser?.email.toString()
                     usuario.fotoUsuario = "https://upload.wikimedia.org/wikipedia/commons/9/9b/Choloepus_didactylus_2_-_Buffalo_Zoo.jpg"
                     Toast.makeText(baseContext, "Te has conectado con exito.", Toast.LENGTH_SHORT).show()
-                    loginGoogle=false
+                    MyApp.loginGoogle=false
                     abrirPantallaPrincipal()
                 } else {
                     // If sign in fails, display a message to the user.
@@ -251,10 +174,28 @@ class Login : AppCompatActivity() {
 
     private fun abrirPantallaPrincipal() {
         val intent = Intent(this, PantallaPrincipal::class.java)
+        buscarUsuarioLogin()
         intent.putExtra("correo",usuario.correo)
         intent.putExtra("nombre",usuario.nombre)
         intent.putExtra("imagen",usuario.fotoUsuario)
         startActivity(intent)
+    }
+
+    private fun buscarUsuarioLogin(){
+        val db = Firebase.firestore
+        db.collection("Usuarios")
+            .whereEqualTo("correo", usuario.correo)
+            .get()
+            .addOnSuccessListener { documents ->
+                for (document in documents) {
+                    usuario.correo=document.data.getValue("Correo").toString()
+                    usuario.nombre=document.data.getValue("Nombre").toString()
+                    usuario.fotoUsuario=document.data.getValue("FotoUsuario").toString()
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.w("", "Error getting documents: ", exception)
+            }
     }
 
 
