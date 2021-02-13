@@ -6,15 +6,10 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.FragmentActivity
 import com.andresivan.turistadroid.R
 import com.andresivan.turistadroid.app.MyApp
-import com.andresivan.turistadroid.entidades.sesion.Sesion
-import com.andresivan.turistadroid.entidades.sesion.SesionDTO
-import com.andresivan.turistadroid.entidades.sesion.SesionMapeado
 import com.andresivan.turistadroid.entidades.usuario.Usuario
 import com.andresivan.turistadroid.utils.CifradorContrasena
-import com.andresivan.turistadroid.utils.servicios.MisSitiosAPI
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -22,20 +17,11 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.SignInButton
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
-import com.google.android.material.snackbar.Snackbar
-import com.google.firebase.FirebaseException
-import com.google.firebase.FirebaseTooManyRequestsException
 import com.google.firebase.auth.*
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_login.*
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import java.time.Instant
-import java.time.temporal.ChronoUnit
-import java.util.concurrent.TimeUnit
 
 
 class Login : AppCompatActivity() {
@@ -104,6 +90,7 @@ class Login : AppCompatActivity() {
                 usuario= Usuario()
                 usuario.nombre=account.displayName.toString()
                 usuario.correo=account.email.toString()
+                MyApp.correoUsuario=usuario.correo
                 usuario.fotoUsuario=account.photoUrl.toString()
                 abrirPantallaPrincipal()
             }
@@ -141,6 +128,7 @@ class Login : AppCompatActivity() {
                     usuario = Usuario()
                     usuario.nombre= auth.currentUser?.displayName.toString()
                     usuario.correo = auth.currentUser?.email.toString()
+                    MyApp.correoUsuario=usuario.correo
                     usuario.fotoUsuario = "https://upload.wikimedia.org/wikipedia/commons/9/9b/Choloepus_didactylus_2_-_Buffalo_Zoo.jpg"
                     Toast.makeText(baseContext, "Te has conectado con exito.", Toast.LENGTH_SHORT).show()
                     MyApp.loginGoogle=false

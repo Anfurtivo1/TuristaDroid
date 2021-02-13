@@ -1,6 +1,7 @@
 package com.andresivan.turistadroid.actividades
 
 import android.content.Intent
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.hardware.camera2.CameraManager
 import android.os.Bundle
@@ -23,9 +24,9 @@ import androidx.navigation.ui.setupWithNavController
 import com.andresivan.turistadroid.R
 import com.andresivan.turistadroid.entidades.sesion.SesionDTO
 import com.andresivan.turistadroid.entidades.usuario.Usuario
-import com.andresivan.turistadroid.utils.servicios.MisSitiosAPI
 import com.andresivan.turistadroid.actividades.Login
 import com.andresivan.turistadroid.app.MyApp
+import com.andresivan.turistadroid.utils.ABase64
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -89,17 +90,18 @@ class PantallaPrincipal : AppCompatActivity() {
         val navUsername: TextView = headerView.findViewById(R.id.nav_header_nombre_usuario)
         val navCorreo: TextView = headerView.findViewById(R.id.nav_header_correo)
         val navImagen: ImageView = headerView.findViewById(R.id.nav_header_imagen)
+        //var imagen: Bitmap? =ABase64.toBitmap(USUARIO.fotoUsuario)
 
         if (!MyApp.loginGoogle){
             navUsername.text = USUARIO.nombre
             navCorreo.text = USUARIO.correo
-            val decodedByte = Base64.decode(USUARIO.fotoUsuario, Base64.DEFAULT)
-            val bitmap = BitmapFactory.decodeByteArray(decodedByte, 0, decodedByte.size)
+            //val decodedByte = Base64.decode(USUARIO.fotoUsuario, Base64.DEFAULT)
+            //val bitmap = BitmapFactory.decodeByteArray(decodedByte, 0, decodedByte.size)
             //Picasso.get().load(bitmap.toString()).resize(200,200).into(navImagen)
         }else{
             navUsername.text = USUARIO.nombre
             navCorreo.text = USUARIO.correo
-            Picasso.get().load(USUARIO.fotoUsuario).resize(200,200).into(navImagen)
+            //Picasso.get().load(imagen.toString()).resize(200,200).into(navImagen)
         }
 
 
@@ -157,9 +159,7 @@ class PantallaPrincipal : AppCompatActivity() {
         clienteSignInGoogle = GoogleSignIn.getClient(this, gso)
         clienteSignInGoogle.signOut()
 
-        val login = Intent(applicationContext, Login::class.java)
-        startActivity(login)
-        finish()
+        finishAffinity()
 
 
     }

@@ -12,14 +12,12 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.andresivan.turistadroid.R
 import com.andresivan.turistadroid.app.MyApp
 import com.andresivan.turistadroid.entidades.lugares.Lugar
-import com.andresivan.turistadroid.entidades.lugares.LugarControlador
 import com.andresivan.turistadroid.ui.missitios.Filtross.FiltrosControlador
 import com.andresivan.turistadroid.ui.missitios.filtros.Filtros
 import com.google.firebase.firestore.ktx.firestore
@@ -31,7 +29,6 @@ class MisSitios : Fragment() {
 
     var SITIOS: MutableList<Lugar> = mutableListOf()
     private lateinit var sitiosAdapter: SitiosListAdapter
-    private lateinit var tarea2doPlanos: TareaCargarRegistros
     private var fondoAlDeslizar = Paint()
     private var FILTRO_ORDENACIÓN = Filtros.NADA
     val db = Firebase.firestore
@@ -76,24 +73,32 @@ class MisSitios : Fragment() {
         actualizar()
         // COGEMOS DE LA BBDD TODOS LOS REGISTROS
         cargarRegistros()
-        //spinner que permite que el usuario ordene los registros por algo en concreto
-        //NO SE HA IMPLEMENTADO
-        cargarFiltros()
         //para cuando queremos modificar o borrar un registro
-        deslizarHorizontalmente()
-        // esta es una referencia al recyclerView del fragmente de mis sitios
-        sitiosRecycler.layoutManager = LinearLayoutManager(context)
+        //deslizarHorizontalmente()
+        //Se inicia el listener de lugares
+        iniciarListener()
         /*
         este es el momento en el que al floatActionButton que tenemos abajo a la derecha, se le
         asgina una funcionalidad, y esta funcionalidad es la de añadir nuevos lugares
          */
         fabNuevo.setOnClickListener { nuevoRegistro() }
-
-        for(elemento in MyApp.listaLugares){
-            insertarRegistroLista(elemento)
-        }
+        sitiosAdapter = SitiosListAdapter(MyApp.listaLugares)
 
     }
+
+    private fun iniciarListener(){
+        //Actualizacion tiempo real
+        db.collection("Lugares")
+            .addSnapshotListener { value, e ->
+                if (e != null) {
+                    Log.w("", "Listen failed.", e)
+                    return@addSnapshotListener
+                }
+                Log.i("Actualizar",value.toString())
+                    cargarRegistros()
+                }
+            }
+        //Fin actualizacion tiempo real
 
     /**
      * Función que permite cargar los filtros de ordenación dentro del spinner del fragment de
@@ -251,10 +256,43 @@ class MisSitios : Fragment() {
      * la información de los registros de la bbdd
      */
     private fun cargarRegistros() {
-        tarea2doPlanos = TareaCargarRegistros()
-        tarea2doPlanos.execute()
-    }
+        SITIOS.clear()
+        val db = Firebase.firestore
+        db.collection("Lugares")
+            .get()
+            .addOnSuccessListener { result ->
+                for (document in result) {
+                    val votoS = document.data.getValue("Votos").toString()
+                    val votos = votoS.toInt()
+                    val lugar = Lugar(
+                        "",
+                        document.data.getValue("NombreLugar").toString(),
+                        document.data.getValue("Tipo").toString(),
+                        "",
+                        document.data.getValue("Latitud").toString(),
+                        document.data.getValue("Longitud").toString(),
+                        "",
+                        votos,
+                        false,
+                        ""
+                    )
+                    SITIOS.add(lugar)
 
+                }
+
+                sitiosAdapter = SitiosListAdapter(SITIOS)
+                if(sitiosRecycler!=null){
+                    sitiosRecycler.setHasFixedSize(true)
+                    sitiosRecycler.layoutManager = LinearLayoutManager(context)
+                    sitiosRecycler.adapter = sitiosAdapter
+                    Log.i("LugarCardView",SITIOS.toString())
+                    sitiosSwipeRefresh.isRefreshing = false
+                }
+            }
+
+
+
+    }
     /**
      * Esta función permite abrir el fragment de SitiosDetalleFragment
      */
@@ -263,15 +301,15 @@ class MisSitios : Fragment() {
         fabNuevo.hide()
     }
 
-    /**
+/*    *//**
      * Función que se encarga de añadir nuevo registro al adaptador y notificar que el RecylcerView
      * ha sido modificado
      * @param item Lugar que se añade al recyclerView
-     */
+     *//*
     fun insertarRegistroLista(item: Lugar) {
         this.sitiosAdapter.addRegistroALista(item)
         sitiosAdapter.notifyDataSetChanged()
-    }
+    }*/
 
     /**
      * Esta función permite abrir el fragment de SitiosDetalleFragment en modo ACTUALIZAR,
@@ -294,14 +332,14 @@ class MisSitios : Fragment() {
         sitiosRecycler.adapter = sitiosAdapter
     }
 
-    /**
+/*    *//**
      * Abre el elemento en la posición didicada
      * @param lugar Lugar
-     */
+     *//*
     private fun abrirRegistro(lugar: Lugar) {
         Log.i("Lugares", "Visualizando el elemento: " + lugar.id)
         abrirDetalle(lugar)
-    }
+    }*/
 
     /**
      * Función que se encarga de abrir el fragment de SitioDetalleFragment según el modo de acceso
@@ -318,74 +356,6 @@ class MisSitios : Fragment() {
         transaction.addToBackStack(null)
         transaction.commit()
     }
-
-    /**
-     * Esta función se encaga de abrir el fragment en modo visualizar
-     * @param lugar Lugar
-     */
-    private fun alPulsarRegistro(lugar: Lugar) {
-        abrirRegistro(lugar)
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == RESULT_CANCELED) {
-            return
-        }
-    }
-
-    /**
-     * Función que se encarga durante el mismo tiempo de ejecución en cargar los registros de la bbdd
-     * de lugares
-     */
-    inner class TareaCargarRegistros : AsyncTask<Void?, Void?, Void?>() {
-        override fun onPreExecute() {
-            if (sitiosSwipeRefresh.isRefreshing) {
-                sitiosSwipeRefresh.isRefreshing = false
-            }
-        }
-        override fun doInBackground(vararg args: Void?): Void? {
-            try {
-
-                sitiosAdapter = SitiosListAdapter(SITIOS) {
-                    alPulsarRegistro(it)
-                }
-                activity?.applicationContext?.let { LugarControlador.obtenerLugares(it,sitiosAdapter) }
-
-                SITIOS = LugarControlador.lugares
-                //por si acaso ya teniamos los registros cargado y ha habido alguna modificacion
-                //avisamoes al adaptador, ya sea que se haya añadido algún nuevo registro, se haya
-                //modificado alguno, o se haya eliminado algún registro
-
-                sitiosAdapter.notifyDataSetChanged()
-                sitiosRecycler.setHasFixedSize(true)
-                sitiosSwipeRefresh.isRefreshing = false
-
-            } catch (e: Exception) {
-            }
-            return null
-        }
-        override fun onPostExecute(args: Void?) {
-
-            if(SITIOS==null){
-                SITIOS = mutableListOf()
-            }
-
-            sitiosAdapter = SitiosListAdapter(SITIOS) {
-                alPulsarRegistro(it)
-            }
-
-            sitiosRecycler.adapter = sitiosAdapter
-
-            sitiosAdapter.notifyDataSetChanged()
-            sitiosRecycler.setHasFixedSize(true)
-            sitiosSwipeRefresh.isRefreshing = false
-        }
-
-    }
-
-
-
     /**
      * Función que se encarga de mostrar todos los registros en el recycler view
      */
@@ -398,7 +368,6 @@ class MisSitios : Fragment() {
      */
     override fun onStop() {
         super.onStop()
-        tarea2doPlanos.cancel(true)
     }
 }
 

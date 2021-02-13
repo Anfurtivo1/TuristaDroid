@@ -79,11 +79,15 @@ class cercademi : Fragment() {
 
     private fun consultar(){
         MyApp.listaLugares = mutableListOf()
+        MyApp.idLugares = mutableListOf()
         val db = Firebase.firestore
         db.collection("Lugares")
             .get()
             .addOnSuccessListener { result ->
                 for (document in result) {
+                    val votoS=document.data.getValue("Votos").toString()
+                    MyApp.idLugares.add(document.id)
+                    val votos=votoS.toInt()
                     lugar = Lugar(
                         "",
                         document.data.getValue("NombreLugar").toString(),
@@ -92,7 +96,7 @@ class cercademi : Fragment() {
                         document.data.getValue("Latitud").toString(),
                         document.data.getValue("Longitud").toString(),
                         "",
-                        0,
+                        votos,
                         false,
                         ""
                     )

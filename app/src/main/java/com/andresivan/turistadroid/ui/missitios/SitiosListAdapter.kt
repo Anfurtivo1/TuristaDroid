@@ -1,19 +1,20 @@
 package com.andresivan.turistadroid.ui.missitios
 
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.recyclerview.widget.RecyclerView
 import com.andresivan.turistadroid.R
+import com.andresivan.turistadroid.app.MyApp
 import com.andresivan.turistadroid.entidades.lugares.Lugar
-import com.andresivan.turistadroid.utils.ABase64
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 
 
 class SitiosListAdapter(
-    private val sitiosLst: MutableList<Lugar>,
-    private val mainFuntcion: (Lugar) -> Unit
+    private val sitiosLst: MutableList<Lugar>
 
 ) : RecyclerView.Adapter<SitiosViewHolder>() {
 
@@ -39,9 +40,6 @@ class SitiosListAdapter(
         btnFavColor(position, holder)
         holder.itemFav.setOnClickListener {
             btnFavAcciones(position, holder)
-        }
-        holder.itemFoto.setOnClickListener {
-            mainFuntcion(sitiosLst[position])
         }
     }
 
@@ -89,10 +87,15 @@ class SitiosListAdapter(
         return sitiosLst.size
     }
 
+
+
     /**
      * Esta función realiza todas las tareas que se necesitan para cuando pulsamos el boton de like
      */
     private fun btnFavAcciones(index: Int, holder: SitiosViewHolder) {
+        var array = mutableListOf<String>()
+        val db = Firebase.firestore
+
         sitiosLst[index].fav = !sitiosLst[index].fav
         btnFavColor(index, holder)
         if (sitiosLst[index].fav){
@@ -101,8 +104,42 @@ class SitiosListAdapter(
             sitiosLst[index].valoracion--
         }
 
+        var lugaresRef = db.collection("Lugares").document(MyApp.idLugares[index])
+            lugaresRef.get().addOnSuccessListener { document ->
+            if (document != null) {
+                Log.d("nVotos", "DocumentSnapshot data: ${document.data}")
+                array = document.data!!.get("usuariosVotados") as ArrayList<String>
+                añadirUsuarios(db,index, array as ArrayList<String>)
+                Log.i("nVotos",array.toString())
+            } else {
+                Log.d("nVotos", "No such document")
+            }
+        }
+            .addOnFailureListener { exception ->
+                Log.d("nVotos", "get failed with ", exception)
+            }
+
         //LugarController.update(sitiosLst[index])
         holder.itemValoracion.text = sitiosLst[index].valoracion.toString()
+    }
+
+    private fun añadirUsuarios(
+        db: FirebaseFirestore,
+        index: Int,
+        array: ArrayList<String>
+    ) {
+        // [START update_document]
+        val lugaresRef = db.collection("Lugares").document(MyApp.idLugares[index])
+        lugaresRef
+            .update("Votos", sitiosLst[index].valoracion)
+            .addOnSuccessListener { Log.d("Votos", "DocumentSnapshot successfully updated!") }
+            .addOnFailureListener { e -> Log.w("Votos", "Error updating document", e) }
+
+        array.add(MyApp.correoUsuario)
+        lugaresRef
+            .update("usuariosVotados", array)
+            .addOnSuccessListener { Log.d("nVotos", "DocumentSnapshot successfully updated!") }
+            .addOnFailureListener { e -> Log.w("nVotos", "Error updating document", e) }
     }
 
     /**

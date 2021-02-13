@@ -21,6 +21,8 @@ class MyApp : Application() {
         lateinit var posicion:Location
         lateinit var listaLugares:MutableList<Lugar>
         var loginGoogle = true
+        lateinit var idLugares:MutableList<String>
+        lateinit var correoUsuario:String
     }
 
     var PERMISOS = false

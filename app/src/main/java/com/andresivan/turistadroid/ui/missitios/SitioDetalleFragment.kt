@@ -134,7 +134,8 @@ class SitioDetalleFragment(
             "NombreLugar" to txtNombreLugar.text.toString(),
             "Tipo" to tipoSeleccionado,
             "Latitud" to MyApp.posicion.latitude.toString(),
-            "Longitud" to MyApp.posicion.longitude.toString()
+            "Longitud" to MyApp.posicion.longitude.toString(),
+            "Votos" to 0
         )
         db.collection("Lugares")
             .add(lugar)
@@ -169,7 +170,6 @@ class SitioDetalleFragment(
 
         USER.correo = Auth.currentUser?.email.toString()
         USER.nombre = Auth.currentUser?.displayName.toString()
-        //this.USER = MyApp.USUARIO_ACTIVO
     }
 
     /**

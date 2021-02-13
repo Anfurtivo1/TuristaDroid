@@ -1,7 +1,6 @@
 package com.andresivan.turistadroid.ui
 
 import android.app.Activity
-import android.app.AlertDialog
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.ImageDecoder
@@ -19,19 +18,14 @@ import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import com.andresivan.turistadroid.R
 import com.andresivan.turistadroid.app.MyApp
-import com.andresivan.turistadroid.entidades.sesion.SesionController
 import com.andresivan.turistadroid.entidades.usuario.Usuario
-import com.andresivan.turistadroid.ui.missitios.SitioDetalleFragment
 import com.andresivan.turistadroid.utils.CifradorContrasena
 import com.andresivan.turistadroid.utils.Fotos
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.auth.ktx.userProfileChangeRequest
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import kotlinx.android.synthetic.main.activity_registrarse.*
 import kotlinx.android.synthetic.main.fragment_miperfil.*
-import org.w3c.dom.Text
 import java.io.IOException
 
 // TODO: Rename parameter arguments, choose names that match
