@@ -3,11 +3,13 @@ package com.andresivan.turistadroid.ui.missitios
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.recyclerview.widget.RecyclerView
 import com.andresivan.turistadroid.R
 import com.andresivan.turistadroid.app.MyApp
 import com.andresivan.turistadroid.entidades.lugares.Lugar
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -95,21 +97,30 @@ class SitiosListAdapter(
     private fun btnFavAcciones(index: Int, holder: SitiosViewHolder) {
         var array = mutableListOf<String>()
         val db = Firebase.firestore
-
         sitiosLst[index].fav = !sitiosLst[index].fav
         btnFavColor(index, holder)
-        if (sitiosLst[index].fav){
-            sitiosLst[index].valoracion++
-        } else {
-            sitiosLst[index].valoracion--
-        }
+
 
         var lugaresRef = db.collection("Lugares").document(MyApp.idLugares[index])
             lugaresRef.get().addOnSuccessListener { document ->
             if (document != null) {
                 Log.d("nVotos", "DocumentSnapshot data: ${document.data}")
                 array = document.data!!.get("usuariosVotados") as ArrayList<String>
-                añadirUsuarios(db,index, array as ArrayList<String>)
+                if(MyApp.correoUsuario in array){
+                    Log.i("Votar","No se pudo votar mas")
+                    //if (!sitiosLst[index].fav){
+                        sitiosLst[index].valoracion--
+                        quitarUsuarios(db,index, array as ArrayList<String>)
+                    //}
+
+                }else{
+                    //if (sitiosLst[index].fav){
+                        sitiosLst[index].valoracion++
+                        añadirUsuarios(db,index, array as ArrayList<String>)
+                    //}
+
+                }
+
                 Log.i("nVotos",array.toString())
             } else {
                 Log.d("nVotos", "No such document")
@@ -119,7 +130,6 @@ class SitiosListAdapter(
                 Log.d("nVotos", "get failed with ", exception)
             }
 
-        //LugarController.update(sitiosLst[index])
         holder.itemValoracion.text = sitiosLst[index].valoracion.toString()
     }
 
@@ -131,16 +141,38 @@ class SitiosListAdapter(
         // [START update_document]
         val lugaresRef = db.collection("Lugares").document(MyApp.idLugares[index])
         lugaresRef
-            .update("Votos", sitiosLst[index].valoracion)
+            .update("Votos", FieldValue.increment(1))
             .addOnSuccessListener { Log.d("Votos", "DocumentSnapshot successfully updated!") }
             .addOnFailureListener { e -> Log.w("Votos", "Error updating document", e) }
 
         array.add(MyApp.correoUsuario)
+
+        val arrayRef = db.collection("Lugares").document(MyApp.idLugares[index])
+        arrayRef
+            .update("usuariosVotados", FieldValue.arrayUnion(MyApp.correoUsuario))
+            .addOnSuccessListener { Log.d("nVotos", "DocumentSnapshot successfully updated!") }
+            .addOnFailureListener { e -> Log.w("nVotos", "Error updating document", e) }
+    }
+
+    private fun quitarUsuarios(
+        db: FirebaseFirestore,
+        index: Int,
+        array: ArrayList<String>
+    ) {
+        // [START update_document]
+        val lugaresRef = db.collection("Lugares").document(MyApp.idLugares[index])
+        lugaresRef
+            .update("Votos", sitiosLst[index].valoracion)
+            .addOnSuccessListener { Log.d("Votos", "DocumentSnapshot successfully updated!") }
+            .addOnFailureListener { e -> Log.w("Votos", "Error updating document", e) }
+
+        array.remove(MyApp.correoUsuario)
         lugaresRef
             .update("usuariosVotados", array)
             .addOnSuccessListener { Log.d("nVotos", "DocumentSnapshot successfully updated!") }
             .addOnFailureListener { e -> Log.w("nVotos", "Error updating document", e) }
     }
+
 
     /**
      * Función que según si le damos a like a la publicación, el color de botón cambiará a un color

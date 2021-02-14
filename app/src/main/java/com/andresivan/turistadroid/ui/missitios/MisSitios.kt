@@ -1,9 +1,6 @@
 package com.andresivan.turistadroid.ui.missitios
 
-import android.app.Activity.RESULT_CANCELED
-import android.content.Intent
 import android.graphics.*
-import android.os.AsyncTask
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -11,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -41,9 +39,7 @@ class MisSitios : Fragment() {
         return inflater.inflate(R.layout.fragment_missitios, container, false)
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-
-        consultar()
-
+        //consultar()
         super.onViewCreated(view, savedInstanceState)
         iniciarInterfaz()
     }
@@ -74,7 +70,7 @@ class MisSitios : Fragment() {
         // COGEMOS DE LA BBDD TODOS LOS REGISTROS
         cargarRegistros()
         //para cuando queremos modificar o borrar un registro
-        //deslizarHorizontalmente()
+        deslizarHorizontalmente()
         //Se inicia el listener de lugares
         iniciarListener()
         /*
@@ -176,7 +172,7 @@ class MisSitios : Fragment() {
                         borrar(indiceRegistro)
                     }
                     else -> {
-                        modificar(indiceRegistro)
+                        comprobarModificar(indiceRegistro)
                     }
                 }
             }
@@ -218,7 +214,7 @@ class MisSitios : Fragment() {
             itemView.top.toFloat(), itemView.right.toFloat(), itemView.bottom.toFloat()
         )
         canvas.drawRect(background, fondoAlDeslizar)
-        val icon: Bitmap = BitmapFactory.decodeResource(resources, R.drawable.ic_borrar)
+        val icon: Bitmap = BitmapFactory.decodeResource(resources, R.drawable.basura)
         val iconDest = RectF(
             itemView.right.toFloat() - 2 * width, itemView.top.toFloat() + width, itemView.right
                 .toFloat() - width, itemView.bottom.toFloat() - width
@@ -243,7 +239,7 @@ class MisSitios : Fragment() {
             itemView.bottom.toFloat()
         )
         canvas.drawRect(background, fondoAlDeslizar)
-        val icon: Bitmap = BitmapFactory.decodeResource(resources, R.drawable.ic_editar)
+        val icon: Bitmap = BitmapFactory.decodeResource(resources, R.drawable.editar)
         val iconDest = RectF(
             itemView.left.toFloat() + width, itemView.top.toFloat() + width, itemView.left
                 .toFloat() + 2 * width, itemView.bottom.toFloat() - width
@@ -316,16 +312,71 @@ class MisSitios : Fragment() {
      * lo que hace es abrir el fragment en modo ACTUALIZAR
      * @param position Int es la posicion del item en la que aparece en la lista
      */
-    private fun modificar(position: Int) {
-        abrirDetalle(SITIOS[position])
+    private fun comprobarModificar(position: Int) {
+        var modificar:Boolean = false
+
+        var lugaresRef = db.collection("Lugares").document(MyApp.idLugares[position])
+        lugaresRef.get().addOnSuccessListener { document ->
+            if (document != null) {
+                if (document.data!!.getValue("creadoPor").equals(MyApp.correoUsuario)){
+                    Log.i("ModificarLugar","El usuario que creó el lugar va a modificarlo")
+                    modificar=true
+                    modificarLugar(position,modificar)
+                }else{
+                    Log.i("ModificarLugar","El usuario que no creó el lugar intentó modificarlo")
+                }
+            } else {
+                Log.d("ModificarLugar", "No such document")
+            }
+        }
+
+
     }
+
+    private fun modificarLugar(position: Int, modificar: Boolean) {
+        if (modificar){
+            abrirDetalleModificar(SITIOS[position],position)
+            Toast.makeText(context,"Vas a editar el lugar nº$position",Toast.LENGTH_SHORT).show()
+        }
+
+    }
+
 
     /**
      * Borra el elemento en la posición seleccionada
      * @param position Int
      */
     private fun borrar(position: Int) {
-        abrirDetalle(SITIOS[position])
+        comprobarBorrarLugar(position)
+        Toast.makeText(context,"Vas a eliminar el lugar nº$position",Toast.LENGTH_SHORT).show()
+    }
+
+    private fun comprobarBorrarLugar(position: Int){
+        var eliminar:Boolean=false
+        var lugaresRef = db.collection("Lugares").document(MyApp.idLugares[position])
+        lugaresRef.get().addOnSuccessListener { document ->
+            if (document != null) {
+                if (document.data!!.getValue("creadoPor").equals(MyApp.correoUsuario)){
+                    Log.i("BorrarLugar","El usuario que creó el lugar va a eliminarlo")
+                    eliminar=true
+                    borrarLugar(position,eliminar)
+                }else{
+                    Log.i("BorrarLugar","El usuario que no creó el lugar intentó eliminarlo")
+                }
+            } else {
+                Log.d("BorrarLugar", "No such document")
+            }
+        }
+    }
+
+    private fun borrarLugar(position: Int, eliminar: Boolean){
+        if (eliminar){
+            db.collection("Lugares").document(MyApp.idLugares[position])
+                .delete()
+                .addOnSuccessListener { Log.d("BorrarLugar", "DocumentSnapshot successfully deleted!") }
+                .addOnFailureListener { e -> Log.w("BorrarLugar", "Error deleting document", e) }
+        }
+
     }
 
     fun actualizarListaRegistros() {
@@ -342,7 +393,7 @@ class MisSitios : Fragment() {
     }*/
 
     /**
-     * Función que se encarga de abrir el fragment de SitioDetalleFragment según el modo de acceso
+     * Función que se encarga de abrir el fragment de SitioDetalleFragment
      * que utilicemos
      * @param lugar Lugar?
      * @param modo Modo?
@@ -356,18 +407,28 @@ class MisSitios : Fragment() {
         transaction.addToBackStack(null)
         transaction.commit()
     }
+
+    /**
+     * Función que se encarga de abrir el fragment de SitioDetalleFragment según el modo de acceso
+     * que utilicemos
+     * @param lugar Lugar?
+     * @param modo Modo?
+     * @param anterior LugaresFragment?
+     * @param position Int?
+     */
+    private fun abrirDetalleModificar(lugar: Lugar?,posicion:Int) {
+        val lugarDetalle = SitioDetalleFragmentModificar(lugar,this,posicion)
+        val transaction = requireActivity().supportFragmentManager.beginTransaction()
+        transaction.replace(R.id.misSitios, lugarDetalle)
+        transaction.addToBackStack(null)
+        transaction.commit()
+    }
+
     /**
      * Función que se encarga de mostrar todos los registros en el recycler view
      */
     private fun mostrarListaRegistros() {
 
-    }
-
-    /**
-     * Si paramos cancelamos la tarea
-     */
-    override fun onStop() {
-        super.onStop()
     }
 }
 

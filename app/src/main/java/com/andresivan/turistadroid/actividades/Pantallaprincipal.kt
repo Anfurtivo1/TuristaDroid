@@ -1,18 +1,13 @@
 package com.andresivan.turistadroid.actividades
 
-import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.hardware.camera2.CameraManager
 import android.os.Bundle
-import android.util.Base64
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
@@ -22,22 +17,17 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.andresivan.turistadroid.R
-import com.andresivan.turistadroid.entidades.sesion.SesionDTO
 import com.andresivan.turistadroid.entidades.usuario.Usuario
-import com.andresivan.turistadroid.actividades.Login
 import com.andresivan.turistadroid.app.MyApp
-import com.andresivan.turistadroid.utils.ABase64
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.squareup.picasso.Picasso
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 
 class PantallaPrincipal : AppCompatActivity() {
@@ -67,10 +57,6 @@ class PantallaPrincipal : AppCompatActivity() {
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
-
-        USUARIO.nombre = intent.getStringExtra("nombre").toString()
-        USUARIO.correo = intent.getStringExtra("correo").toString()
-        USUARIO.fotoUsuario = intent.getStringExtra("imagen").toString()
     }
 
 
@@ -90,18 +76,25 @@ class PantallaPrincipal : AppCompatActivity() {
         val navUsername: TextView = headerView.findViewById(R.id.nav_header_nombre_usuario)
         val navCorreo: TextView = headerView.findViewById(R.id.nav_header_correo)
         val navImagen: ImageView = headerView.findViewById(R.id.nav_header_imagen)
-        //var imagen: Bitmap? =ABase64.toBitmap(USUARIO.fotoUsuario)
 
         if (!MyApp.loginGoogle){
+            USUARIO.id = intent.getStringExtra("id").toString()
+            USUARIO.nombre = intent.getStringExtra("nombre").toString()
+            USUARIO.correo = intent.getStringExtra("correo").toString()
+            USUARIO.fotoUsuario = intent.getStringExtra("imagen").toString()
+
             navUsername.text = USUARIO.nombre
             navCorreo.text = USUARIO.correo
-            //val decodedByte = Base64.decode(USUARIO.fotoUsuario, Base64.DEFAULT)
-            //val bitmap = BitmapFactory.decodeByteArray(decodedByte, 0, decodedByte.size)
-            //Picasso.get().load(bitmap.toString()).resize(200,200).into(navImagen)
+            val uri=sacarFotoUsuario(USUARIO.id,navImagen)
         }else{
+            USUARIO.id = intent.getStringExtra("id").toString()
+            USUARIO.nombre = intent.getStringExtra("nombre").toString()
+            USUARIO.correo = intent.getStringExtra("correo").toString()
+            USUARIO.fotoUsuario = intent.getStringExtra("imagen").toString()
+
             navUsername.text = USUARIO.nombre
             navCorreo.text = USUARIO.correo
-            //Picasso.get().load(imagen.toString()).resize(200,200).into(navImagen)
+            Picasso.get().load(USUARIO.fotoUsuario).resize(200,200).into(navImagen)
         }
 
 
@@ -113,7 +106,6 @@ class PantallaPrincipal : AppCompatActivity() {
         return when (item.itemId) {
             R.id.EncenderLinterna -> {
                 encenderLinterna()
-                val duracion = Toast.LENGTH_SHORT
                 true
 
             }
@@ -146,6 +138,24 @@ class PantallaPrincipal : AppCompatActivity() {
         }
     }
 
+    private fun sacarFotoUsuario(id: String, navImagen: ImageView){
+        val db = Firebase.firestore
+        db.collection("Imagenes")
+            .whereEqualTo("usuarioID",id)
+            .get()
+            .addOnSuccessListener { documents ->
+                for (document in documents) {
+                    Log.d("buscarFoto", "${document.id} => ${document.data}")
+                    var uri=document.data.getValue("uri").toString()
+                    Picasso.get().load(uri).resize(200,200).into(navImagen)
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.w("buscarFoto", "Error getting documents: ", exception)
+            }
+    }
+
+
     private fun cerrarSesion() {
         // Firebase sign out
         auth = Firebase.auth
@@ -158,9 +168,8 @@ class PantallaPrincipal : AppCompatActivity() {
 
         clienteSignInGoogle = GoogleSignIn.getClient(this, gso)
         clienteSignInGoogle.signOut()
-
+        //Cerramos la app por completo
         finishAffinity()
-
 
     }
 

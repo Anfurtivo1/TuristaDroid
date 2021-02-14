@@ -31,12 +31,15 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.fragment_sitio_detalle.*
+import kotlinx.android.synthetic.main.fragment_sitio_detalle.tiposLugares_spinner
+import kotlinx.android.synthetic.main.fragment_sitio_detalle_modificar.*
 import java.io.IOException
 
 //Foto,Nombre,Tipo,Fecha y puntuacion
-class SitioDetalleFragment(
+class SitioDetalleFragmentModificar(
     private var SITIO: Lugar? = null,
-    private val ANTERIOR: MisSitios? = null
+    private val ANTERIOR: MisSitios? = null,
+    private val posicion:Int
 ) : Fragment(){
     private lateinit var fusedLocationClient: FusedLocationProviderClient//Lo que nos dará la ultima ubicacion
     private var USER: Usuario = Usuario()
@@ -59,7 +62,7 @@ class SitioDetalleFragment(
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val vista = inflater.inflate(R.layout.fragment_sitio_detalle, container, false)
+        val vista = inflater.inflate(R.layout.fragment_sitio_detalle_modificar, container, false)
         //Esto lo usaremos para acceder a nuestra ubicacion actual
         fusedLocationClient= activity?.let { LocationServices.getFusedLocationProviderClient(it) }!!
         Auth = Firebase.auth
@@ -69,7 +72,7 @@ class SitioDetalleFragment(
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        btnIngresar.setOnClickListener { ingresarLugar() }
+        btnIngresarModificar.setOnClickListener { ingresarLugar() }
 
         accionesSpinner()
 
@@ -120,24 +123,35 @@ class SitioDetalleFragment(
             }
 
         }
-        val lugar = hashMapOf(
-            "NombreLugar" to txtNombreLugar.text.toString(),
+        /*val lugar = hashMapOf(
+            "NombreLugar" to txtNombreLugarModificar.text.toString(),
             "Tipo" to tipoSeleccionado,
             "Latitud" to MyApp.posicion.latitude.toString(),
             "Longitud" to MyApp.posicion.longitude.toString(),
             "Votos" to 0,
-            "usuariosVotados" to arrayListOf(""),
-            "creadoPor" to MyApp.correoUsuario
-        )
-        db.collection("Lugares")
-            .add(lugar)
+            "usuariosVotados" to arrayListOf("")
+        )*/
+        val lugaresRef = db.collection("Lugares").document(MyApp.idLugares[posicion])
+        lugaresRef
+            .update("NombreLugar",txtNombreLugarModificar.text.toString())
             .addOnSuccessListener { documentReference ->
-                Log.d("Registro", "DocumentSnapshot added with ID: ${documentReference.id}")
+                Log.d("Modificar", "Modificacion realizada correctamente:")
             }
             .addOnFailureListener { e ->
-                Log.w("Registro", "Error adding document", e)
+                Log.w("Modificar", "Error al modificar lugar", e)
 
             }
+
+        lugaresRef
+            .update("Tipo",tipoSeleccionado)
+            .addOnSuccessListener { documentReference ->
+                Log.d("Modificar", "Modificacion realizada correctamente:")
+            }
+            .addOnFailureListener { e ->
+                Log.w("Modificar", "Error al modificar lugar", e)
+
+            }
+
     }
 
     private fun inicializarSpinner(vista: View) {
@@ -199,45 +213,6 @@ class SitioDetalleFragment(
         }
         return comprobacion*/
         return true
-    }
-
-    /**
-     * Función que nos permite compartir un lugar mediante un codigo QR con la info de un sitio
-     * a su vez usamos la librería de Gson para convertir el objeto a un fichero JSON
-     */
-    private fun sharePlace() {
-        val buildr = AlertDialog.Builder(context)
-        val infltr = requireActivity().layoutInflater
-        val view = infltr.inflate(R.layout.fragment_compartir_qr, null)
-        val qr = GeneradorQR.generarCodigoQR(Gson().toJson(SITIO))
-        val codeQR_IV = view.findViewById(R.id.imagenCodigoQR) as ImageView
-        codeQR_IV.setImageBitmap(qr)
-        buildr
-            .setView(view)
-            .setIcon(R.drawable.ic_qr)
-            .setTitle("¿COMPARTIR QR?")
-            .setPositiveButton(R.string.aceptar) { _, _ ->
-                compartir(qr)
-            }
-            .setNegativeButton(R.string.cancelar, null)
-        buildr.show()
-
-    }
-
-    /**
-     * Función que nos permite compartir los QR que generemos
-     * @param qr Bitmap
-     */
-    private fun compartir(qr: Bitmap) {
-        val buildr = StrictMode.VmPolicy.Builder()
-        StrictMode.setVmPolicy(buildr.build())
-        val fichero =
-            Fotos.copiarFoto(qr, IMG_DIR, 100, requireContext())
-        val shareIntent = Intent(Intent.ACTION_SEND).apply {
-            type = "img/*"
-            putExtra(Intent.EXTRA_STREAM, Uri.fromFile(fichero))
-        }
-        context?.startActivity(Intent.createChooser(shareIntent, null))
     }
 
     /**

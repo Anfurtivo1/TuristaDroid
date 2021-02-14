@@ -93,6 +93,7 @@ class Login : AppCompatActivity() {
                 MyApp.correoUsuario=usuario.correo
                 usuario.fotoUsuario=account.photoUrl.toString()
                 abrirPantallaPrincipal()
+                MyApp.loginGoogle=true
             }
         } catch (e: ApiException) {
         }
@@ -129,7 +130,6 @@ class Login : AppCompatActivity() {
                     usuario.nombre= auth.currentUser?.displayName.toString()
                     usuario.correo = auth.currentUser?.email.toString()
                     MyApp.correoUsuario=usuario.correo
-                    usuario.fotoUsuario = "https://upload.wikimedia.org/wikipedia/commons/9/9b/Choloepus_didactylus_2_-_Buffalo_Zoo.jpg"
                     Toast.makeText(baseContext, "Te has conectado con exito.", Toast.LENGTH_SHORT).show()
                     MyApp.loginGoogle=false
                     abrirPantallaPrincipal()
@@ -162,24 +162,36 @@ class Login : AppCompatActivity() {
 
     private fun abrirPantallaPrincipal() {
         val intent = Intent(this, PantallaPrincipal::class.java)
-        buscarUsuarioLogin()
-        intent.putExtra("correo",usuario.correo)
-        intent.putExtra("nombre",usuario.nombre)
-        intent.putExtra("imagen",usuario.fotoUsuario)
-        startActivity(intent)
+
+        if(!MyApp.loginGoogle){
+            buscarUsuarioLogin(intent)
+        }else{
+            intent.putExtra("id",usuario.id)
+            intent.putExtra("correo",usuario.correo)
+            intent.putExtra("nombre",usuario.nombre)
+            intent.putExtra("imagen",usuario.fotoUsuario)
+            startActivity(intent)
+        }
+
     }
 
-    private fun buscarUsuarioLogin(){
+    private fun buscarUsuarioLogin(intent: Intent) {
         val db = Firebase.firestore
         db.collection("Usuarios")
             .whereEqualTo("correo", usuario.correo)
             .get()
             .addOnSuccessListener { documents ->
                 for (document in documents) {
+                    usuario.id=document.id
                     usuario.correo=document.data.getValue("Correo").toString()
                     usuario.nombre=document.data.getValue("Nombre").toString()
                     usuario.fotoUsuario=document.data.getValue("FotoUsuario").toString()
                 }
+                intent.putExtra("id",usuario.id)
+                intent.putExtra("correo",usuario.correo)
+                intent.putExtra("nombre",usuario.nombre)
+                intent.putExtra("imagen",usuario.fotoUsuario)
+                startActivity(intent)
             }
             .addOnFailureListener { exception ->
                 Log.w("", "Error getting documents: ", exception)

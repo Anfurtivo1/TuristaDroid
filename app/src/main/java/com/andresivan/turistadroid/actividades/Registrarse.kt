@@ -13,7 +13,6 @@ import android.provider.MediaStore
 import android.util.Log
 import android.widget.ImageView
 import android.widget.Toast
-import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.FileProvider
 import com.andresivan.turistadroid.R
 import com.andresivan.turistadroid.entidades.fotos.Foto
@@ -21,7 +20,6 @@ import com.andresivan.turistadroid.utils.ABase64
 import com.andresivan.turistadroid.utils.CifradorContrasena
 //import com.andresivan.turistadroid.entidades.preferencias.PreferenciasController.crearSesion
 import com.andresivan.turistadroid.utils.Fotos
-import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -172,38 +170,42 @@ class Registrarse : AppCompatActivity() {
         if (correo == "" || contrasena == "" || nombreUsuario == ""){
             Toast.makeText(this, "Rellene todos los campos para Registrarse", Toast.LENGTH_SHORT)
         }else{
+            val idImagen=UUID.randomUUID().toString()
+            val idUsuario=UUID.randomUUID().toString()
             imagen.isDrawingCacheEnabled = true
             val bitmap = (imagen.drawable as BitmapDrawable).bitmap
             val base64=ABase64.toBase64(bitmap)
             val baos = ByteArrayOutputStream()
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
             val data = baos.toByteArray()
-            guardarImagen(data,nombreUsuario)
             registrarUsuarioFireBase(correo,pass.toString())
             val user = hashMapOf(
                 "Correo" to correo,
                 "Nombre" to nombreUsuario,
                 "FotoUsuario" to base64.toString()
             )
-            guardarUsuarioBD(user)
-            mostrarDatosUsuarios()
+            guardarUsuarioBD(user,idUsuario,idImagen,data)
+            //mostrarDatosUsuarios()
 
         }
 
     }
 
-    private fun guardarImagen(data: ByteArray, nombreUsuario: String) {
+    private fun guardarImagen(
+        data: ByteArray,
+        idImagen: String,
+        idUsuario: String
+    ) {
         var storageRef = storage.reference
 
-        storageRef = storageRef.child("FotosUsuario/$nombreUsuario foto.jpg")
+        storageRef = storageRef.child("FotosUsuario/$idImagen foto.jpg")
         var uploadTask = storageRef.putBytes(data)
         uploadTask.addOnFailureListener {
             Log.i("Imagen","Error al subir la imagen")
         }.addOnSuccessListener { taskSnapshot ->
             val uriImagen = taskSnapshot.metadata!!.reference!!.downloadUrl
             uriImagen.addOnSuccessListener {
-                val idImagen=UUID.randomUUID().toString()
-                val imagen = Foto(idImagen,it.toString(),auth.currentUser!!.uid)
+                val imagen = Foto(idImagen,it.toString(),idUsuario)
                 store = FirebaseFirestore.getInstance()
                 store.collection("Imagenes").document(idImagen).set(imagen).addOnSuccessListener {
                     Log.i("guardarImagen","Se ha guardado la imagen")
@@ -214,12 +216,14 @@ class Registrarse : AppCompatActivity() {
     }
 
 
-    private fun guardarUsuarioBD(user: HashMap<String, String>) {
+    private fun guardarUsuarioBD(user: HashMap<String, String>,idUsuario:String,idImagen:String,data: ByteArray) {
         val db = Firebase.firestore
         db.collection("Usuarios")
-            .add(user)
+            .document(idUsuario)
+            .set(user)
             .addOnSuccessListener { documentReference ->
-                Log.d("Registro", "DocumentSnapshot added with ID: ${documentReference.id}")
+                guardarImagen(data,idImagen,idUsuario)
+                Log.d("Registro", "DocumentSnapshot added with ID: $idUsuario")
             }
             .addOnFailureListener { e ->
                 Log.w("Registro", "Error adding document", e)
