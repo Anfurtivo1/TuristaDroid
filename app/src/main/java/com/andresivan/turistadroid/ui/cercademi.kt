@@ -10,6 +10,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import com.andresivan.turistadroid.R
@@ -95,36 +96,15 @@ class cercademi : Fragment() {
                         "",
                         document.data.getValue("Latitud").toString(),
                         document.data.getValue("Longitud").toString(),
-                        "",
+                        document.data.getValue("idImagen").toString(),
                         votos,
                         false,
                         ""
                     )
                     MyApp.listaLugares.add(lugar)
+                    sacarFotoLugar(lugar.imgID)
                 }
-                Picasso.get().load("https://assets.change.org/photos/5/iz/mb/uDIzmBupCuNsUUX-800x450-noPad.jpg?1519267641").transform(CircleTransform()).resize(100,100).into(object : com.squareup.picasso.Target {
-                    override fun onBitmapLoaded(bitmap: Bitmap?, from: Picasso.LoadedFrom?) {
-                        if (bitmap != null) run {
-                            for (elemento in MyApp.listaLugares) {
-                                val lugarMapa = LatLng(
-                                    elemento.latitud.toDouble(),
-                                    elemento.longitud.toDouble()
-                                )
-                                map.addMarker(
-                                    MarkerOptions()
-                                        .position(lugarMapa)
-                                        .title(elemento.nombre)
-                                        .snippet("Lugar del tipo " + elemento.tipo + " con una valoración de " + elemento.valoracion)
-                                )
-                                        .setIcon(BitmapDescriptorFactory.fromBitmap(bitmap))
-                            }
-                        }
-                    }
 
-                    override fun onPrepareLoad(placeHolderDrawable: Drawable?) {}
-
-                    override fun onBitmapFailed(e: Exception?, errorDrawable: Drawable?) {}
-                })
             }
             .addOnFailureListener { exception ->
                 Log.d("Consulta", "Error getting documents: ", exception)
@@ -166,6 +146,46 @@ class cercademi : Fragment() {
         } }
 
 
+    }
+
+    private fun sacarFotoLugar(id: String){
+        val db = Firebase.firestore
+        //TODO
+        db.collection("Imagenes")
+            .whereEqualTo("id",id)
+            .get()
+            .addOnSuccessListener { documents ->
+                for (document in documents) {
+                    Log.d("buscarFoto", "${document.id} => ${document.data}")
+                    var uri=document.data.getValue("uri").toString()
+                    Picasso.get().load(uri).transform(CircleTransform()).resize(100,100).into(object : com.squareup.picasso.Target {
+                        override fun onBitmapLoaded(bitmap: Bitmap?, from: Picasso.LoadedFrom?) {
+                            if (bitmap != null) run {
+                                for (elemento in MyApp.listaLugares) {
+                                    val lugarMapa = LatLng(
+                                        elemento.latitud.toDouble(),
+                                        elemento.longitud.toDouble()
+                                    )
+                                    map.addMarker(
+                                        MarkerOptions()
+                                            .position(lugarMapa)
+                                            .title(elemento.nombre)
+                                            .snippet("Lugar del tipo " + elemento.tipo + " con una valoración de " + elemento.valoracion)
+                                    )
+                                        .setIcon(BitmapDescriptorFactory.fromBitmap(bitmap))
+                                }
+                            }
+                        }
+
+                        override fun onPrepareLoad(placeHolderDrawable: Drawable?) {}
+
+                        override fun onBitmapFailed(e: Exception?, errorDrawable: Drawable?) {}
+                    })
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.w("buscarFoto", "Error getting documents: ", exception)
+            }
     }
 
 }

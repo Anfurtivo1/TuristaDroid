@@ -81,11 +81,10 @@ class PantallaPrincipal : AppCompatActivity() {
             USUARIO.id = intent.getStringExtra("id").toString()
             USUARIO.nombre = intent.getStringExtra("nombre").toString()
             USUARIO.correo = intent.getStringExtra("correo").toString()
-            USUARIO.fotoUsuario = intent.getStringExtra("imagen").toString()
 
             navUsername.text = USUARIO.nombre
             navCorreo.text = USUARIO.correo
-            val uri=sacarFotoUsuario(USUARIO.id,navImagen)
+            sacarFotoUsuario(USUARIO.id,navImagen)
         }else{
             USUARIO.id = intent.getStringExtra("id").toString()
             USUARIO.nombre = intent.getStringExtra("nombre").toString()

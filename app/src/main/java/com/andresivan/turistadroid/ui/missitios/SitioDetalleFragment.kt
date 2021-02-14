@@ -5,6 +5,7 @@ import android.app.AlertDialog
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.ImageDecoder
+import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -15,23 +16,31 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import androidx.core.net.toFile
 import androidx.fragment.app.Fragment
 import com.andresivan.turistadroid.R
 import com.andresivan.turistadroid.app.MyApp
+import com.andresivan.turistadroid.entidades.fotos.Foto
 import com.andresivan.turistadroid.entidades.lugares.Lugar
 import com.andresivan.turistadroid.entidades.usuario.Usuario
+import com.andresivan.turistadroid.utils.ABase64
 import com.andresivan.turistadroid.utils.Fotos
 import com.andresivan.turistadroid.utils.GeneradorQR
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.ktx.storage
 import com.google.gson.Gson
+import kotlinx.android.synthetic.main.activity_registrarse.*
 import kotlinx.android.synthetic.main.fragment_sitio_detalle.*
+import java.io.ByteArrayOutputStream
 import java.io.IOException
+import java.io.Serializable
+import java.util.*
+import kotlin.collections.HashMap
 
 //Foto,Nombre,Tipo,Fecha y puntuacion
 class SitioDetalleFragment(
@@ -51,8 +60,12 @@ class SitioDetalleFragment(
     private val IMG_PREF = "Sitio"
     private val IMG_EXT = ".jpg"
     private lateinit var tipoSeleccionado:String
+    private lateinit var FOTO: Bitmap//Para poder pasar la imagen a bitmap
+    private lateinit var IMAGEN_URI: Uri//Ruta de la imagen
     //
     private lateinit var Auth: FirebaseAuth
+    private var storage = Firebase.storage
+    private lateinit var store : FirebaseFirestore
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -70,6 +83,7 @@ class SitioDetalleFragment(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         btnIngresar.setOnClickListener { ingresarLugar() }
+        detalleCamaraSitio.setOnClickListener { opcionAElegirFoto() }
 
         accionesSpinner()
 
@@ -108,9 +122,7 @@ class SitioDetalleFragment(
         val db = Firebase.firestore
         tiposLugares_spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
             override fun onNothingSelected(parent: AdapterView<*>?) {
-
             }
-
             override fun onItemSelected(
                 parent: AdapterView<*>?,
                 view: View?,
@@ -120,7 +132,17 @@ class SitioDetalleFragment(
             }
 
         }
+        var imagen:ImageView = requireActivity().findViewById(R.id.detalleFotoSitio)
+        val idImagen=UUID.randomUUID().toString()
+        var idLugar = UUID.randomUUID()
+        imagen.isDrawingCacheEnabled = true
+        val bitmap = (imagen.drawable as BitmapDrawable).bitmap
+        val base64= ABase64.toBase64(bitmap)
+        val baos = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+        val data = baos.toByteArray()
         val lugar = hashMapOf(
+            "idImagen" to idImagen,
             "NombreLugar" to txtNombreLugar.text.toString(),
             "Tipo" to tipoSeleccionado,
             "Latitud" to MyApp.posicion.latitude.toString(),
@@ -129,15 +151,47 @@ class SitioDetalleFragment(
             "usuariosVotados" to arrayListOf(""),
             "creadoPor" to MyApp.correoUsuario
         )
-        db.collection("Lugares")
-            .add(lugar)
+        guardarLugarDB(lugar,idLugar,idImagen,data)
+            }
+
+    private fun guardarLugarDB(
+        lugar: HashMap<String, Serializable>,
+        idLugar: UUID,
+        idImagen:String,
+        data: ByteArray) {
+        val db = Firebase.firestore
+        db.collection("Lugares").document(idLugar.toString())
+            .set(lugar)
             .addOnSuccessListener { documentReference ->
-                Log.d("Registro", "DocumentSnapshot added with ID: ${documentReference.id}")
+                guardarImagen(data,idImagen,idLugar.toString())
             }
             .addOnFailureListener { e ->
                 Log.w("Registro", "Error adding document", e)
+        }
+    }
 
+    private fun guardarImagen(
+        data: ByteArray,
+        idImagen: String,
+        idLugar: String
+    ) {
+        var storageRef = storage.reference
+
+        storageRef = storageRef.child("FotosLugares/$idImagen foto.jpg")
+        var uploadTask = storageRef.putBytes(data)
+        uploadTask.addOnFailureListener {
+            Log.i("Imagen","Error al subir la imagen")
+        }.addOnSuccessListener { taskSnapshot ->
+            val uriImagen = taskSnapshot.metadata!!.reference!!.downloadUrl
+            uriImagen.addOnSuccessListener {
+                val imagen = Foto(idImagen,it.toString(),idLugar)
+                store = FirebaseFirestore.getInstance()
+                store.collection("Imagenes").document(idImagen).set(imagen).addOnSuccessListener {
+                    Log.i("guardarImagen","Se ha guardado la imagen")
+                    //Snackbar.make(this, "Imagen guardada", Snackbar.LENGTH_LONG).show()
+                }
             }
+        }
     }
 
     private fun inicializarSpinner(vista: View) {
@@ -286,47 +340,61 @@ class SitioDetalleFragment(
     }
 
     /**
-     * Siempre se ejecuta al realizar una acción
+     * Este metodo siempre se ejecutará al realizar una acción
      * @param requestCode Int
      * @param resultCode Int
      * @param data Intent?
      */
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == Activity.RESULT_CANCELED)
+        //En caso de que al echar la foto le demos a cancelar, saldrá este log
+        if (resultCode == Activity.RESULT_CANCELED) {
+            Log.i("FOTO", "Se ha cancelado")
+        }
+        // Si hemos elegido la galería realizará lo siguiente
         if (requestCode == GAL) {
+            Log.i("FOTO", "Entramos en Galería")
+            //Este if es muy importante ya que si no estuviera y al pulsar el botón de camara, dijeramos que no queremos, petaría la app
             if (data != null) {
+                // Obtenemos su URI con su dirección temporal
+                Log.i("FOTO",data.toString())
                 val contentURI = data.data!!
                 try {
+                    // Dependiendo de la versión del SDK debemos hacerlo de una manera u otra, el imageDecoder es lo que usaremos para acceder a las fotos con el URI
                     if (Build.VERSION.SDK_INT < 28) {
-                        this.PHOTO = MediaStore.Images.Media.getBitmap(context?.contentResolver, contentURI)
+                        this.FOTO = MediaStore.Images.Media.getBitmap(requireContext().contentResolver, contentURI)
                     } else {
-                        val source: ImageDecoder.Source = ImageDecoder.createSource(context?.contentResolver!!, contentURI)
-                        this.PHOTO = ImageDecoder.decodeBitmap(source)
+                        val source: ImageDecoder.Source = ImageDecoder.createSource(requireContext().contentResolver, contentURI)
+                        this.FOTO = ImageDecoder.decodeBitmap(source)
                     }
-                    val prop = this.IMG_SIZE / this.PHOTO.width.toFloat()
-                    this.PHOTO = Bitmap.createScaledBitmap(this.PHOTO, this.IMG_SIZE, (this.PHOTO.height * prop).toInt(), false)
-                    val nombre = Fotos.crearNombreFoto(IMG_PREF, IMG_EXT)
-                    val fichero = Fotos.copyPhoto(this.PHOTO, nombre, IMG_DIR, IMG_COMPR_LVL, requireContext())
-                    IMG_URI = Uri.fromFile(fichero)
-                    detalleFotoSitio.setImageBitmap(this.PHOTO)
+                    Toast.makeText(context, "Se ha conseguido cargar la imagen de la galeria", Toast.LENGTH_SHORT).show()
+                    imgUsuario.setImageBitmap(this.FOTO)
                 } catch (e: IOException) {
                     e.printStackTrace()
+                    Toast.makeText(context, "Ocurrió un fallo al cargar la imagen de la galeria", Toast.LENGTH_SHORT).show()
                 }
             }
         } else if (requestCode == CAM) {
-            try {
+            Log.i("FOTO", "Entramos en Camara")
+
+            try{
+                //Aqui se comprueba la version del SDK ya que dependiendo de la version, el acceso a la camara se hace de una forma o de otra
                 if (Build.VERSION.SDK_INT < 28) {
-                    this.PHOTO = MediaStore.Images.Media.getBitmap(context?.contentResolver, IMG_URI)
+                    this.FOTO = MediaStore.Images.Media.getBitmap(requireContext().contentResolver, IMG_URI)
                 } else {
-                    val source: ImageDecoder.Source = ImageDecoder.createSource(context?.contentResolver!!, IMG_URI)
-                    this.PHOTO = ImageDecoder.decodeBitmap(source)
+                    val source: ImageDecoder.Source = ImageDecoder.createSource(requireContext().contentResolver!!, IMG_URI)
+                    this.FOTO = ImageDecoder.decodeBitmap(source)
                 }
-                Fotos.comprimirImagen(IMG_URI.toFile(), this.PHOTO, this.IMG_COMPR_LVL)
-                detalleFotoSitio.setImageBitmap(this.PHOTO)
-            } catch (e: Exception) {
+
+                // Aqui mostramos la imagen que se ha elegido añadiendole el bitmap de la imagen tomada
+                detalleFotoSitio.setImageBitmap(this.FOTO)
+                //Mostramos un toast para ver que se ha conseguido hacer lo anterior
+                Toast.makeText(context, "¡Foto Salvada!", Toast.LENGTH_SHORT).show()
+
+            }catch (e:IOException){//Este try catch es para que si le damos a volver al ir a tomar la foto, nos envia aqui
                 e.printStackTrace()
             }
+
         }
     }
 }

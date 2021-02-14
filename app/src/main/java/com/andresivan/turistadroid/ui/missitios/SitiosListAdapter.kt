@@ -1,8 +1,10 @@
 package com.andresivan.turistadroid.ui.missitios
 
+import android.graphics.Bitmap
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.recyclerview.widget.RecyclerView
@@ -13,6 +15,7 @@ import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.squareup.picasso.Picasso
 
 
 class SitiosListAdapter(
@@ -39,10 +42,33 @@ class SitiosListAdapter(
         holder.itemTipo.text = sitiosLst[position].tipo
         holder.itemValoracion.text = sitiosLst[position].valoracion.toString()
         //holder.itemFoto.setImageBitmap(fotoLugar(sitiosLst[position], holder))
+        fotoLugar(sitiosLst[position], holder)
         btnFavColor(position, holder)
         holder.itemFav.setOnClickListener {
             btnFavAcciones(position, holder)
         }
+    }
+
+    private fun fotoLugar(lugar: Lugar, holder: SitiosViewHolder) {
+        sacarFotoLugar(lugar.imgID,holder.itemFoto)
+    }
+
+    private fun sacarFotoLugar(id: String, itemLugarImagen: ImageView){
+        val db = Firebase.firestore
+        //TODO
+        db.collection("Imagenes")
+            .whereEqualTo("id",id)
+            .get()
+            .addOnSuccessListener { documents ->
+                for (document in documents) {
+                    Log.d("buscarFoto", "${document.id} => ${document.data}")
+                    var uri=document.data.getValue("uri").toString()
+                    Picasso.get().load(uri).resize(200,200).into(itemLugarImagen)
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.w("buscarFoto", "Error getting documents: ", exception)
+            }
     }
 
 
@@ -100,7 +126,6 @@ class SitiosListAdapter(
         sitiosLst[index].fav = !sitiosLst[index].fav
         btnFavColor(index, holder)
 
-
         var lugaresRef = db.collection("Lugares").document(MyApp.idLugares[index])
             lugaresRef.get().addOnSuccessListener { document ->
             if (document != null) {
@@ -116,7 +141,7 @@ class SitiosListAdapter(
                 }else{
                     //if (sitiosLst[index].fav){
                         sitiosLst[index].valoracion++
-                        añadirUsuarios(db,index, array as ArrayList<String>)
+                        añadirUsuarios(db,index)
                     //}
 
                 }
@@ -135,23 +160,20 @@ class SitiosListAdapter(
 
     private fun añadirUsuarios(
         db: FirebaseFirestore,
-        index: Int,
-        array: ArrayList<String>
+        index: Int
     ) {
         // [START update_document]
         val lugaresRef = db.collection("Lugares").document(MyApp.idLugares[index])
         lugaresRef
-            .update("Votos", FieldValue.increment(1))
+            .update(mapOf("Votos" to FieldValue.increment(1),"usuariosVotados" to FieldValue.arrayUnion(MyApp.correoUsuario)))
             .addOnSuccessListener { Log.d("Votos", "DocumentSnapshot successfully updated!") }
             .addOnFailureListener { e -> Log.w("Votos", "Error updating document", e) }
 
-        array.add(MyApp.correoUsuario)
-
-        val arrayRef = db.collection("Lugares").document(MyApp.idLugares[index])
+        /*val arrayRef = db.collection("Lugares").document(MyApp.idLugares[index])
         arrayRef
             .update("usuariosVotados", FieldValue.arrayUnion(MyApp.correoUsuario))
             .addOnSuccessListener { Log.d("nVotos", "DocumentSnapshot successfully updated!") }
-            .addOnFailureListener { e -> Log.w("nVotos", "Error updating document", e) }
+            .addOnFailureListener { e -> Log.w("nVotos", "Error updating document", e) }*/
     }
 
     private fun quitarUsuarios(
@@ -159,18 +181,19 @@ class SitiosListAdapter(
         index: Int,
         array: ArrayList<String>
     ) {
+        array.remove(MyApp.correoUsuario)
         // [START update_document]
         val lugaresRef = db.collection("Lugares").document(MyApp.idLugares[index])
         lugaresRef
-            .update("Votos", sitiosLst[index].valoracion)
+            .update(mapOf("Votos" to sitiosLst[index].valoracion,"usuariosVotados" to array))
             .addOnSuccessListener { Log.d("Votos", "DocumentSnapshot successfully updated!") }
             .addOnFailureListener { e -> Log.w("Votos", "Error updating document", e) }
 
-        array.remove(MyApp.correoUsuario)
+/*        array.remove(MyApp.correoUsuario)
         lugaresRef
             .update("usuariosVotados", array)
             .addOnSuccessListener { Log.d("nVotos", "DocumentSnapshot successfully updated!") }
-            .addOnFailureListener { e -> Log.w("nVotos", "Error updating document", e) }
+            .addOnFailureListener { e -> Log.w("nVotos", "Error updating document", e) }*/
     }
 
 

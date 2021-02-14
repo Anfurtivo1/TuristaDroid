@@ -178,7 +178,7 @@ class Login : AppCompatActivity() {
     private fun buscarUsuarioLogin(intent: Intent) {
         val db = Firebase.firestore
         db.collection("Usuarios")
-            .whereEqualTo("correo", usuario.correo)
+            .whereEqualTo("Correo", usuario.correo)
             .get()
             .addOnSuccessListener { documents ->
                 for (document in documents) {
@@ -190,11 +190,10 @@ class Login : AppCompatActivity() {
                 intent.putExtra("id",usuario.id)
                 intent.putExtra("correo",usuario.correo)
                 intent.putExtra("nombre",usuario.nombre)
-                intent.putExtra("imagen",usuario.fotoUsuario)
                 startActivity(intent)
             }
             .addOnFailureListener { exception ->
-                Log.w("", "Error getting documents: ", exception)
+                Log.w("usuarios", "Error getting documents: ", exception)
             }
     }
 

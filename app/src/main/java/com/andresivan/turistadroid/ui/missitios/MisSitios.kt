@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -20,6 +21,7 @@ import com.andresivan.turistadroid.ui.missitios.Filtross.FiltrosControlador
 import com.andresivan.turistadroid.ui.missitios.filtros.Filtros
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_missitios.*
 
 
@@ -247,14 +249,11 @@ class MisSitios : Fragment() {
         canvas.drawBitmap(icon, null, iconDest, fondoAlDeslizar)
     }
 
-    /**
-     * Función que se encarga de llamar a la funcion cargarRegistros() que es la función que carga
-     * la información de los registros de la bbdd
-     */
-    private fun cargarRegistros() {
+    private fun cargarRegistrosPropios(){
         SITIOS.clear()
         val db = Firebase.firestore
         db.collection("Lugares")
+            .whereEqualTo("creadoPor",MyApp.correoUsuario)
             .get()
             .addOnSuccessListener { result ->
                 for (document in result) {
@@ -273,9 +272,7 @@ class MisSitios : Fragment() {
                         ""
                     )
                     SITIOS.add(lugar)
-
                 }
-
                 sitiosAdapter = SitiosListAdapter(SITIOS)
                 if(sitiosRecycler!=null){
                     sitiosRecycler.setHasFixedSize(true)
@@ -285,8 +282,122 @@ class MisSitios : Fragment() {
                     sitiosSwipeRefresh.isRefreshing = false
                 }
             }
+    }
+
+    private fun cargarRegistrosValoracion(){
+
+    }
+
+    private fun cargarRegistrosTipo(tipo:String){
+        if(tipo.equals("Ciudad")){
+            SITIOS.clear()
+            val db = Firebase.firestore
+            db.collection("Lugares").whereEqualTo("Tipo","Ciudad")
+                .get()
+                .addOnSuccessListener { result ->
+                    for (document in result) {
+                        val votoS = document.data.getValue("Votos").toString()
+                        val votos = votoS.toInt()
+                        val lugar = Lugar(
+                            "",
+                            document.data.getValue("NombreLugar").toString(),
+                            document.data.getValue("Tipo").toString(),
+                            "",
+                            document.data.getValue("Latitud").toString(),
+                            document.data.getValue("Longitud").toString(),
+                            "",
+                            votos,
+                            false,
+                            ""
+                        )
+                        SITIOS.add(lugar)
+                    }
+                    sitiosAdapter = SitiosListAdapter(SITIOS)
+                    if(sitiosRecycler!=null){
+                        sitiosRecycler.setHasFixedSize(true)
+                        sitiosRecycler.layoutManager = LinearLayoutManager(context)
+                        sitiosRecycler.adapter = sitiosAdapter
+                        Log.i("LugarCardView",SITIOS.toString())
+                        sitiosSwipeRefresh.isRefreshing = false
+                    }
+                }
+        }
+
+        if (tipo.equals("Paramo")){
+            SITIOS.clear()
+            val db = Firebase.firestore
+            db.collection("Lugares").whereEqualTo("Tipo","Paramo")
+                .get()
+                .addOnSuccessListener { result ->
+                    for (document in result) {
+                        val votoS = document.data.getValue("Votos").toString()
+                        val votos = votoS.toInt()
+                        val lugar = Lugar(
+                            "",
+                            document.data.getValue("NombreLugar").toString(),
+                            document.data.getValue("Tipo").toString(),
+                            "",
+                            document.data.getValue("Latitud").toString(),
+                            document.data.getValue("Longitud").toString(),
+                            "",
+                            votos,
+                            false,
+                            ""
+                        )
+                        SITIOS.add(lugar)
+                    }
+                    sitiosAdapter = SitiosListAdapter(SITIOS)
+                    if(sitiosRecycler!=null){
+                        sitiosRecycler.setHasFixedSize(true)
+                        sitiosRecycler.layoutManager = LinearLayoutManager(context)
+                        sitiosRecycler.adapter = sitiosAdapter
+                        Log.i("LugarCardView",SITIOS.toString())
+                        sitiosSwipeRefresh.isRefreshing = false
+                    }
+                }
+        }
+
+    }
 
 
+    /**
+     * Función que se encarga de llamar a la funcion cargarRegistros() que es la función que carga
+     * la información de los registros de la bbdd
+     */
+    private fun cargarRegistros() {
+        SITIOS.clear()
+        val db = Firebase.firestore
+        db.collection("Lugares")
+            .get()
+            .addOnSuccessListener { result ->
+                for (document in result) {
+                    val votoS = document.data.getValue("Votos").toString()
+                    val votos = votoS.toInt()
+                    val lugar = Lugar(
+                        document.id,
+                        document.data.getValue("NombreLugar").toString(),
+                        document.data.getValue("Tipo").toString(),
+                        "",
+                        document.data.getValue("Latitud").toString(),
+                        document.data.getValue("Longitud").toString(),
+                        document.data.getValue("idImagen").toString(),
+                        votos,
+                        false,
+                        ""
+                    )
+
+                    SITIOS.add(lugar)
+                }
+                sitiosAdapter = SitiosListAdapter(SITIOS)
+                if(sitiosRecycler!=null){
+                    sitiosRecycler.setHasFixedSize(true)
+                    sitiosRecycler.layoutManager = LinearLayoutManager(context)
+                    sitiosRecycler.adapter = sitiosAdapter
+                    Log.i("LugarCardView",SITIOS.toString())
+                    sitiosSwipeRefresh.isRefreshing = false
+                }
+
+            }
 
     }
     /**
