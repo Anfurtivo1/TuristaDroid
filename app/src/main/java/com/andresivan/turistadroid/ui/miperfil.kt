@@ -17,6 +17,7 @@ import android.widget.Toast
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import com.andresivan.turistadroid.R
+<<<<<<< HEAD
 import com.andresivan.turistadroid.app.MyApp
 import com.andresivan.turistadroid.entidades.usuario.Usuario
 import com.andresivan.turistadroid.utils.CifradorContrasena
@@ -26,6 +27,20 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.fragment_miperfil.*
+=======
+import com.andresivan.turistadroid.entidades.sesion.Sesion
+import com.andresivan.turistadroid.entidades.sesion.SesionController
+import com.andresivan.turistadroid.entidades.usuario.Usuario
+import com.andresivan.turistadroid.usuario.UsuarioControlador
+import com.andresivan.turistadroid.utils.CifradorContrasena
+import com.andresivan.turistadroid.utils.Fotos
+import io.realm.exceptions.RealmError
+import io.realm.exceptions.RealmException
+import kotlinx.android.synthetic.main.activity_registrarse.*
+import kotlinx.android.synthetic.main.fragment_miperfil.*
+import kotlinx.android.synthetic.main.fragment_miperfil.imgCamaraRegistrarse
+import kotlinx.android.synthetic.main.fragment_miperfil.imgGaleriaRegistrarse
+>>>>>>> main
 import java.io.IOException
 
 // TODO: Rename parameter arguments, choose names that match
@@ -35,11 +50,19 @@ private const val ARG_PARAM2 = "param2"
 
 /**
  * A simple [Fragment] subclass.
+<<<<<<< HEAD
  * Use the [MiPerfil.newInstance] factory method to
  * create an instance of this fragment.
  */
 class MiPerfil : Fragment() {
     var USUARIO: Usuario = Usuario()
+=======
+ * Use the [miperfil.newInstance] factory method to
+ * create an instance of this fragment.
+ */
+class miperfil : Fragment() {
+    lateinit var USUARIO: Usuario
+>>>>>>> main
 
     // Variables para la camara de fotos
     private val GALERIA = 1//Para poder saber que opción se ha elegido
@@ -49,12 +72,19 @@ class MiPerfil : Fragment() {
     private val IMAGEN_DIR = "/TuristaDroid"//Donde se van a guardar
     private lateinit var FOTO: Bitmap//Para poder pasar la imagen a bitmap
 
+<<<<<<< HEAD
     //
     private lateinit var Auth: FirebaseAuth
+=======
+    // TODO: Rename and change types of parameters
+    private var param1: String? = null
+    private var param2: String? = null
+>>>>>>> main
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
+<<<<<<< HEAD
         Auth = Firebase.auth
         leerSesionUsuarioActivo()
 
@@ -63,6 +93,12 @@ class MiPerfil : Fragment() {
     private fun leerSesionUsuarioActivo() {
         USUARIO.correo = Auth.currentUser?.email.toString()
         USUARIO.nombre = Auth.currentUser?.displayName.toString()
+=======
+        arguments?.let {
+            param1 = it.getString(ARG_PARAM1)
+            param2 = it.getString(ARG_PARAM2)
+        }
+>>>>>>> main
     }
 
     override fun onCreateView(
@@ -76,6 +112,7 @@ class MiPerfil : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         //Vamos a inicializar la UI de mi perfil
+<<<<<<< HEAD
         if (MyApp.loginGoogle){
             abrirPrincipal()
             Toast.makeText(context,"Has iniciado sesion con google, por lo que no puedes cambiar tus datos",Toast.LENGTH_LONG).show()
@@ -83,6 +120,9 @@ class MiPerfil : Fragment() {
             initUI()
         }
 
+=======
+        initUI()
+>>>>>>> main
     }
 
     /**
@@ -90,7 +130,10 @@ class MiPerfil : Fragment() {
      */
     private fun initUI() {
         cargarMiPerfilUsuario()
+<<<<<<< HEAD
         inicializarEventosBotones()
+=======
+>>>>>>> main
     }
 
 
@@ -101,8 +144,29 @@ class MiPerfil : Fragment() {
         var CorreoElectronico: TextView = miperfil_tv_correo
         var NombreUsuario: TextView = miperfil_tv_nombreUsuario
 
+<<<<<<< HEAD
         CorreoElectronico.text = USUARIO.correo
         NombreUsuario.text = USUARIO.nombre
+=======
+        for (sesion in SesionController.selectAll()!!){
+            Log.i("Sesion",sesion.toString())
+
+            USUARIO = UsuarioControlador.selectById(sesion.idUsuarioActivo)!!
+
+            Log.i("Mi Perfil", USUARIO.toString())
+
+            Log.i("Mi perfil", "NOMBRE USUARIO: "+USUARIO.nombre)
+            Log.i("Mi perfil", "CORREO ELECTRONICO USUARIO: "+ USUARIO.correo)
+            Log.i("Mi perfil", "NOMBRE_FOTO: "+ USUARIO.fotoUsuario)
+
+
+            CorreoElectronico.text = USUARIO.correo
+            NombreUsuario.text = USUARIO.nombre
+
+            inicializarEventosBotones()
+
+        }
+>>>>>>> main
     }
 
     /**
@@ -112,16 +176,24 @@ class MiPerfil : Fragment() {
 
         btnEditarPerfil.setOnClickListener{editarPerfil()}
 
+<<<<<<< HEAD
         fabMP_Twitter.setOnClickListener{abrirPaginaWeb(USUARIO.cuentaTwitter)}
 
         fabMP_Camara.setOnClickListener{abrirCamara()}
         fabMP_Galeria.setOnClickListener{abrirGaleria()}
+=======
+        imgTwitterMiPerfil.setOnClickListener{abrirPaginaWeb(USUARIO.cuentaTwitter)}
+
+        imgCamaraRegistrarse.setOnClickListener{abrirCamara()}
+        imgGaleriaRegistrarse.setOnClickListener{abrirGaleria()}
+>>>>>>> main
     }
 
     /**
      * Este es el metodo en si que edita el usuario, pese a dar un error al ejecutarlo, actualiza de forma correcta el usuario
      * Si en el enlace del Twitter se pone un texto que no es una URL valida, dara error al abrir el twitter por esa misma razón
      */
+<<<<<<< HEAD
    private fun editarPerfil() {
         var CorreoElectronico: TextView = miperfil_et_nombreusuario
         var contrasena: TextView = miperfil_et_contrasena
@@ -176,6 +248,28 @@ class MiPerfil : Fragment() {
             .addOnFailureListener {  }
     }
 
+=======
+    private fun editarPerfil() {
+        for (sesion in SesionController.selectAll()!!){
+                if (miperfil_et_nombreusuario.text.toString() != ""){
+                    USUARIO.nombre = miperfil_et_nombreusuario.text.toString()//Nombre de usuario
+                }
+                if (miperfil_et_contrasena.text.toString() != ""){
+                    USUARIO.contrasena = CifradorContrasena.convertirHash(miperfil_et_contrasena.text.toString(), "SHA-256")!!//Nueva contraseña que luego se convierte
+                    Log.i("Mod_perfil -->", "NUEVA COINTRASEÑA --> "+USUARIO.contrasena)
+                }
+                if (miperfil_et_twitter.text.toString() != ""){
+                    USUARIO.cuentaTwitter = miperfil_et_twitter.text.toString()//EL enlace de Twitter
+                }
+            if (miperfil_et_nombreusuario.text.toString() != "" && miperfil_et_contrasena.text.toString() != "" && miperfil_et_twitter.text.toString() != ""){
+                UsuarioControlador.updateUsuario(USUARIO, sesion.idUsuarioActivo)//Si todo esta correcto se ejecuta la actualización del usuario
+                Log.i("MI PERFIL - MOD USU", "USUARIO MODIFICADO")
+            }
+
+        }
+
+    }
+>>>>>>> main
     /**
      * Este metodo elegirá una foto de la galeria
      */
@@ -188,6 +282,7 @@ class MiPerfil : Fragment() {
             startActivityForResult(galleryIntent, GALERIA)//Ejecutamos el OnActivityResult
     }
 
+<<<<<<< HEAD
     private fun abrirPrincipal(){
         val cercaDeMi = cercademi()
         val transaction = requireActivity().supportFragmentManager.beginTransaction()
@@ -196,6 +291,8 @@ class MiPerfil : Fragment() {
         transaction.commit()
     }
 
+=======
+>>>>>>> main
     /**
      * Este es el metodo que nos permite tomar una foto de la camara
      */
@@ -293,12 +390,20 @@ class MiPerfil : Fragment() {
          *
          * @param param1 Parameter 1.
          * @param param2 Parameter 2.
+<<<<<<< HEAD
          * @return A new instance of fragment MiPerfil.
+=======
+         * @return A new instance of fragment miperfil.
+>>>>>>> main
          */
         // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
+<<<<<<< HEAD
             MiPerfil().apply {
+=======
+            miperfil().apply {
+>>>>>>> main
                 arguments = Bundle().apply {
                     putString(ARG_PARAM1, param1)
                     putString(ARG_PARAM2, param2)

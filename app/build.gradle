@@ -3,8 +3,11 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'realm-android'
+<<<<<<< HEAD
 apply plugin: 'com.google.gms.google-services'
 
+=======
+>>>>>>> main
 
 android {
     compileSdkVersion 30
@@ -50,7 +53,10 @@ dependencies {
     implementation 'androidx.navigation:navigation-ui-ktx:2.3.1'
     implementation 'com.google.android.gms:play-services-maps:17.0.0'
     implementation 'com.google.android.gms:play-services-location:17.0.0'
+<<<<<<< HEAD
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.0.0'
+=======
+>>>>>>> main
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
@@ -63,6 +69,7 @@ dependencies {
     // RELACIONADO CON LOS QR
     implementation 'com.google.zxing:core:3.4.1'
     implementation 'com.journeyapps:zxing-android-embedded:3.4.0'
+<<<<<<< HEAD
     //LIBRERIA RETROFIT PARA LA API
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
@@ -87,3 +94,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-firestore-ktx'
 
 }
+=======
+
+}
+>>>>>>> main

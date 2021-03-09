@@ -1,19 +1,31 @@
 package com.andresivan.turistadroid.actividades
 
+<<<<<<< HEAD
+=======
+import android.Manifest
+>>>>>>> main
 import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.ImageDecoder
+<<<<<<< HEAD
 import android.graphics.drawable.BitmapDrawable
+=======
+>>>>>>> main
 import android.net.Uri
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+<<<<<<< HEAD
+=======
+import android.os.StrictMode
+>>>>>>> main
 import android.provider.MediaStore
 import android.util.Log
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.core.content.FileProvider
+<<<<<<< HEAD
 import com.andresivan.turistadroid.R
 import com.andresivan.turistadroid.entidades.fotos.Foto
 import com.andresivan.turistadroid.utils.ABase64
@@ -33,6 +45,23 @@ import java.util.*
 import kotlin.collections.HashMap
 
 class Registrarse : AppCompatActivity() {
+=======
+import androidx.core.net.toFile
+import com.andresivan.turistadroid.R
+import com.andresivan.turistadroid.entidades.preferencias.PreferenciasController.crearSesion
+import com.andresivan.turistadroid.utils.Fotos
+import com.karumi.dexter.Dexter
+import com.karumi.dexter.MultiplePermissionsReport
+import com.karumi.dexter.PermissionToken
+import com.karumi.dexter.listener.PermissionRequest
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener
+import kotlinx.android.synthetic.main.activity_registrarse.*
+import java.io.IOException
+import java.lang.Exception
+import java.lang.NullPointerException
+
+class registrarse : AppCompatActivity() {
+>>>>>>> main
 
 
     // Variables para la camara de fotos
@@ -42,13 +71,17 @@ class Registrarse : AppCompatActivity() {
     private lateinit var IMAGEN_URI: Uri//Ruta de la imagen
     private val IMAGEN_DIR = "/TuristaDroid"//Donde se van a guardar
     private lateinit var FOTO: Bitmap//Para poder pasar la imagen a bitmap
+<<<<<<< HEAD
     private lateinit var auth: FirebaseAuth
     private var storage = Firebase.storage
     private lateinit var store : FirebaseFirestore
+=======
+>>>>>>> main
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_registrarse)
+<<<<<<< HEAD
         fabRegCamara.setOnClickListener { tomarFotoCamara() }
         fabRegGaleria.setOnClickListener { elegirFotoGaleria() }
         btnRegistrarse.setOnClickListener{ registrarUsuario() }
@@ -62,6 +95,12 @@ class Registrarse : AppCompatActivity() {
         // Check if user is signed in (non-null) and update UI accordingly.
         val currentUser = auth.currentUser
         //updateUI(currentUser)
+=======
+        imgCamaraRegistrarse.setOnClickListener { tomarFotoCamara() }
+        imgGaleriaRegistrarse.setOnClickListener { elegirFotoGaleria() }
+        btnRegistrarse.setOnClickListener{ registrarUsuario() }
+
+>>>>>>> main
     }
 
     /**
@@ -157,6 +196,7 @@ class Registrarse : AppCompatActivity() {
     }
 
     /**
+<<<<<<< HEAD
      * Este metodo nos permite guardar un usuario en la API REST
      */
     private fun registrarUsuario() {
@@ -187,10 +227,28 @@ class Registrarse : AppCompatActivity() {
             guardarUsuarioBD(user,idUsuario,idImagen,data)
             //mostrarDatosUsuarios()
 
+=======
+     * Este metodo nos permite guardar un usuario en la base de datos realizada por Ivan
+     */
+    private fun registrarUsuario() {
+        //Recogemos todos los datos del usuario
+        var img:ImageView
+        img = findViewById(R.id.imgUsuario)
+        var correo = registrarse_et_correo.text.toString()
+        var contrasena = registrarse_et_contrasena.text.toString()
+        var nombreUsuario = registrarse_et_nombreusu.text.toString()
+        IMAGEN_NOMBRE = img.toString()
+        //Si esta vacio algún campo, no dejamos que se registre
+        if (correo == "" || contrasena == "" || nombreUsuario == ""){
+            Toast.makeText(this, "Rellene todos los campos para registrarse", Toast.LENGTH_SHORT)
+        }else{
+            crearSesion(this,  correo, contrasena, nombreUsuario, IMAGEN_NOMBRE)
+>>>>>>> main
         }
 
     }
 
+<<<<<<< HEAD
     private fun guardarImagen(
         data: ByteArray,
         idImagen: String,
@@ -260,4 +318,6 @@ class Registrarse : AppCompatActivity() {
             }
     }
 
+=======
+>>>>>>> main
 }

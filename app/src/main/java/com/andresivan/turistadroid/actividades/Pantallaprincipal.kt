@@ -1,17 +1,26 @@
 package com.andresivan.turistadroid.actividades
 
+<<<<<<< HEAD
+=======
+import android.hardware.Camera
+>>>>>>> main
 import android.hardware.camera2.CameraManager
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+<<<<<<< HEAD
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+=======
+import android.widget.Toast
+>>>>>>> main
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.findNavController
+<<<<<<< HEAD
 import androidx.navigation.ui.*
 import com.andresivan.turistadroid.R
 import com.andresivan.turistadroid.entidades.usuario.Usuario
@@ -39,6 +48,27 @@ class PantallaPrincipal : AppCompatActivity() {
     //
     private lateinit var auth: FirebaseAuth
     private lateinit var clienteSignInGoogle: GoogleSignInClient
+=======
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.navigateUp
+import androidx.navigation.ui.setupActionBarWithNavController
+import androidx.navigation.ui.setupWithNavController
+import com.andresivan.turistadroid.R
+import com.andresivan.turistadroid.entidades.sesion.SesionController
+import com.andresivan.turistadroid.entidades.usuario.Usuario
+import com.andresivan.turistadroid.usuario.UsuarioControlador
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.navigation.NavigationView
+import com.google.android.material.snackbar.Snackbar
+import kotlinx.android.synthetic.main.nav_header_main.*
+
+
+class pantallaprincipal : AppCompatActivity() {
+
+    private lateinit var appBarConfiguration: AppBarConfiguration
+    var estado = true
+    lateinit var USUARIO:Usuario
+>>>>>>> main
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,9 +88,17 @@ class PantallaPrincipal : AppCompatActivity() {
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+<<<<<<< HEAD
     }
 
 
+=======
+
+    }
+
+
+
+>>>>>>> main
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.pantallaprincipal, menu)
@@ -71,6 +109,7 @@ class PantallaPrincipal : AppCompatActivity() {
     }
 
     private fun initUI() {
+<<<<<<< HEAD
 
         val navigationView: NavigationView = findViewById(R.id.nav_view)
         val headerView: View = navigationView.getHeaderView(0)
@@ -99,10 +138,30 @@ class PantallaPrincipal : AppCompatActivity() {
 
     }
 
+=======
+        for (sesion in SesionController.selectAll()!!){
+            Log.i("Sesion",sesion.toString())
+
+            USUARIO = UsuarioControlador.selectById(sesion.idUsuarioActivo)!!
+
+            Log.i("Mi Perfil", USUARIO.toString())
+
+            Log.i("Mi perfil", "NOMBRE USUARIO: "+USUARIO.nombre)
+            Log.i("Mi perfil", "CORREO ELECTRONICO USUARIO: "+ USUARIO.correo)
+            Log.i("Mi perfil", "NOMBRE_FOTO: "+ USUARIO.fotoUsuario)
+
+
+            nav_header_nombre_usuario.text = USUARIO.nombre
+            nav_header_correo.text = USUARIO.correo
+
+        }
+    }
+>>>>>>> main
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.EncenderLinterna -> {
+<<<<<<< HEAD
                 encenderLinterna()
                 true
 
@@ -114,6 +173,18 @@ class PantallaPrincipal : AppCompatActivity() {
             else -> return NavigationUI.onNavDestinationSelected(item!!,
                 findNavController(R.id.nav_host_fragment))
                     || super.onOptionsItemSelected(item)
+=======
+
+                encenderLinterna()
+
+                val duracion = Toast.LENGTH_SHORT
+                val toast = Toast.makeText(applicationContext, R.string.EncenderLinterna, Toast.LENGTH_SHORT)
+                toast.show()
+                true
+
+            }
+            else -> super.onOptionsItemSelected(item)
+>>>>>>> main
         }
     }
 
@@ -142,6 +213,7 @@ class PantallaPrincipal : AppCompatActivity() {
         }
     }
 
+<<<<<<< HEAD
     private fun sacarFotoUsuario(id: String, navImagen: ImageView){
         val db = Firebase.firestore
         db.collection("Imagenes")
@@ -177,4 +249,6 @@ class PantallaPrincipal : AppCompatActivity() {
 
     }
 
+=======
+>>>>>>> main
 }

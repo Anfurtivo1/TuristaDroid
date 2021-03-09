@@ -1,6 +1,7 @@
 package com.andresivan.turistadroid.ui.missitios
 
 import android.graphics.Bitmap
+<<<<<<< HEAD
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -20,6 +21,23 @@ import com.squareup.picasso.Picasso
 
 class SitiosListAdapter(
     private val sitiosLst: MutableList<Lugar>
+=======
+import android.graphics.BitmapFactory
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import androidx.appcompat.content.res.AppCompatResources
+import androidx.recyclerview.widget.RecyclerView
+import com.andresivan.turistadroid.R
+import com.andresivan.turistadroid.entidades.fotos.FotoController
+import com.andresivan.turistadroid.entidades.lugares.Lugar
+import com.andresivan.turistadroid.entidades.lugares.LugarController
+import com.andresivan.turistadroid.utils.ABase64
+
+
+class SitiosListAdapter(
+    private val sitiosLst: MutableList<Lugar>,
+    private val mainFuntcion: (Lugar) -> Unit
+>>>>>>> main
 
 ) : RecyclerView.Adapter<SitiosViewHolder>() {
 
@@ -41,12 +59,17 @@ class SitiosListAdapter(
         holder.itemFecha.text = sitiosLst[position].fecha
         holder.itemTipo.text = sitiosLst[position].tipo
         holder.itemValoracion.text = sitiosLst[position].valoracion.toString()
+<<<<<<< HEAD
         //holder.itemFoto.setImageBitmap(fotoLugar(sitiosLst[position], holder))
         fotoLugar(sitiosLst[position], holder)
+=======
+        holder.itemFoto.setImageBitmap(fotoLugar(sitiosLst[position], holder))
+>>>>>>> main
         btnFavColor(position, holder)
         holder.itemFav.setOnClickListener {
             btnFavAcciones(position, holder)
         }
+<<<<<<< HEAD
     }
 
     private fun fotoLugar(lugar: Lugar, holder: SitiosViewHolder) {
@@ -69,6 +92,11 @@ class SitiosListAdapter(
             .addOnFailureListener { exception ->
                 Log.w("buscarFoto", "Error getting documents: ", exception)
             }
+=======
+        holder.itemFoto.setOnClickListener {
+            mainFuntcion(sitiosLst[position])
+        }
+>>>>>>> main
     }
 
 
@@ -115,12 +143,28 @@ class SitiosListAdapter(
         return sitiosLst.size
     }
 
+<<<<<<< HEAD
 
+=======
+    /**
+     * Funcion para mostrar la imagen de un lugar, pasando por parámetro el objeto lugar, con el id
+     * de la imagen
+     */
+    private fun fotoLugar(lugar: Lugar, holder: SitiosViewHolder): Bitmap? {
+        return try {
+            val fotografia = FotoController.selectById(lugar.imgID)
+            ABase64.toBitmap(fotografia?.imgLugar.toString())
+        } catch (ex: Exception) {
+            BitmapFactory.decodeResource(holder.context.resources, R.drawable.ic_sitio)
+        }
+    }
+>>>>>>> main
 
     /**
      * Esta función realiza todas las tareas que se necesitan para cuando pulsamos el boton de like
      */
     private fun btnFavAcciones(index: Int, holder: SitiosViewHolder) {
+<<<<<<< HEAD
         var array = mutableListOf<String>()
         val db = Firebase.firestore
         sitiosLst[index].fav = !sitiosLst[index].fav
@@ -197,6 +241,20 @@ class SitiosListAdapter(
     }
 
 
+=======
+        sitiosLst[index].fav = !sitiosLst[index].fav
+        btnFavColor(index, holder)
+        if (sitiosLst[index].fav){
+            sitiosLst[index].valoracion++
+        } else {
+            sitiosLst[index].valoracion--
+        }
+
+        LugarController.update(sitiosLst[index])
+        holder.itemValoracion.text = sitiosLst[index].valoracion.toString()
+    }
+
+>>>>>>> main
     /**
      * Función que según si le damos a like a la publicación, el color de botón cambiará a un color
      * u otro
