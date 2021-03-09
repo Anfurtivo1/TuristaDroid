@@ -370,6 +370,7 @@ class MisSitios : Fragment() {
         db.collection("Lugares")
             .get()
             .addOnSuccessListener { result ->
+                SITIOS.clear()
                 for (document in result) {
                     val votoS = document.data.getValue("Votos").toString()
                     val votos = votoS.toInt()

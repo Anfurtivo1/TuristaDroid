@@ -2,8 +2,18 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
+        android:id="@+id/CerrarSesion"
+        android:orderInCategory="100"
+        android:title="@string/CerrarSesion"
+        app:showAsAction="never" />
+    <item
         android:id="@+id/EncenderLinterna"
         android:orderInCategory="100"
         android:title="@string/EncenderLinterna"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/tiempoFragment"
+        android:orderInCategory="100"
+        android:title="@string/ConsultarTiempo"
+        app:showAsAction="always" />
 </menu>

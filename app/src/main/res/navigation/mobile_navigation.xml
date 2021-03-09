@@ -30,5 +30,10 @@
         android:name="com.andresivan.turistadroid.ui.missitios.SitioDetalleFragment"
         android:label="SitioDetalleFragment"
         tools:layout="@layout/fragment_sitio_detalle"/>
+    <fragment
+        android:id="@+id/tiempoFragment"
+        android:name="com.andresivan.turistadroid.entidades.tiempo.tiempoFragment"
+        android:label="fragment_tiempo"
+        tools:layout="@layout/fragment_tiempo" />
 
 </navigation>

@@ -367,11 +367,11 @@ class SitioDetalleFragment(
                         val source: ImageDecoder.Source = ImageDecoder.createSource(requireContext().contentResolver, contentURI)
                         this.FOTO = ImageDecoder.decodeBitmap(source)
                     }
-                    Toast.makeText(context, "Se ha conseguido cargar la imagen de la galeria", Toast.LENGTH_SHORT).show()
-                    imgUsuario.setImageBitmap(this.FOTO)
+                    Toast.makeText(requireContext(), "Se ha conseguido cargar la imagen de la galeria", Toast.LENGTH_SHORT).show()
+                    detalleFotoSitio.setImageBitmap(this.FOTO)
                 } catch (e: IOException) {
                     e.printStackTrace()
-                    Toast.makeText(context, "Ocurrió un fallo al cargar la imagen de la galeria", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), "Ocurrió un fallo al cargar la imagen de la galeria", Toast.LENGTH_SHORT).show()
                 }
             }
         } else if (requestCode == CAM) {

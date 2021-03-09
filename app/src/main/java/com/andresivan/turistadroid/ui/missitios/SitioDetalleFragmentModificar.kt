@@ -132,25 +132,11 @@ class SitioDetalleFragmentModificar(
             "usuariosVotados" to arrayListOf("")
         )*/
         val lugaresRef = db.collection("Lugares").document(MyApp.idLugares[posicion])
-        lugaresRef
-            .update("NombreLugar",txtNombreLugarModificar.text.toString())
-            .addOnSuccessListener { documentReference ->
-                Log.d("Modificar", "Modificacion realizada correctamente:")
-            }
-            .addOnFailureListener { e ->
-                Log.w("Modificar", "Error al modificar lugar", e)
-
-            }
 
         lugaresRef
-            .update("Tipo",tipoSeleccionado)
-            .addOnSuccessListener { documentReference ->
-                Log.d("Modificar", "Modificacion realizada correctamente:")
-            }
-            .addOnFailureListener { e ->
-                Log.w("Modificar", "Error al modificar lugar", e)
-
-            }
+            .update(mapOf("NombreLugar" to txtNombreLugarModificar.text.toString(),"Tipo" to tipoSeleccionado))
+            .addOnSuccessListener { Log.d("Actualizar", "Lugar actualizado con exito") }
+            .addOnFailureListener { e -> Log.w("Actualizar", "Fallo al modificar el lugar", e) }
 
     }
 

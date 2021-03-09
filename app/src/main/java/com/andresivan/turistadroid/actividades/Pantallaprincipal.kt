@@ -12,13 +12,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.navigateUp
-import androidx.navigation.ui.setupActionBarWithNavController
-import androidx.navigation.ui.setupWithNavController
+import androidx.navigation.ui.*
 import com.andresivan.turistadroid.R
 import com.andresivan.turistadroid.entidades.usuario.Usuario
 import com.andresivan.turistadroid.app.MyApp
+import com.andresivan.turistadroid.entidades.tiempo.tiempoFragment
+import com.andresivan.turistadroid.ui.cercademi
+import com.andresivan.turistadroid.ui.missitios.SitioDetalleFragmentModificar
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -28,6 +28,7 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.squareup.picasso.Picasso
+import java.lang.Exception
 
 
 class PantallaPrincipal : AppCompatActivity() {
@@ -96,10 +97,8 @@ class PantallaPrincipal : AppCompatActivity() {
             Picasso.get().load(USUARIO.fotoUsuario).resize(200,200).into(navImagen)
         }
 
-
-        navImagen.setOnClickListener{cerrarSesion()}
-
     }
+
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
@@ -108,7 +107,13 @@ class PantallaPrincipal : AppCompatActivity() {
                 true
 
             }
-            else -> super.onOptionsItemSelected(item)
+            R.id.CerrarSesion->{
+                cerrarSesion()
+                true
+            }
+            else -> return NavigationUI.onNavDestinationSelected(item!!,
+                findNavController(R.id.nav_host_fragment))
+                    || super.onOptionsItemSelected(item)
         }
     }
 
