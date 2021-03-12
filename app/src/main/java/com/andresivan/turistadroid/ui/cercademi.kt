@@ -2,7 +2,6 @@ package com.andresivan.turistadroid.ui
 
 import android.Manifest
 import android.content.pm.PackageManager
-<<<<<<< HEAD
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.location.Location
@@ -20,25 +19,10 @@ import com.andresivan.turistadroid.entidades.lugares.Lugar
 import com.andresivan.turistadroid.utils.CircleTransform
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
-=======
-import android.location.Location
-import androidx.fragment.app.Fragment
-
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import androidx.core.app.ActivityCompat
-import com.andresivan.turistadroid.R
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationServices
-
->>>>>>> main
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-<<<<<<< HEAD
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
@@ -46,19 +30,13 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.squareup.picasso.Picasso
 
-=======
-import com.google.android.gms.maps.model.LatLng
->>>>>>> main
 
 class cercademi : Fragment() {
 
     private lateinit var fusedLocationClient: FusedLocationProviderClient//Lo que nos dará la ultima ubicacion
     private lateinit var lastLocation:Location//Para obtener la ultima localización del usuario
     private lateinit var map:GoogleMap//EL mapa que se va a mostrar
-<<<<<<< HEAD
     private lateinit var lugar:Lugar
-=======
->>>>>>> main
 
     private val callback = OnMapReadyCallback { googleMap ->
         /**
@@ -94,16 +72,12 @@ class cercademi : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
         mapFragment?.getMapAsync(callback)
-<<<<<<< HEAD
         consultar()
-=======
->>>>>>> main
         //Esto lo usaremos para acceder a nuestra unicacion actual
         fusedLocationClient= activity?.let { LocationServices.getFusedLocationProviderClient(it) }!!
 
     }
 
-<<<<<<< HEAD
     private fun consultar(){
         MyApp.listaLugares = mutableListOf()
         MyApp.idLugares = mutableListOf()
@@ -139,8 +113,6 @@ class cercademi : Fragment() {
     }
 
 
-=======
->>>>>>> main
     /**
      * En este metodo montamos el mapa y optamos por una opción distina a Dexter para comprobar los permisos para probar mas cosas
      */
@@ -166,10 +138,7 @@ class cercademi : Fragment() {
             if (location!=null){
                 //Indicamos que nuestra ultima localizacion va ser la ultima localizacion nuestra
                 lastLocation=location
-<<<<<<< HEAD
                 MyApp.posicion=lastLocation
-=======
->>>>>>> main
                 //Asignamos al mapa nuestra ubicacion actual,13f es el zoom
                 val currentLatLong=LatLng(location.latitude,location.longitude)
                 map.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLong,13f))
@@ -179,7 +148,6 @@ class cercademi : Fragment() {
 
     }
 
-<<<<<<< HEAD
     private fun sacarFotoLugar(id: String){
         val db = Firebase.firestore
         //TODO
@@ -220,6 +188,4 @@ class cercademi : Fragment() {
             }
     }
 
-=======
->>>>>>> main
 }

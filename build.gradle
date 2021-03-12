@@ -6,16 +6,10 @@ buildscript {
         jcenter()
     }
     dependencies {
-<<<<<<< HEAD
         classpath 'com.android.tools.build:gradle:4.1.2'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         //Firebase
         classpath 'com.google.gms:google-services:4.3.5'
-=======
-        classpath 'com.android.tools.build:gradle:4.1.1'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-
->>>>>>> main
         // Realm
         classpath "io.realm:realm-gradle-plugin:6.0.2"
 

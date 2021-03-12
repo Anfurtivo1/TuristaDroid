@@ -22,11 +22,7 @@
     </fragment>
     <fragment
         android:id="@+id/ndMiPerfil"
-<<<<<<< HEAD
         android:name="com.andresivan.turistadroid.ui.MiPerfil"
-=======
-        android:name="com.andresivan.turistadroid.ui.miperfil"
->>>>>>> main
         android:label="fragment_miperfil"
         tools:layout="@layout/fragment_miperfil" />
     <fragment
@@ -34,13 +30,10 @@
         android:name="com.andresivan.turistadroid.ui.missitios.SitioDetalleFragment"
         android:label="SitioDetalleFragment"
         tools:layout="@layout/fragment_sitio_detalle"/>
-<<<<<<< HEAD
     <fragment
         android:id="@+id/tiempoFragment"
         android:name="com.andresivan.turistadroid.entidades.tiempo.tiempoFragment"
         android:label="fragment_tiempo"
         tools:layout="@layout/fragment_tiempo" />
-=======
->>>>>>> main
 
 </navigation>

@@ -5,12 +5,8 @@
     android:id="@+id/frameLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-<<<<<<< HEAD
     android:background="@color/colorPrimary"
     tools:context=".ui.MiPerfil">
-=======
-    tools:context=".ui.miperfil" >
->>>>>>> main
 
     <Button
         android:id="@+id/btnEditarPerfil"
@@ -18,11 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="286dp"
         android:layout_marginBottom="20dp"
-<<<<<<< HEAD
         android:backgroundTint="@color/colorBTN_Dark"
-=======
-        android:backgroundTint="@android:color/holo_blue_dark"
->>>>>>> main
         android:text="@string/editar_perfil"
         android:textColor="@android:color/background_light"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -38,11 +30,7 @@
         android:layout_height="104dp"
         android:layout_marginStart="24dp"
         android:layout_marginTop="16dp"
-<<<<<<< HEAD
         android:src="@drawable/ic_profile_pic"
-=======
-        android:src="@drawable/imagenusuarioregistro"
->>>>>>> main
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -67,10 +55,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="62dp"
-<<<<<<< HEAD
         android:layout_marginTop="3dp"
-=======
->>>>>>> main
         android:layout_marginEnd="81dp"
         android:text="Nombre usuario"
         android:textSize="19sp"
@@ -122,7 +107,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imgMiPerfil" />
 
-<<<<<<< HEAD
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabMP_Twitter"
         android:layout_width="wrap_content"
@@ -159,35 +143,4 @@
         app:layout_constraintBottom_toTopOf="@+id/fabMP_Camara"
         app:layout_constraintStart_toStartOf="parent" />
 
-=======
-    <ImageView
-        android:id="@+id/imgTwitterMiPerfil"
-        android:layout_width="58dp"
-        android:layout_height="60dp"
-        android:layout_marginEnd="36dp"
-        android:layout_marginBottom="36dp"
-        android:src="@drawable/twitter"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-    <ImageView
-        android:id="@+id/imgGaleriaRegistrarse"
-        android:layout_width="78dp"
-        android:layout_height="65dp"
-        android:layout_marginStart="14dp"
-        android:layout_marginBottom="20dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@drawable/imagengaleriaregistro" />
-
-    <ImageView
-        android:id="@+id/imgCamaraRegistrarse"
-        android:layout_width="78dp"
-        android:layout_height="65dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginBottom="10dp"
-        app:layout_constraintBottom_toTopOf="@+id/imgGaleriaRegistrarse"
-        app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@drawable/imagencamararegistro" />
->>>>>>> main
 </androidx.constraintlayout.widget.ConstraintLayout>

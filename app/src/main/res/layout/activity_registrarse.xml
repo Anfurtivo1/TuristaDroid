@@ -4,12 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-<<<<<<< HEAD
     android:background="@color/colorPrimary"
     tools:context=".actividades.Registrarse">
-=======
-    tools:context=".actividades.registrarse">
->>>>>>> main
 
     <Button
         android:id="@+id/btnRegistrarse"
@@ -17,11 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:layout_marginBottom="5dp"
-<<<<<<< HEAD
         android:backgroundTint="@color/colorBTN_Dark"
-=======
-        android:backgroundTint="@android:color/holo_blue_dark"
->>>>>>> main
         android:text="@string/login_link_registrarse"
         android:textColor="@android:color/background_light"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -38,11 +30,7 @@
         android:layout_marginEnd="50dp"
         android:autofillHints=""
         android:background="#B3B3B3"
-<<<<<<< HEAD
         android:backgroundTint="@color/design_default_color_background"
-=======
-        android:backgroundTint="#B3B3B3"
->>>>>>> main
         android:ems="10"
         android:inputType="textEmailAddress"
         app:layout_constraintEnd_toEndOf="parent"
@@ -58,11 +46,7 @@
         android:layout_marginEnd="50dp"
         android:autofillHints=""
         android:background="#B3B3B3"
-<<<<<<< HEAD
         android:backgroundTint="@color/design_default_color_on_primary"
-=======
-        android:backgroundTint="#B3B3B3"
->>>>>>> main
         android:ems="10"
         android:inputType="textEmailAddress"
         app:layout_constraintEnd_toEndOf="parent"
@@ -74,18 +58,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="168dp"
-<<<<<<< HEAD
         android:layout_marginTop="5dp"
         android:layout_marginEnd="168dp"
         android:text="@string/login_lbl_Contrasena"
         android:textAlignment="center"
         android:textColor="@color/design_default_color_background"
         android:textStyle="bold"
-=======
-        android:layout_marginEnd="168dp"
-        android:text="@string/login_lbl_Contrasena"
-        android:textAlignment="center"
->>>>>>> main
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/registrarse_et_correo" />
@@ -97,13 +75,8 @@
         android:layout_marginStart="50dp"
         android:layout_marginEnd="50dp"
         android:autofillHints=""
-<<<<<<< HEAD
         android:background="@color/design_default_color_background"
         android:backgroundTint="@color/design_default_color_on_primary"
-=======
-        android:background="#B3B3B3"
-        android:backgroundTint="#B3B3B3"
->>>>>>> main
         android:ems="10"
         android:inputType="textPassword"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -122,11 +95,8 @@
         android:layout_marginEnd="168dp"
         android:text="@string/login_lbl_Correo"
         android:textAlignment="center"
-<<<<<<< HEAD
         android:textColor="@color/design_default_color_background"
         android:textStyle="bold"
-=======
->>>>>>> main
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imgUsuario" />
@@ -137,50 +107,23 @@
         android:layout_marginTop="4dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent"
-<<<<<<< HEAD
         app:srcCompat="@drawable/ic_profile_pic"/>
-=======
-        app:srcCompat="@drawable/imagenusuarioregistro"/>
-    <ImageView
-        android:id="@+id/imgGaleriaRegistrarse"
-        android:layout_width="79dp"
-        android:layout_height="64dp"
-        android:layout_marginStart="45dp" android:layout_marginTop="28dp"
-        app:layout_constraintEnd_toStartOf="@+id/imgUsuario" app:layout_constraintHorizontal_bias="0.992"
-        app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/imagengaleriaregistro"/>
-    <ImageView
-        android:id="@+id/imgCamaraRegistrarse"
-        android:layout_width="78dp"
-        android:layout_height="65dp"
-        android:layout_marginTop="28dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0" app:layout_constraintStart_toEndOf="@+id/imgUsuario"
-        app:layout_constraintTop_toTopOf="parent" app:srcCompat="@drawable/imagencamararegistro"/>
->>>>>>> main
 
     <TextView
         android:id="@+id/registrarse_tv_nombreuser"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="140dp"
-<<<<<<< HEAD
         android:layout_marginTop="5dp"
         android:layout_marginEnd="140dp"
         android:text="@string/register_lbl_nombreUsu"
         android:textAlignment="center"
         android:textColor="@color/design_default_color_on_primary"
         android:textStyle="bold"
-=======
-        android:layout_marginEnd="140dp"
-        android:text="@string/register_lbl_nombreUsu"
-        android:textAlignment="center"
->>>>>>> main
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/registrarse_et_contrasena" />
 
-<<<<<<< HEAD
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabRegGaleria"
         android:layout_width="wrap_content"
@@ -207,6 +150,4 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_camara" />
 
-=======
->>>>>>> main
 </androidx.constraintlayout.widget.ConstraintLayout>

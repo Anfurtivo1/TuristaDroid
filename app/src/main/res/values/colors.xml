@@ -2,20 +2,14 @@
 <resources>
     <color name="colorPrimary">#F370CA9C</color>
     <color name="colorPrimaryDark">#73AF6C</color>
-<<<<<<< HEAD
     <color name="colorBTN_Dark">#86AC82</color>
-=======
->>>>>>> main
     <color name="fabBtnColor">#B6E3A5</color>
     <color name="colorAccent">#03DAC5</color>
     <color name="favNo">#FFFFDFDF</color>
     <color name="favYes">#5EB867</color>
     <color name="recyclerListColor">#F370CA9C</color>
     <color name="itemlstColour">#D6D6D6</color>
-<<<<<<< HEAD
     <color name="specialTextColor">#FFFFFF</color>
-=======
->>>>>>> main
     <color name="qrCodeColor">#F370CA9C</color>
     <color name="removeColor">#73AF6C</color>
     <color name="updateColor">#73AF6C</color>

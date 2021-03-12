@@ -33,19 +33,11 @@ class MainActivity : AppCompatActivity() {
         tituloSplashScreen.animation=animacion2
         imagenSplashScreen.animation=animacion1
 
-<<<<<<< HEAD
         //Creamos un handler para que despues de 4 segundos, nos muestre la actividad del Login
         val handler: Handler= Handler()
 
         handler.postDelayed({
             val intent:Intent = Intent(this, Login::class.java)
-=======
-        //Creamos un handler para que despues de 4 segundos, nos muestre la actividad del login
-        val handler: Handler= Handler()
-
-        handler.postDelayed({
-            val intent:Intent = Intent(this, login::class.java)
->>>>>>> main
             startActivity(intent)
             finish()
         },4000)
